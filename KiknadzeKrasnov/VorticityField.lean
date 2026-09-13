@@ -12,7 +12,10 @@ def distributedAngularMomentum (circ s beta r : ℝ) : ℝ :=
 theorem scaledX_hasDerivAt (beta r : ℝ) :
     HasDerivAt (scaledX beta) (2 * beta * r) r := by
   unfold scaledX
-  convert ((hasDerivAt_id r).pow 2).const_mul beta using 1 <;> ring
+  convert ((hasDerivAt_id r).pow 2).const_mul beta using 1
+  · funext y
+    simp
+  · ring
 
 /-- Radial derivative of a regularised incomplete-gamma profile after the KK change of variables. -/
 theorem regLowerGamma_scaledX_hasDerivAt
@@ -21,8 +24,9 @@ theorem regLowerGamma_scaledX_hasDerivAt
       (regLowerGammaDensity s (scaledX beta r) * (2 * beta * r)) r := by
   have hP := (regLowerGamma_hasDerivAt hs hx).comp r (scaledX_hasDerivAt beta r)
   convert hP using 1
-  unfold regLowerGammaDensity
-  ring
+  · rfl
+  · unfold regLowerGammaDensity
+    ring
 
 /-- Certified radial derivative of a one-mode angular momentum profile. -/
 theorem distributedAngularMomentum_hasDerivAt
@@ -41,7 +45,7 @@ theorem distributedVorticity_eq_angularMomentumCurl
       distributedVorticity circ s beta r := by
   have hx : 0 < scaledX beta r := by
     unfold scaledX
-    positivity
+    exact mul_pos hbeta (pow_pos hr 2)
   rw [(distributedAngularMomentum_hasDerivAt (circ := circ) hs hx).deriv]
   unfold distributedVorticity vorticityShape regLowerGammaDensity gammaKernel
   field_simp [hr.ne', Real.pi_ne_zero, gammaFn_ne_zero hs]
