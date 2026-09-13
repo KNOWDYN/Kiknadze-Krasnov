@@ -25,14 +25,10 @@ theorem radialVelocityRadialDeriv_hasDerivAt {a q r : ℝ} (hr : r ≠ 0) :
     · funext y
       simp
     · simp
-      ring
   have hquot := (hasDerivAt_const r q).div hden (pow_ne_zero 2 hr)
   convert (hasDerivAt_const r (-a / 2)).sub hquot using 1
-  · funext y
-    simp
-  · simp only [id_eq]
-    field_simp [hr]
-    ring
+  field_simp [hr]
+  ring
 
 /-- Time derivative of `u_r` when `q` is frozen, as required by the fixed-profile construction. -/
 theorem radialVelocity_time_hasDerivAt
