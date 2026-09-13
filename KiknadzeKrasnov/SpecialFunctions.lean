@@ -57,14 +57,17 @@ theorem gammaKernel_intervalIntegrable {s x : ℝ} (hs : 0 < s) (hx : 0 ≤ x) :
 theorem lowerGamma_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
     HasDerivAt (lowerGamma s) (gammaKernel s x) x := by
   have hcont : ContinuousAt (gammaKernel s) x := gammaKernel_continuousAt hx
+  have hmeas : StronglyMeasurableAtFilter (gammaKernel s) (𝓝 x) volume := by
+    exact ContinuousAt.stronglyMeasurableAtFilter isOpen_Ioi
+      (fun y hy => gammaKernel_continuousAt hy) x hx
   exact intervalIntegral.integral_hasDerivAt_right
-    (gammaKernel_intervalIntegrable hs hx.le)
-    hcont.stronglyMeasurableAtFilter hcont
+    (gammaKernel_intervalIntegrable hs hx.le) hmeas hcont
 
 /-- Fundamental derivative identity for the regularised lower incomplete gamma function. -/
 theorem regLowerGamma_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
     HasDerivAt (regLowerGamma s) (gammaKernel s x / gammaFn s) x := by
-  simpa [regLowerGamma] using (lowerGamma_hasDerivAt hs hx).div_const (gammaFn s)
+  unfold regLowerGamma
+  exact (lowerGamma_hasDerivAt hs hx).div_const (gammaFn s)
 
 /-- The derivative is exactly the density used throughout the KK construction. -/
 theorem deriv_regLowerGamma {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
