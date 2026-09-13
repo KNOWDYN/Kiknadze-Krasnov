@@ -7,3 +7,4 @@ import KiknadzeKrasnov.Meridional
 import KiknadzeKrasnov.ScaleDynamics
 import KiknadzeKrasnov.GammaProfile
 import KiknadzeKrasnov.AngularMomentum
+import KiknadzeKrasnov.FieldResiduals
