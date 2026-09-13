@@ -20,7 +20,8 @@ theorem gammaKernel_hasDerivAt_profile {s x : ℝ} (hx : 0 < x) :
     HasDerivAt (gammaKernel s)
       (((s - 1) / x - 1) * gammaKernel s x) x := by
   have hexp : HasDerivAt (fun y : ℝ => Real.exp (-y)) (-Real.exp (-x)) x := by
-    convert (Real.hasDerivAt_exp (-x)).comp x (hasDerivAt_neg x) using 1 <;> ring
+    simpa only [Function.comp_apply] using
+      (Real.hasDerivAt_exp (-x)).comp x (hasDerivAt_neg x)
   have hpow : HasDerivAt (fun y : ℝ => y ^ (s - 1))
       ((s - 1) * x ^ ((s - 1) - 1)) x :=
     Real.hasDerivAt_rpow_const (x := x) (p := s - 1) (Or.inl hx.ne')
@@ -28,8 +29,7 @@ theorem gammaKernel_hasDerivAt_profile {s x : ℝ} (hx : 0 < x) :
   unfold gammaKernel
   convert hmul using 1
   rw [Real.rpow_sub_one hx.ne' (s - 1)]
-  field_simp [hx.ne']
-  ring
+  field_simp [hx.ne'] <;> ring
 
 /-- The certified second-profile relation `P_xx=((s-1)/x-1)P_x`. -/
 theorem regLowerGammaDensity_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
@@ -37,8 +37,7 @@ theorem regLowerGammaDensity_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
       (((s - 1) / x - 1) * regLowerGammaDensity s x) x := by
   unfold regLowerGammaDensity
   convert (gammaKernel_hasDerivAt_profile (s := s) hx).div_const (gammaFn s) using 1
-  field_simp [gammaFn_ne_zero hs]
-  ring
+  field_simp [gammaFn_ne_zero hs] <;> ring
 
 /-- Algebraic gamma-profile ODE after `q=2ν(s-1)`. -/
 theorem gammaProfile_ode_identity {nu q s x : ℝ}
@@ -46,8 +45,7 @@ theorem gammaProfile_ode_identity {nu q s x : ℝ}
     2 * nu * x * (((s - 1) / x - 1) * regLowerGammaDensity s x) +
       (2 * nu * x - q) * regLowerGammaDensity s x = 0 := by
   rw [hq]
-  field_simp [hx]
-  ring
+  field_simp [hx] <;> ring
 
 /-- The project shape definition supplies exactly the source/profile compatibility relation. -/
 theorem gammaProfile_ode_for_shape (p : FluidParams) (q s x : ℝ)
