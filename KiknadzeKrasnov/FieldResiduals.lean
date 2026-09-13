@@ -21,11 +21,18 @@ theorem radialVelocityRadialDeriv_hasDerivAt {a q r : ℝ} (hr : r ≠ 0) :
       (radialVelocitySecondRadialDeriv q r) r := by
   unfold radialVelocityRadialDeriv radialVelocitySecondRadialDeriv
   have hden : HasDerivAt (fun y : ℝ => y ^ 2) (2 * r) r := by
-    convert (hasDerivAt_id r).pow 2 using 1 <;> ring
+    convert (hasDerivAt_id r).pow 2 using 1
+    · funext y
+      simp
+    · simp
+      ring
   have hquot := (hasDerivAt_const r q).div hden (pow_ne_zero 2 hr)
   convert (hasDerivAt_const r (-a / 2)).sub hquot using 1
-  field_simp [hr]
-  ring
+  · funext y
+    simp
+  · simp only [id_eq]
+    field_simp [hr]
+    ring
 
 /-- Time derivative of `u_r` when `q` is frozen, as required by the fixed-profile construction. -/
 theorem radialVelocity_time_hasDerivAt
@@ -33,7 +40,11 @@ theorem radialVelocity_time_hasDerivAt
     HasDerivAt (fun tau => radialVelocity (a tau) q r)
       (-aDot / 2 * r) t := by
   unfold radialVelocity
-  convert (ha.mul_const (-r / 2)).add_const (q / r) using 1 <;> ring
+  have h := (ha.mul_const (-r / 2)).add_const (q / r)
+  convert h using 1
+  · funext tau
+    ring
+  · ring
 
 /-- Time derivative of `u_z=a(t)z+b(t)`. -/
 theorem axialVelocity_time_hasDerivAt
