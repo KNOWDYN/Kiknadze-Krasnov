@@ -16,6 +16,7 @@ theorem scaledX_hasDerivAt (beta r : ℝ) :
   · funext y
     simp
   · simp
+    ring
 
 /-- Radial derivative of a regularised incomplete-gamma profile after the KK change of variables. -/
 theorem regLowerGamma_scaledX_hasDerivAt
