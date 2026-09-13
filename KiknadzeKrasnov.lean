@@ -8,3 +8,5 @@ import KiknadzeKrasnov.ScaleDynamics
 import KiknadzeKrasnov.GammaProfile
 import KiknadzeKrasnov.AngularMomentum
 import KiknadzeKrasnov.FieldResiduals
+import KiknadzeKrasnov.PressureField
+import KiknadzeKrasnov.KKField
