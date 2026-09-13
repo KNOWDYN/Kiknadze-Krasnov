@@ -7,6 +7,7 @@ namespace KiknadzeKrasnov
 noncomputable section
 
 open Set MeasureTheory intervalIntegral
+open scoped Topology
 
 /-- Euler gamma function, given a collision-free project name. -/
 def gammaFn (s : ℝ) : ℝ := Real.Gamma s
