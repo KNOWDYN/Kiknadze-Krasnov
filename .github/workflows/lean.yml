@@ -12,10 +12,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build Lean project
+      - name: Install Lean
         uses: leanprover/lean-action@v1
         with:
-          use-mathlib-cache: true
+          auto-config: false
+          build: false
+          test: false
+          lint: false
+          use-mathlib-cache: false
+          use-github-cache: false
+      - name: Resolve pinned dependencies
+        run: lake update
+      - name: Fetch Mathlib cache
+        run: lake exe cache get
+      - name: Build Lean project
+        run: lake build
       - name: Reject proof placeholders
         shell: bash
         run: |
