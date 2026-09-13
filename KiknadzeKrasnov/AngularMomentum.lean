@@ -49,7 +49,10 @@ theorem angularResidualFactor_zero
     (hscale : scaleResidual p.nu a beta betaDot = 0) :
     angularResidualFactor p.nu a q beta betaDot (shape p q) x = 0 := by
   unfold angularResidualFactor
-  rw [hscale, source_eq_two_nu_mul_shape_sub_one p q]
+  rw [hscale]
+  have hcompat : q - 2 * p.nu * (shape p q - 1) = 0 := by
+    exact sub_eq_zero.mpr (source_eq_two_nu_mul_shape_sub_one p q)
+  rw [hcompat]
   ring
 
 /-- A single finite-circulation gamma mode satisfies the angular-momentum equation locally. -/
