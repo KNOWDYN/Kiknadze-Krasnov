@@ -26,7 +26,6 @@ theorem angularMomentum_multimodeSwirl {n : ℕ}
       multimodeCirculationValue gammaLine circ s beta r / (2 * Real.pi) := by
   unfold angularMomentum multimodeSwirl
   field_simp [hr, Real.pi_ne_zero]
-  ring
 
 /-- Constant central line circulation contributes a constant angular momentum on `r>0`. -/
 def centralAngularMomentum (gammaLine : ℝ) : ℝ := gammaLine / (2 * Real.pi)
@@ -57,7 +56,7 @@ theorem multimodeAngularResidual_zero {n : ℕ}
   intro i hi
   have hxi : 0 < scaledX (beta i) r := by
     unfold scaledX
-    positivity
+    exact mul_pos (hbeta i) (pow_pos hr 2)
   rw [gammaAngularResidual_zero p (hbeta i).ne' hxi.ne' (hscale i)]
   ring
 
