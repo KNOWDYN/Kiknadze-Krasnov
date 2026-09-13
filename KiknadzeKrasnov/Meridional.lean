@@ -23,7 +23,8 @@ theorem radialVelocity_hasDerivAt {a q r : ℝ} (hr : r ≠ 0) :
   convert h using 1
   · funext y
     simp [radialVelocity]
-  · field_simp [hr]
+  · simp only [id_eq]
+    field_simp [hr]
     ring
 
 /-- The radial flux derivative is exactly `-a r`; the source term differentiates away. -/
@@ -34,15 +35,19 @@ theorem radialFlux_hasDerivAt {a q r : ℝ} (hr : r ≠ 0) :
   convert h using 1
   · funext y
     rfl
-  · unfold radialVelocity
+  · simp only [id_eq]
+    unfold radialVelocity
     field_simp [hr]
     ring
 
 /-- The axial KK velocity has constant spatial derivative `a`. -/
 theorem axialVelocity_hasDerivAt (a b z : ℝ) :
     HasDerivAt (axialVelocity a b) a z := by
-  simpa [axialVelocity] using
-    (hasDerivAt_const_mul (x := z) a).add_const b
+  have h := (hasDerivAt_const_mul (x := z) a).add (hasDerivAt_const z b)
+  convert h using 1
+  · funext y
+    simp [axialVelocity]
+  · ring
 
 /-- Machine-checked cylindrical incompressibility on the punctured radial domain. -/
 theorem continuityResidual_zero {a q r b z : ℝ} (hr : r ≠ 0) :
