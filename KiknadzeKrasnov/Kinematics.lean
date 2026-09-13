@@ -52,7 +52,8 @@ def distributedVorticity (circ s beta r : ℝ) : ℝ :=
 /-- Algebraic identity behind `r_*²=(s-1)/β`. -/
 theorem scaledX_materialRadiusSq {s beta : ℝ} (hbeta : beta ≠ 0) :
     beta * materialRadiusSq s beta = s - 1 := by
-  simp [materialRadiusSq, hbeta]
+  unfold materialRadiusSq
+  field_simp [hbeta]
 
 end
 
