@@ -16,17 +16,24 @@ def continuityResidual (a q r b z : ℝ) : ℝ :=
 /-- The derivative of the punctured-domain radial velocity. -/
 theorem radialVelocity_hasDerivAt {a q r : ℝ} (hr : r ≠ 0) :
     HasDerivAt (radialVelocity a q) (-a / 2 - q / r ^ 2) r := by
-  unfold radialVelocity
-  convert
-    (hasDerivAt_const_mul (x := r) (-(a / 2))).add
-      ((hasDerivAt_const r q).div (hasDerivAt_id r) hr)
-    using 1 <;> field_simp [hr] <;> ring
+  have hlin : HasDerivAt (fun y : ℝ => -(a / 2) * y) (-(a / 2)) r :=
+    hasDerivAt_const_mul (x := r) (-(a / 2))
+  have hquot := (hasDerivAt_const r q).div (hasDerivAt_id r) hr
+  have h := hlin.add hquot
+  convert h using 1
+  · funext y
+    simp [radialVelocity]
+  · field_simp [hr]
+    ring
 
 /-- The radial flux derivative is exactly `-a r`; the source term differentiates away. -/
 theorem radialFlux_hasDerivAt {a q r : ℝ} (hr : r ≠ 0) :
     HasDerivAt (radialFlux a q) (-a * r) r := by
-  convert (hasDerivAt_id r).mul (radialVelocity_hasDerivAt (a := a) (q := q) hr) using 1
-  · rfl
+  have h := (hasDerivAt_id r).mul
+    (radialVelocity_hasDerivAt (a := a) (q := q) hr)
+  convert h using 1
+  · funext y
+    rfl
   · unfold radialVelocity
     field_simp [hr]
     ring
@@ -34,8 +41,8 @@ theorem radialFlux_hasDerivAt {a q r : ℝ} (hr : r ≠ 0) :
 /-- The axial KK velocity has constant spatial derivative `a`. -/
 theorem axialVelocity_hasDerivAt (a b z : ℝ) :
     HasDerivAt (axialVelocity a b) a z := by
-  unfold axialVelocity
-  convert (hasDerivAt_const_mul (x := z) a).add_const b using 1 <;> ring
+  simpa [axialVelocity] using
+    (hasDerivAt_const_mul (x := z) a).add_const b
 
 /-- Machine-checked cylindrical incompressibility on the punctured radial domain. -/
 theorem continuityResidual_zero {a q r b z : ℝ} (hr : r ≠ 0) :
@@ -47,12 +54,11 @@ theorem continuityResidual_zero {a q r b z : ℝ} (hr : r ≠ 0) :
   ring
 
 /-- Source/sink flux per unit axial length, written exactly as the manuscript's angular integral. -/
-def sourceFlux (q : ℝ) : ℝ := ∫ θ : ℝ in 0..2 * Real.pi, q
+def sourceFlux (q : ℝ) : ℝ := ∫ _theta : ℝ in 0..2 * Real.pi, q
 
 /-- `q/r` carries radial flux `2πq` per unit axial length. -/
 theorem sourceFlux_eq (q : ℝ) : sourceFlux q = 2 * Real.pi * q := by
   simp [sourceFlux]
-  ring
 
 end
 
