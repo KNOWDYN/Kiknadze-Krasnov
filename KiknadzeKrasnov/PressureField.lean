@@ -54,7 +54,11 @@ theorem pressureField_hasDerivAt_r
     hasDerivAt_const r _
   have hsum := (hconst.add hquad).add hinvTerm |>.add hPiScaled
   unfold pressureField radialPressureGradientOverRho swirlPressureIntegrand at *
-  convert hsum using 1 <;> field_simp [hr] <;> ring
+  convert hsum using 1
+  · funext y
+    ring
+  · field_simp [hr]
+    ring
 
 /-- The exact pressure field differentiates to the axial pressure-gradient relation. -/
 theorem pressureField_hasDerivAt_z
@@ -71,7 +75,10 @@ theorem pressureField_hasDerivAt_z
     hasDerivAt_const z _
   have hsum := (hconst.add hquad).add hlin
   unfold pressureField axialPressureGradientOverRho
-  convert hsum using 1 <;> ring
+  convert hsum using 1
+  · funext y
+    ring
+  · ring
 
 end
 
