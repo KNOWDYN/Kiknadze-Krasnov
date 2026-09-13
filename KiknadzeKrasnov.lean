@@ -5,3 +5,5 @@ import KiknadzeKrasnov.Model
 import KiknadzeKrasnov.Kinematics
 import KiknadzeKrasnov.Meridional
 import KiknadzeKrasnov.ScaleDynamics
+import KiknadzeKrasnov.GammaProfile
+import KiknadzeKrasnov.AngularMomentum
