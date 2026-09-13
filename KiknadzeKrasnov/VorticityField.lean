@@ -15,7 +15,7 @@ theorem scaledX_hasDerivAt (beta r : ℝ) :
   convert ((hasDerivAt_id r).pow 2).const_mul beta using 1
   · funext y
     simp
-  · ring
+  · simp
 
 /-- Radial derivative of a regularised incomplete-gamma profile after the KK change of variables. -/
 theorem regLowerGamma_scaledX_hasDerivAt
@@ -49,7 +49,6 @@ theorem distributedVorticity_eq_angularMomentumCurl
   rw [(distributedAngularMomentum_hasDerivAt (circ := circ) hs hx).deriv]
   unfold distributedVorticity vorticityShape regLowerGammaDensity gammaKernel
   field_simp [hr.ne', Real.pi_ne_zero, gammaFn_ne_zero hs]
-  ring
 
 /-- Finite-mode distributed axial vorticity; constant central line circulation has no classical vorticity on `r>0`. -/
 def multimodeDistributedVorticity {n : ℕ}
