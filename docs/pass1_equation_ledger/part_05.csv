@@ -1,0 +1,7 @@
+item_id,source,lines,label,section,subsection,formal_action,target_bundle,canonical_status,formula_sha256,formula_preview,pass1_notes
+S042,supplementary_material.tex,277-279,,Detailed finite-time scale asymptotics,$p=1$,PROVE,FiniteTimeAsymptotics,canonical,62cdd665459cf8f3,\beta(t)\sim\frac{1}{4\nu(T-t)\ln[T/(T-t)]}.,
+S043,supplementary_material.tex,281-283,,Detailed finite-time scale asymptotics,$p=1$,PROVE,FiniteTimeAsymptotics,canonical,9895c7e9bdc88c62,"\beta(t)\sim\frac{\lambda-1}{4\nu(T-t)},",
+S044,supplementary_material.tex,288-291,,Detailed finite-time scale asymptotics,$p>1$,PROVE,FiniteTimeAsymptotics,canonical,6bd9a74d9744f903,\beta(t)\sim\frac{a(t)}{4\nu} =\frac{\lambda}{4\nu T}y^{-p}.,
+S045,supplementary_material.tex,298-300,,Computational verification and figure generation,,DUPLICATE_NUMERICAL,Verification,duplicate,103f4d11889faaf8,"\frac{\mathrm D x}{\mathrm D t}=4\nu\beta[(s-1)-x],",Formula repeated for numerical figure generation; no separate theorem required.
+S046,supplementary_material.tex,301-303,,Computational verification and figure generation,,DUPLICATE_NUMERICAL,Verification,duplicate,bb3d5479c01d496f,"\omega_z\propto x^{s-1}\e^{-x},",Formula repeated for numerical figure generation; no separate theorem required.
+S047,supplementary_material.tex,305-307,,Computational verification and figure generation,,DUPLICATE_NUMERICAL,Verification,duplicate,bcb657247e690eaf,\frac{\dd\Gamma_m}{\dd t}\propto x^{s-1}\e^{-x}[(s-1)-x].,Formula repeated for numerical figure generation; no separate theorem required.
