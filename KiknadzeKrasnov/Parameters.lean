@@ -72,15 +72,16 @@ theorem finiteCirculationBranch_iff (p : FluidParams) (q : ℝ) :
   constructor
   · intro h
     unfold FiniteCirculationBranch shape at h
-    have hqdiv : -1 < q / (2 * p.nu) := by linarith
-    have hmul := (mul_lt_mul_of_pos_right hqdiv hden)
-    field_simp [p.nu_ne_zero] at hmul
-    linarith
+    have hqdiv : (-1 : ℝ) < q / (2 * p.nu) := by linarith
+    have hraw : (-1 : ℝ) * (2 * p.nu) < q :=
+      (lt_div_iff₀ hden).1 hqdiv
+    convert hraw using 1 <;> ring
   · intro hq
     unfold FiniteCirculationBranch shape
-    have hqdiv : -1 < q / (2 * p.nu) := by
-      apply (lt_div_iff₀ hden).2
-      linarith
+    have hraw : (-1 : ℝ) * (2 * p.nu) < q := by
+      convert hq using 1 <;> ring
+    have hqdiv : (-1 : ℝ) < q / (2 * p.nu) :=
+      (lt_div_iff₀ hden).2 hraw
     linarith
 
 end
