@@ -19,7 +19,7 @@ def swirlPressureIntegral (uTheta : ℝ → ℝ) (rRef r : ℝ) : ℝ :=
 theorem swirlPressureIntegral_hasDerivAt
     {uTheta : ℝ → ℝ} {rRef r : ℝ}
     (hint : IntervalIntegrable (swirlPressureIntegrand uTheta) volume rRef r)
-    (hmeas : StronglyMeasurableAtFilter (swirlPressureIntegrand uTheta) (𝓝 r) volume)
+    (hmeas : StronglyMeasurableAtFilter (swirlPressureIntegrand uTheta) (nhds r) volume)
     (hcont : ContinuousAt (swirlPressureIntegrand uTheta) r) :
     HasDerivAt (swirlPressureIntegral uTheta rRef)
       (swirlPressureIntegrand uTheta r) r := by
@@ -43,7 +43,10 @@ theorem pressureField_hasDerivAt_r
     HasDerivAt (fun y => pressureField rho p0 a aDot q b bDot z rRef y uTheta)
       (rho * radialPressureGradientOverRho a aDot q (uTheta r) r) r := by
   have hr2 : HasDerivAt (fun y : ℝ => y ^ 2) (2 * r) r := by
-    convert (hasDerivAt_id r).pow 2 using 1 <;> ring
+    convert (hasDerivAt_id r).pow 2 using 1
+    · funext y
+      simp
+    · simp
   have hquad := hr2.const_mul (rho * (aDot / 4 - a ^ 2 / 8))
   have hinv := hr2.inv (pow_ne_zero 2 hr)
   have hinvTerm := hinv.const_mul (-(rho * q ^ 2 / 2))
@@ -56,6 +59,7 @@ theorem pressureField_hasDerivAt_r
   unfold pressureField radialPressureGradientOverRho swirlPressureIntegrand at *
   convert hsum using 1
   · funext y
+    simp [div_eq_mul_inv, inv_pow]
     ring
   · field_simp [hr]
     ring
@@ -66,7 +70,10 @@ theorem pressureField_hasDerivAt_z
     HasDerivAt (fun y => pressureField rho p0 a aDot q b bDot y rRef r uTheta)
       (rho * axialPressureGradientOverRho a aDot b bDot z) z := by
   have hz2 : HasDerivAt (fun y : ℝ => y ^ 2) (2 * z) z := by
-    convert (hasDerivAt_id z).pow 2 using 1 <;> ring
+    convert (hasDerivAt_id z).pow 2 using 1
+    · funext y
+      simp
+    · simp
   have hquad := hz2.const_mul (-(rho / 2 * (aDot + a ^ 2)))
   have hlin := (hasDerivAt_const_mul (x := z) (-(rho * (bDot + a * b))))
   have hconst : HasDerivAt
@@ -77,6 +84,7 @@ theorem pressureField_hasDerivAt_z
   unfold pressureField axialPressureGradientOverRho
   convert hsum using 1
   · funext y
+    simp [div_eq_mul_inv, inv_pow]
     ring
   · ring
 
