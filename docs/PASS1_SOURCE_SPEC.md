@@ -23,7 +23,7 @@ Mathematical display inventory:
 - manuscript equation labels `eq:*` = **89**
 - all manuscript labels (equations, sections, figures, tables) = **111**
 
-Every display block is represented in `docs/PASS1_equation_ledger.csv`. Mathematically consequential prose assertions that are not uniquely represented by a display equation are represented in `docs/PASS1_claim_register.csv`.
+Every display block is represented in the five sharded CSV files under `docs/pass1_equation_ledger/` (indexed by its `README.md`). Mathematically consequential prose assertions that are not uniquely represented by a display equation are represented in `docs/PASS1_claim_register.csv`.
 
 ## 2. Certification boundary
 
@@ -261,7 +261,7 @@ The Lean project must not claim any of the following unless a later source or ex
 ## 8. Pass-1 artefacts
 
 - `docs/PASS1_SOURCE_SPEC.md` — this frozen formal specification
-- `docs/PASS1_equation_ledger.csv` — all 206 display blocks with source lines, labels, context, action and target bundle
+- `docs/pass1_equation_ledger/part_01.csv` … `part_05.csv` — all 206 display blocks with source lines, labels, fingerprints, action and target bundle
 - `docs/PASS1_claim_register.csv` — mathematically consequential prose claims and restrictions not safely represented by display equations alone
 
 These artefacts are audit inputs for every subsequent pass. A later proof may refine theorem names or split a claim into smaller lemmas, but it must not silently delete, strengthen or weaken a source claim. Any intentional scope change must be recorded in the repository.
