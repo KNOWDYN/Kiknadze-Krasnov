@@ -10,3 +10,4 @@ import KiknadzeKrasnov.AngularMomentum
 import KiknadzeKrasnov.FieldResiduals
 import KiknadzeKrasnov.PressureField
 import KiknadzeKrasnov.KKField
+import KiknadzeKrasnov.VorticityField
