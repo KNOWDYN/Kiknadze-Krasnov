@@ -19,9 +19,12 @@ theorem deriv_regLowerGamma_eq_density {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
 theorem gammaKernel_hasDerivAt_profile {s x : ℝ} (hx : 0 < x) :
     HasDerivAt (gammaKernel s)
       (((s - 1) / x - 1) * gammaKernel s x) x := by
+  have hcomp := (Real.hasDerivAt_exp (-x)).comp x (hasDerivAt_neg x)
   have hexp : HasDerivAt (fun y : ℝ => Real.exp (-y)) (-Real.exp (-x)) x := by
-    simpa only [Function.comp_apply] using
-      (Real.hasDerivAt_exp (-x)).comp x (hasDerivAt_neg x)
+    convert hcomp using 1
+    · funext y
+      simp
+    · ring
   have hpow : HasDerivAt (fun y : ℝ => y ^ (s - 1))
       ((s - 1) * x ^ ((s - 1) - 1)) x :=
     Real.hasDerivAt_rpow_const (x := x) (p := s - 1) (Or.inl hx.ne')
