@@ -30,7 +30,7 @@ theorem vorticityShape_pos {s x : ℝ} (hx : 0 < x) :
 
 /-- Before `x=s-1`, the shape derivative is positive for `s>1`. -/
 theorem vorticityShape_deriv_pos_before_peak {s x : ℝ}
-    (hs : 1 < s) (hx : 0 < x) (hxp : x < s - 1) :
+    (_hs : 1 < s) (hx : 0 < x) (hxp : x < s - 1) :
     0 < deriv (vorticityShape s) x := by
   rw [(vorticityShape_hasDerivAt (s := s) hx).deriv]
   have hcoef : 0 < (s - 1) / x - 1 := by
@@ -40,7 +40,7 @@ theorem vorticityShape_deriv_pos_before_peak {s x : ℝ}
 
 /-- After `x=s-1`, the shape derivative is negative for `s>1`. -/
 theorem vorticityShape_deriv_neg_after_peak {s x : ℝ}
-    (hs : 1 < s) (hx : 0 < x) (hxp : s - 1 < x) :
+    (_hs : 1 < s) (hx : 0 < x) (hxp : s - 1 < x) :
     deriv (vorticityShape s) x < 0 := by
   rw [(vorticityShape_hasDerivAt (s := s) hx).deriv]
   have hcoef : (s - 1) / x - 1 < 0 := by
@@ -54,6 +54,7 @@ theorem vorticityShape_deriv_at_peak {s : ℝ} (hs : 1 < s) :
   have hx : 0 < s - 1 := by linarith
   rw [(vorticityShape_hasDerivAt (s := s) hx).deriv]
   field_simp [hx.ne']
+  ring
 
 /-- Strict global peak of the positive gamma/vorticity shape on `x>0` for `s>1`. -/
 theorem vorticityShape_lt_peak {s x : ℝ}
@@ -62,8 +63,8 @@ theorem vorticityShape_lt_peak {s x : ℝ}
   rcases lt_or_gt_of_ne hne with hlt | hgt
   · have hcont : ContinuousOn (vorticityShape s) (Icc x (s - 1)) := by
       intro y hy
-      rw [vorticityShape_eq_gammaKernel]
-      exact (gammaKernel_continuousAt (lt_of_lt_of_le hx hy.1)).continuousWithinAt
+      have hpos : 0 < y := lt_of_lt_of_le hx hy.1
+      exact (vorticityShape_hasDerivAt (s := s) hpos).continuousAt.continuousWithinAt
     have hmono : StrictMonoOn (vorticityShape s) (Icc x (s - 1)) := by
       apply strictMonoOn_of_deriv_pos (convex_Icc x (s - 1)) hcont
       intro y hy
@@ -73,14 +74,14 @@ theorem vorticityShape_lt_peak {s x : ℝ}
     exact hmono (left_mem_Icc.mpr hlt.le) (right_mem_Icc.mpr hlt.le) hlt
   · have hcont : ContinuousOn (vorticityShape s) (Icc (s - 1) x) := by
       intro y hy
-      rw [vorticityShape_eq_gammaKernel]
-      have hpos : 0 < y := by linarith
-      exact (gammaKernel_continuousAt hpos).continuousWithinAt
+      have hpos : 0 < y := lt_of_lt_of_le (sub_pos.mpr hs) hy.1
+      exact (vorticityShape_hasDerivAt (s := s) hpos).continuousAt.continuousWithinAt
     have hanti : StrictAntiOn (vorticityShape s) (Icc (s - 1) x) := by
       apply strictAntiOn_of_deriv_neg (convex_Icc (s - 1) x) hcont
       intro y hy
       rw [interior_Icc] at hy
-      exact vorticityShape_deriv_neg_after_peak hs (by linarith) hy.1
+      exact vorticityShape_deriv_neg_after_peak hs
+        (lt_trans (sub_pos.mpr hs) hy.1) hy.1
     exact hanti (left_mem_Icc.mpr hgt.le) (right_mem_Icc.mpr hgt.le) hgt
 
 /-- Radial derivative of the one-mode enclosed circulation equals `2πrω_z`. -/
@@ -96,7 +97,6 @@ theorem distributedCirculation_hasDerivAt_r
     vorticityShape gammaKernel at *
   convert hP using 1
   field_simp [gammaFn_ne_zero hs, Real.pi_ne_zero]
-  ring
 
 /-- Radial derivative of the one-mode vorticity in factored scaled-radius form. -/
 theorem distributedVorticity_hasDerivAt_r
@@ -110,7 +110,8 @@ theorem distributedVorticity_hasDerivAt_r
     positivity
   have hshape := (vorticityShape_hasDerivAt (s := s) hx).comp r (scaledX_hasDerivAt beta r)
   unfold distributedVorticity
-  exact hshape.const_mul (circ * beta / (Real.pi * gammaFn s))
+  simpa only [Function.comp_apply, mul_assoc] using
+    hshape.const_mul (circ * beta / (Real.pi * gammaFn s))
 
 /-- Positive annular peak radius in physical space. -/
 def vorticityPeakRadius (s beta : ℝ) : ℝ :=
@@ -139,6 +140,7 @@ theorem distributedVorticity_deriv_at_peak
     (beta := beta) (r := vorticityPeakRadius s beta) (by linarith) hbeta hr).deriv]
   rw [scaledX_vorticityPeakRadius hs hbeta]
   field_simp [sub_ne_zero.mpr (ne_of_gt hs)]
+  ring
 
 /-- Exact signed vorticity value at the annular peak radius. -/
 theorem distributedVorticity_at_peak
@@ -162,24 +164,26 @@ theorem abs_distributedVorticity_lt_peak
   have hxpeak := scaledX_vorticityPeakRadius hs hbeta
   have hxr_ne : scaledX beta r ≠ s - 1 := by
     intro h
-    have hr2 : r ^ 2 = (vorticityPeakRadius s beta) ^ 2 := by
-      have hp2 : (vorticityPeakRadius s beta) ^ 2 = (s - 1) / beta := by
-        unfold vorticityPeakRadius
-        rw [Real.sq_sqrt (div_nonneg (by linarith) hbeta.le)]
-      unfold scaledX at h
-      rw [hp2]
-      apply (mul_left_cancel₀ hbeta.ne')
-      simpa [h] using hxpeak
-    have : r = vorticityPeakRadius s beta := by
+    have hscaled : scaledX beta r =
+        scaledX beta (vorticityPeakRadius s beta) := h.trans hxpeak.symm
+    have hmul : beta * r ^ 2 =
+        beta * (vorticityPeakRadius s beta) ^ 2 := by
+      simpa [scaledX] using hscaled
+    have hr2 : r ^ 2 = (vorticityPeakRadius s beta) ^ 2 :=
+      mul_left_cancel₀ hbeta.ne' hmul
+    have hrEq : r = vorticityPeakRadius s beta := by
       nlinarith [hr, vorticityPeakRadius_pos hs hbeta]
-    exact hne this
+    exact hne hrEq
   have hshape := vorticityShape_lt_peak hs hx hxr_ne
   unfold distributedVorticity
-  have hpref : 0 < |circ * beta / (Real.pi * gammaFn s)| := by
-    positivity
-  rw [abs_mul, abs_mul]
+  have hspos : 0 < s := lt_trans zero_lt_one hs
+  have hpref_ne : circ * beta / (Real.pi * gammaFn s) ≠ 0 := by
+    exact div_ne_zero (mul_ne_zero hcirc hbeta.ne')
+      (mul_ne_zero Real.pi_ne_zero (gammaFn_ne_zero hspos))
+  have hpref : 0 < |circ * beta / (Real.pi * gammaFn s)| := abs_pos.mpr hpref_ne
+  simp only [abs_mul]
   rw [abs_of_pos (vorticityShape_pos hx)]
-  rw [hxpeak, abs_of_pos (vorticityShape_pos (by linarith : 0 < s - 1))]
+  rw [hxpeak, abs_of_pos (vorticityShape_pos (sub_pos.mpr hs))]
   exact mul_lt_mul_of_pos_left hshape hpref
 
 end
