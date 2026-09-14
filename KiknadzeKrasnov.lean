@@ -13,4 +13,7 @@ import KiknadzeKrasnov.KKField
 import KiknadzeKrasnov.VorticityField
 import KiknadzeKrasnov.VorticityAnalysis
 import KiknadzeKrasnov.GammaMoments
+import KiknadzeKrasnov.VorticityTransport
+import KiknadzeKrasnov.SwirlExtrema
+import KiknadzeKrasnov.Enstrophy
 import KiknadzeKrasnov.Trajectories
