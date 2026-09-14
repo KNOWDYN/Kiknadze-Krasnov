@@ -30,7 +30,8 @@ theorem vorticityTransport_from_differentiated_angularMomentum
       (LT_r / r)
       (LRR / r - LR / r ^ 2)
       (LRRR / r - 2 * LRR / r ^ 2 + 2 * LR / r ^ 3) = 0 := by
-  unfold vorticityTransportResidualLocal radialVelocityR radialVelocity
+  unfold radialVelocityR radialVelocity at hL
+  unfold vorticityTransportResidualLocal radialVelocity
   field_simp [hr] at hL ⊢
   nlinarith
 
@@ -42,6 +43,39 @@ theorem vorticityTransport_eq_zero_iff
         a * omega + nu * (omegaRR + omegaR / r) := by
   unfold vorticityTransportResidualLocal
   constructor <;> intro h <;> linarith
+
+/-- Scaled residual obtained by substituting the one-mode gamma vorticity shape into Eq. (80). -/
+def vorticityTransportScaledResidual
+    (nu a q beta betaDot s x : ℝ) : ℝ :=
+  (betaDot / beta) * (s - x) +
+    (-a * x + 2 * beta * q) * ((s - 1) / x - 1) - a -
+    4 * nu * beta *
+      ((s ^ 2 - 2 * s * x - 2 * s + x ^ 2 + x + 1) / x)
+
+/-- Direct one-mode verification of Eq. (80): the scaled vorticity residual vanishes under
+exactly the scale Riccati law and source/profile relation, with no additional dynamical assumption. -/
+theorem vorticityTransportScaledResidual_zero
+    {nu a q beta betaDot s x : ℝ}
+    (hbeta : beta ≠ 0) (hx : x ≠ 0)
+    (hscale : scaleResidual nu a beta betaDot = 0)
+    (hcompat : q = 2 * nu * (s - 1)) :
+    vorticityTransportScaledResidual nu a q beta betaDot s x = 0 := by
+  have hbdot : betaDot = a * beta - 4 * nu * beta ^ 2 :=
+    scaleResidual_zero_iff.mp hscale
+  unfold vorticityTransportScaledResidual
+  rw [hbdot, hcompat]
+  field_simp [hbeta, hx]
+  ring
+
+/-- Project-parameter form of the direct Eq. (80) verification. -/
+theorem vorticityTransportScaledResidual_zero_for_shape
+    (p : FluidParams) {a q beta betaDot x : ℝ}
+    (hbeta : beta ≠ 0) (hx : x ≠ 0)
+    (hscale : scaleResidual p.nu a beta betaDot = 0) :
+    vorticityTransportScaledResidual
+      p.nu a q beta betaDot (shape p q) x = 0 := by
+  exact vorticityTransportScaledResidual_zero hbeta hx hscale
+    (source_eq_two_nu_mul_shape_sub_one p q)
 
 end
 
