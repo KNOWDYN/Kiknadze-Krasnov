@@ -128,7 +128,6 @@ theorem enstrophyPairClosed_diagonal_eq_single
   have h2pow : (2 : ℝ) ^ (2 * s - 1) ≠ 0 :=
     (Real.rpow_pos_of_pos (by positivity) (2 * s - 1)).ne'
   field_simp [Real.pi_ne_zero, gammaFn_ne_zero hs0, hbpow, h2pow]
-  ring
 
 /-- The convergence threshold in Eq. (96) is algebraically identical to positivity of
 `2s-1`, the gamma-integral shape parameter. -/
