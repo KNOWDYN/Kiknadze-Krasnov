@@ -29,7 +29,7 @@ theorem oneModeSwirl_hasDerivAt
     (circ / (2 * Real.pi) *
       ((regLowerGammaDensity s (scaledX beta r) * (2 * beta * r) * r -
           regLowerGamma s (scaledX beta r)) / r ^ 2)) r
-  simpa only [Pi.div_apply, id_eq, one_mul] using
+  simpa only [Pi.div_apply, id_eq, one_mul, mul_one] using
     hquot.const_mul (circ / (2 * Real.pi))
 
 /-- Stationarity of the one-mode swirl is equivalent to the regularised form of Eq. (92). -/
