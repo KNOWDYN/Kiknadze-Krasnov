@@ -29,7 +29,8 @@ theorem oneModeSwirl_hasDerivAt
     (circ / (2 * Real.pi) *
       ((regLowerGammaDensity s (scaledX beta r) * (2 * beta * r) * r -
           regLowerGamma s (scaledX beta r)) / r ^ 2)) r
-  exact hquot.const_mul (circ / (2 * Real.pi))
+  simpa only [Pi.div_apply, id_eq, one_mul] using
+    hquot.const_mul (circ / (2 * Real.pi))
 
 /-- Stationarity of the one-mode swirl is equivalent to the regularised form of Eq. (92). -/
 theorem oneModeSwirl_deriv_zero_iff_scaled
@@ -131,11 +132,17 @@ theorem multimodeCirculationValue_hasDerivAt {n : ℕ}
     apply HasDerivAt.sum
     intro i hi
     exact distributedCirculation_hasDerivAt_r hs (hbeta i) hr
+  have hfun :
+      (fun y => ∑ i : Fin n, distributedCirculation (circ i) s (beta i) y) =
+        (∑ i : Fin n, distributedCirculation (circ i) s (beta i)) := by
+    funext y
+    simp only [Finset.sum_apply]
   have hsum :
       HasDerivAt
         (fun y => ∑ i, distributedCirculation (circ i) s (beta i) y)
         (∑ i, 2 * Real.pi * r * distributedVorticity (circ i) s (beta i) r) r := by
-    simpa only [Finset.sum_apply] using hsum'
+    rw [hfun]
+    exact hsum'
   have htotal := (hasDerivAt_const r gammaLine).add hsum
   convert htotal using 1
   · funext y
@@ -161,7 +168,6 @@ theorem multimodeSwirl_hasDerivAt {n : ℕ}
   unfold multimodeSwirl
   convert hquot using 1
   field_simp [hr.ne', Real.pi_ne_zero]
-  ring
 
 /-- Manuscript Eq. (94) for the actual finite-mode KK field: a positive-radius stationary
 swirl point occurs exactly when `2πr²ω_z=Γ(r,t)`. -/
