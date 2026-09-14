@@ -79,10 +79,15 @@ theorem radialSq_particle_hasDerivAt
     (hparticle : rDot = radialVelocity a q (r t)) :
     HasDerivAt (fun tau => (r tau) ^ 2)
       (-a * (r t) ^ 2 + 2 * q) t := by
-  have hsq := hr.pow 2
+  have hsq : HasDerivAt (fun tau => (r tau) ^ 2) (2 * r t * rDot) t := by
+    convert hr.pow 2 using 1
+    · funext tau
+      simp
+    · norm_num
+      ring
+  convert hsq using 1
   rw [hparticle]
   unfold radialVelocity
-  convert hsq using 1
   field_simp [hrt]
   ring
 
@@ -101,14 +106,12 @@ theorem radialSqTrajectory_hasDerivAt
   have hprod := hexp.mul hbracket
   unfold radialSqTrajectory at *
   convert hprod using 1
-  · funext tau
-    ring
-  · have hcancel :
+  simp only [Pi.add_apply, Pi.mul_apply, Pi.neg_apply, zero_add]
+  have hcancel :
       Real.exp (-(strainAccum a t)) * Real.exp (strainAccum a t) = 1 := by
-      rw [← Real.exp_add]
-      simp
-    rw [hcancel]
-    ring
+    rw [← Real.exp_add]
+    simp
+  nlinarith [hcancel]
 
 @[simp] theorem radialSqTrajectory_zero (a : ℝ → ℝ) (q r0 : ℝ) :
     radialSqTrajectory a q r0 0 = r0 ^ 2 := by
@@ -127,23 +130,12 @@ theorem axialTrajectory_hasDerivAt
   have hprod := hexp.mul hbracket
   unfold axialTrajectory axialVelocity at *
   convert hprod using 1
-  · funext tau
-    ring
-  · have hcancel :
+  simp only [Pi.add_apply, Pi.mul_apply, zero_add]
+  have hcancel :
       Real.exp (strainAccum a t) * Real.exp (-(strainAccum a t)) = 1 := by
-      rw [← Real.exp_add]
-      simp
-    calc
-      a t * Real.exp (strainAccum a t) *
-          (z0 + weightedAxialIntegral a b t) +
-          Real.exp (strainAccum a t) *
-            (Real.exp (-(strainAccum a t)) * b t)
-          = a t * (Real.exp (strainAccum a t) *
-              (z0 + weightedAxialIntegral a b t)) +
-              (Real.exp (strainAccum a t) *
-                Real.exp (-(strainAccum a t))) * b t := by ring
-      _ = a t * (Real.exp (strainAccum a t) *
-              (z0 + weightedAxialIntegral a b t)) + b t := by rw [hcancel]; ring
+    rw [← Real.exp_add]
+    simp
+  nlinarith [hcancel]
 
 @[simp] theorem axialTrajectory_zero (a b : ℝ → ℝ) (z0 : ℝ) :
     axialTrajectory a b z0 0 = z0 := by
@@ -158,7 +150,6 @@ theorem azimuthalRate_eq_multimodeSwirl_div_radius {n : ℕ}
         (2 * Real.pi * r ^ 2) := by
   unfold multimodeSwirl
   field_simp [hr, Real.pi_ne_zero]
-  ring
 
 /-- The azimuthal integral differentiates to the exact angular rate at a regular endpoint. -/
 theorem azimuthalTrajectory_hasDerivAt {n : ℕ}
