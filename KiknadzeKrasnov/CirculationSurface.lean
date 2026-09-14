@@ -27,8 +27,10 @@ theorem materialCirculationFromX_hasDerivAt
   have hC := hP.const_mul circ
   unfold materialCirculationFromX materialCirculationRate
   convert hC using 1
-  unfold gammaKernel vorticityShape
-  ring
+  · funext tau
+    simp only [Function.comp_apply]
+  · unfold gammaKernel vorticityShape
+    ring
 
 /-- The material circulation rate vanishes exactly at the distinguished scaled radius. -/
 @[simp] theorem materialCirculationRate_at_star
@@ -89,7 +91,7 @@ theorem materialCirculationRate_eq_viscousFlux
   have hx : 0 < scaledX beta r := by
     unfold scaledX
     positivity
-  unfold materialCirculationRate distributedVorticity
+  unfold materialCirculationRate
   field_simp [gammaFn_ne_zero hs, Real.pi_ne_zero, hx.ne']
   unfold scaledX
   ring
@@ -129,7 +131,8 @@ theorem materialCirculationRate_neg_before_star_of_circ_neg
   have hpre : (4 * nu * beta * circ / gammaFn s) * vorticityShape s x < 0 := by
     have hG : 0 < gammaFn s := gammaFn_pos hs
     have hshape : 0 < vorticityShape s x := vorticityShape_pos hx
-    have hnum : 4 * nu * beta * circ < 0 := by positivity
+    have hfour : 0 < 4 * nu * beta := by positivity
+    have hnum : 4 * nu * beta * circ < 0 := mul_neg_of_pos_of_neg hfour hcirc
     have hfrac : 4 * nu * beta * circ / gammaFn s < 0 := div_neg_of_neg_of_pos hnum hG
     exact mul_neg_of_neg_of_pos hfrac hshape
   exact mul_neg_of_neg_of_pos hpre (sub_pos.mpr hbefore)
@@ -144,7 +147,8 @@ theorem materialCirculationRate_pos_after_star_of_circ_neg
   have hpre : (4 * nu * beta * circ / gammaFn s) * vorticityShape s x < 0 := by
     have hG : 0 < gammaFn s := gammaFn_pos hs
     have hshape : 0 < vorticityShape s x := vorticityShape_pos hx
-    have hnum : 4 * nu * beta * circ < 0 := by positivity
+    have hfour : 0 < 4 * nu * beta := by positivity
+    have hnum : 4 * nu * beta * circ < 0 := mul_neg_of_pos_of_neg hfour hcirc
     have hfrac : 4 * nu * beta * circ / gammaFn s < 0 := div_neg_of_neg_of_pos hnum hG
     exact mul_neg_of_neg_of_pos hfrac hshape
   exact mul_pos_of_neg_of_neg hpre (sub_neg.mpr hafter)
