@@ -126,10 +126,8 @@ theorem radialInvariant_hasDerivAt_zero
   have hprod := hexp.mul hoff
   unfold radialInvariant materialOffsetSq
   convert hprod using 1
-  · funext tau
-    simp only [Pi.sub_apply]
-  · simp only [Pi.sub_apply]
-    ring
+  simp only [Pi.sub_apply]
+  ring
 
 /-- Global form of manuscript Eq. (110): if the KK differential hypotheses hold for all
 real times under consideration, the radial integrating-factor quantity is constant. -/
