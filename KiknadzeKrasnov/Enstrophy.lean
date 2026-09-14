@@ -23,7 +23,7 @@ theorem enstrophyKernelIntegral_eq
   have h := Real.integral_rpow_mul_exp_neg_mul_Ioi
     (a := 2 * s - 1) (r := B) ha hB
   unfold enstrophyKernelIntegral
-  change (∫ x in Ioi (0 : ℝ), x ^ ((2 * s - 1) - 1) * Real.exp (-(B * x))) = _
+  rw [show 2 * s - 2 = (2 * s - 1) - 1 by ring]
   simpa [gammaFn] using h
 
 /-- Denominator form used in manuscript Eq. (96). -/
@@ -58,16 +58,34 @@ theorem enstrophyPairClosed_diagonal_eq_single
     enstrophyPairClosed circ circ s beta beta =
       singleModeEnstrophyClosed circ s beta := by
   unfold enstrophyPairClosed singleModeEnstrophyClosed
-  have hb : beta ≠ 0 := hbeta.ne'
-  have h2b : 0 < 2 * beta := by positivity
-  rw [mul_rpow hbeta.le hbeta.le]
-  rw [add_self]
-  rw [mul_rpow (by positivity : (0 : ℝ) ≤ 2) hbeta.le]
-  rw [← Real.rpow_natCast beta 2]
-  rw [← Real.rpow_add hbeta.le]
-  field_simp [Real.pi_ne_zero, gammaFn_ne_zero (by linarith : 0 < s),
-    Real.rpow_pos_of_pos hbeta (2 * s) |>.ne',
-    Real.rpow_pos_of_pos h2b (2 * s - 1) |>.ne']
+  have hs0 : 0 < s := by linarith
+  have hbb : (beta * beta) ^ s = beta ^ (2 * s) := by
+    rw [Real.mul_rpow hbeta.le hbeta.le]
+    rw [← Real.rpow_add hbeta]
+    congr 1
+    ring
+  have hadd : beta + beta = 2 * beta := by ring
+  have h2b : (2 * beta) ^ (2 * s - 1) =
+      (2 : ℝ) ^ (2 * s - 1) * beta ^ (2 * s - 1) := by
+    exact Real.mul_rpow (by positivity) hbeta.le
+  have hbetasplit : beta ^ (2 * s) = beta * beta ^ (2 * s - 1) := by
+    calc
+      beta ^ (2 * s) = beta ^ ((1 : ℝ) + (2 * s - 1)) := by congr 1 <;> ring
+      _ = beta ^ (1 : ℝ) * beta ^ (2 * s - 1) := Real.rpow_add hbeta 1 (2 * s - 1)
+      _ = beta * beta ^ (2 * s - 1) := by rw [Real.rpow_one]
+  have htwosplit : (2 : ℝ) ^ (2 * s) =
+      2 * (2 : ℝ) ^ (2 * s - 1) := by
+    calc
+      (2 : ℝ) ^ (2 * s) = (2 : ℝ) ^ ((1 : ℝ) + (2 * s - 1)) := by congr 1 <;> ring
+      _ = (2 : ℝ) ^ (1 : ℝ) * (2 : ℝ) ^ (2 * s - 1) :=
+        Real.rpow_add (by positivity) 1 (2 * s - 1)
+      _ = 2 * (2 : ℝ) ^ (2 * s - 1) := by rw [Real.rpow_one]
+  rw [hbb, hadd, h2b, hbetasplit, htwosplit]
+  have hbpow : beta ^ (2 * s - 1) ≠ 0 :=
+    (Real.rpow_pos_of_pos hbeta (2 * s - 1)).ne'
+  have h2pow : (2 : ℝ) ^ (2 * s - 1) ≠ 0 :=
+    (Real.rpow_pos_of_pos (by positivity) (2 * s - 1)).ne'
+  field_simp [Real.pi_ne_zero, gammaFn_ne_zero hs0, hbpow, h2pow]
   ring
 
 /-- The convergence threshold in Eq. (96) is algebraically identical to positivity of
@@ -80,7 +98,7 @@ theorem enstrophy_threshold_iff {s : ℝ} :
 implies `Zdot=(a-4νβ)Z`. -/
 theorem singleModeEnstrophy_hasDerivAt
     {circ s nu a betaDot t : ℝ} {beta : ℝ → ℝ}
-    (hs : (1 / 2 : ℝ) < s)
+    (_hs : (1 / 2 : ℝ) < s)
     (hbeta : HasDerivAt beta betaDot t)
     (hscale : scaleResidual nu a (beta t) betaDot = 0) :
     HasDerivAt (fun tau => singleModeEnstrophyClosed circ s (beta tau))
