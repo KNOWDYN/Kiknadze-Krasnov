@@ -56,6 +56,8 @@ theorem radialFourthMoment_eq
     {s beta : ℝ} (hs : 0 < s) (hbeta : beta ≠ 0) :
     radialEvenMoment s beta 2 = s * (s + 1) / beta ^ 2 := by
   rw [radialEvenMoment_eq 2 hs]
+  change (beta ^ 2)⁻¹ * (gammaFn (s + (2 : ℝ)) / gammaFn s) =
+    s * (s + 1) / beta ^ 2
   have hs1 : 0 < s + 1 := by linarith
   have hrec1 := gammaFn_add_one hs
   have hrec2 := gammaFn_add_one hs1
