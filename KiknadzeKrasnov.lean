@@ -19,3 +19,4 @@ import KiknadzeKrasnov.Enstrophy
 import KiknadzeKrasnov.Trajectories
 import KiknadzeKrasnov.MaterialSurface
 import KiknadzeKrasnov.CirculationSurface
+import KiknadzeKrasnov.MaterialSurfaceTheorem
