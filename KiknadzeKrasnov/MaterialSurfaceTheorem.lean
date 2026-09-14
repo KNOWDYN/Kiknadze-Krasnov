@@ -14,7 +14,6 @@ theorem materialRadiusSq_eq_source_form
   unfold materialRadiusSq
   rw [hcompat]
   field_simp [hnu, hbeta]
-  ring
 
 /-- The distinguished physical material radius maps exactly to `x=s-1`. -/
 theorem scaledX_materialRadius
@@ -70,7 +69,6 @@ theorem angularMomentumDiffusionTerm_eq_r_vorticityGradient
     LRR - LR / r = r * omegaR := by
   rw [homegaR]
   field_simp [hr]
-  ring
 
 /-- The sign of one-mode distributed vorticity follows positive circulation. -/
 theorem distributedVorticity_pos_of_circ_pos
