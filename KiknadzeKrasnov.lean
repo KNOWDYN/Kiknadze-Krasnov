@@ -17,3 +17,4 @@ import KiknadzeKrasnov.VorticityTransport
 import KiknadzeKrasnov.SwirlExtrema
 import KiknadzeKrasnov.Enstrophy
 import KiknadzeKrasnov.Trajectories
+import KiknadzeKrasnov.MaterialSurface
