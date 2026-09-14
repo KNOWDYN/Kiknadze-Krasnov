@@ -11,3 +11,6 @@ import KiknadzeKrasnov.FieldResiduals
 import KiknadzeKrasnov.PressureField
 import KiknadzeKrasnov.KKField
 import KiknadzeKrasnov.VorticityField
+import KiknadzeKrasnov.VorticityAnalysis
+import KiknadzeKrasnov.GammaMoments
+import KiknadzeKrasnov.Trajectories
