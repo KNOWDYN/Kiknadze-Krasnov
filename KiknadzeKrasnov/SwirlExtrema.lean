@@ -23,7 +23,13 @@ theorem oneModeSwirl_hasDerivAt
     positivity
   have hP := regLowerGamma_scaledX_hasDerivAt (s := s) (beta := beta) hs hx
   have hquot := hP.div (hasDerivAt_id r) hr.ne'
-  simpa [oneModeSwirl] using hquot.const_mul (circ / (2 * Real.pi))
+  change HasDerivAt
+    (fun y => (circ / (2 * Real.pi)) *
+      (regLowerGamma s (scaledX beta y) / y))
+    (circ / (2 * Real.pi) *
+      ((regLowerGammaDensity s (scaledX beta r) * (2 * beta * r) * r -
+          regLowerGamma s (scaledX beta r)) / r ^ 2)) r
+  exact hquot.const_mul (circ / (2 * Real.pi))
 
 /-- Stationarity of the one-mode swirl is equivalent to the regularised form of Eq. (92). -/
 theorem oneModeSwirl_deriv_zero_iff_scaled
@@ -76,7 +82,7 @@ theorem swirl_extremum_scaled_eq_lowerGamma
   have hpow : x * x ^ (s - 1) = x ^ s := by
     calc
       x * x ^ (s - 1) = x ^ (1 : ℝ) * x ^ (s - 1) := by rw [Real.rpow_one]
-      _ = x ^ ((1 : ℝ) + (s - 1)) := (Real.rpow_add hx).symm
+      _ = x ^ ((1 : ℝ) + (s - 1)) := (Real.rpow_add hx 1 (s - 1)).symm
       _ = x ^ s := by ring_nf
   constructor
   · intro h
@@ -118,13 +124,18 @@ theorem multimodeCirculationValue_hasDerivAt {n : ℕ}
     HasDerivAt (multimodeCirculationValue gammaLine circ s beta)
       (2 * Real.pi * r * multimodeDistributedVorticity circ s beta r) r := by
   classical
+  have hsum' :
+      HasDerivAt
+        (∑ i : Fin n, distributedCirculation (circ i) s (beta i))
+        (∑ i : Fin n, 2 * Real.pi * r * distributedVorticity (circ i) s (beta i) r) r := by
+    apply HasDerivAt.sum
+    intro i hi
+    exact distributedCirculation_hasDerivAt_r hs (hbeta i) hr
   have hsum :
       HasDerivAt
         (fun y => ∑ i, distributedCirculation (circ i) s (beta i) y)
         (∑ i, 2 * Real.pi * r * distributedVorticity (circ i) s (beta i) r) r := by
-    apply HasDerivAt.sum
-    intro i hi
-    exact distributedCirculation_hasDerivAt_r hs (hbeta i) hr
+    simpa only [Finset.sum_apply] using hsum'
   have htotal := (hasDerivAt_const r gammaLine).add hsum
   convert htotal using 1
   · funext y
@@ -140,7 +151,8 @@ theorem multimodeSwirl_hasDerivAt {n : ℕ}
       ((2 * Real.pi * r ^ 2 * multimodeDistributedVorticity circ s beta r -
           multimodeCirculationValue gammaLine circ s beta r) /
         (2 * Real.pi * r ^ 2)) r := by
-  have hG := multimodeCirculationValue_hasDerivAt hs hr hbeta
+  have hG := multimodeCirculationValue_hasDerivAt
+    (gammaLine := gammaLine) (circ := circ) (beta := beta) hs hr hbeta
   have hden : HasDerivAt (fun y : ℝ => 2 * Real.pi * y) (2 * Real.pi) r := by
     simpa using (hasDerivAt_id r).const_mul (2 * Real.pi)
   have hden0 : 2 * Real.pi * r ≠ 0 :=
