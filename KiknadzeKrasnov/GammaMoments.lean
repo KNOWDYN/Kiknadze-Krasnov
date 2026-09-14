@@ -16,7 +16,7 @@ theorem scaledGammaMoment_eq_gamma_ratio
     {s : ℝ} (n : ℕ) (hs : 0 < s) :
     scaledGammaMoment s n = gammaFn (s + n) / gammaFn s := by
   have ha : 0 < s + (n : ℝ) := by positivity
-  have h := _root_.integral_rpow_mul_exp_neg_mul_Ioi
+  have h := Real.integral_rpow_mul_exp_neg_mul_Ioi
     (a := s + (n : ℝ)) (r := 1) ha one_pos
   have hint :
       (∫ x in Ioi (0 : ℝ), x ^ (s + (n : ℝ) - 1) * Real.exp (-x)) =
@@ -40,7 +40,7 @@ theorem radialEvenMoment_eq
 /-- Real gamma recurrence in the project's collision-free notation. -/
 theorem gammaFn_add_one {s : ℝ} (hs : 0 < s) :
     gammaFn (s + 1) = s * gammaFn s := by
-  simpa [gammaFn] using Real.Gamma_add_one s hs.ne'
+  simpa [gammaFn] using Real.Gamma_add_one hs.ne'
 
 /-- Manuscript Eq. (84), first identity: `⟨r²⟩=s/β`. -/
 theorem radialSecondMoment_eq
@@ -59,10 +59,9 @@ theorem radialFourthMoment_eq
   have hs1 : 0 < s + 1 := by linarith
   have hrec1 := gammaFn_add_one hs
   have hrec2 := gammaFn_add_one hs1
-  have harg : s + (2 : ℕ) = (s + 1) + 1 := by norm_num; ring
+  have harg : s + (2 : ℝ) = (s + 1) + 1 := by ring
   rw [harg, hrec2, hrec1]
   field_simp [hbeta, gammaFn_ne_zero hs]
-  ring
 
 /-- Variance of the squared radius under the normalised distributed-circulation density. -/
 def radialSquaredVariance (s beta : ℝ) : ℝ :=
