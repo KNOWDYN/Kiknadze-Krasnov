@@ -104,9 +104,8 @@ theorem materialRadius_history_hasDerivAt
   have hrsq : (Real.sqrt (materialRadiusSq s (beta t))) ^ 2 = materialRadiusSq s (beta t) :=
     Real.sq_sqrt hypos.le
   unfold radialVelocity
-  rw [hcompat]
   field_simp [hrpos.ne']
-  nlinarith
+  rw [hrsq]
 
 /-- The radial integrating factor has zero derivative along every material squared-radius
 trajectory satisfying the KK scale and particle equations. -/
@@ -125,9 +124,12 @@ theorem radialInvariant_hasDerivAt_zero
   have hoff := hy.sub hstar
   have hexp := hA.exp
   have hprod := hexp.mul hoff
-  unfold radialInvariant materialOffsetSq at *
+  unfold radialInvariant materialOffsetSq
   convert hprod using 1
-  ring
+  · funext tau
+    simp only [Pi.sub_apply]
+  · simp only [Pi.sub_apply]
+    ring
 
 /-- Global form of manuscript Eq. (110): if the KK differential hypotheses hold for all
 real times under consideration, the radial integrating-factor quantity is constant. -/
