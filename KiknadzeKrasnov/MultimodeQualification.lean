@@ -65,7 +65,13 @@ theorem multimodeDistributedVorticity_hasDerivAt {n : ℕ}
       (circ := circ i) (s := s) (beta := beta i) (r := r)
       hs (hbeta i) hr).differentiableAt.hasDerivAt)
   unfold multimodeDistributedVorticity
-  simpa only [Finset.sum_apply] using hsum
+  have hfun :
+      (∑ i, distributedVorticity (circ i) s (beta i)) =
+        (fun x => ∑ i, distributedVorticity (circ i) s (beta i) x) := by
+    funext x
+    simp
+  rw [← hfun]
+  exact hsum
 
 /-- The derivative of total finite-mode vorticity is exactly the sum of the
 component radial derivatives. -/
