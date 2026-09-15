@@ -66,9 +66,9 @@ def zeroStrainScale (nu beta0 t : ℝ) : ℝ :=
   (beta0⁻¹ + 4 * nu * t)⁻¹
 
 @[simp] theorem zeroStrainScale_zero
-    {nu beta0 : ℝ} (hbeta0 : beta0 ≠ 0) :
+    {nu beta0 : ℝ} :
     zeroStrainScale nu beta0 0 = beta0 := by
-  simp [zeroStrainScale, hbeta0]
+  simp [zeroStrainScale]
 
 /-- The M125 closed form satisfies the zero-strain Riccati scale equation wherever
 its denominator is nonzero. -/
@@ -77,18 +77,17 @@ theorem zeroStrainScale_hasDerivAt
     (hden : beta0⁻¹ + 4 * nu * t ≠ 0) :
     HasDerivAt (zeroStrainScale nu beta0)
       (-4 * nu * (zeroStrainScale nu beta0 t) ^ 2) t := by
-  have hlin : HasDerivAt (fun tau : ℝ => beta0⁻¹ + 4 * nu * tau) (4 * nu) t := by
-    convert (hasDerivAt_const t beta0⁻¹).add ((hasDerivAt_id t).const_mul (4 * nu)) using 1 <;> ring
+  have hlin : HasDerivAt (fun tau : ℝ => beta0⁻¹ + (4 * nu) * tau) (4 * nu) t := by
+    simpa only [id_eq] using
+      (hasDerivAt_const t beta0⁻¹).add ((hasDerivAt_id t).const_mul (4 * nu))
   have hinv := hlin.inv hden
   unfold zeroStrainScale
   convert hinv using 1
-  field_simp [hden]
   ring
 
 /-- The exact zero-strain scale therefore has vanishing scale residual. -/
 theorem zeroStrainScale_residual_zero
-    {nu beta0 t : ℝ}
-    (hden : beta0⁻¹ + 4 * nu * t ≠ 0) :
+    {nu beta0 t : ℝ} :
     scaleResidual nu 0 (zeroStrainScale nu beta0 t)
       (-4 * nu * (zeroStrainScale nu beta0 t) ^ 2) = 0 := by
   unfold scaleResidual
@@ -106,21 +105,23 @@ def constantStrainScale (nu a0 h0 t : ℝ) : ℝ :=
     {nu a0 h0 : ℝ} (ha0 : a0 ≠ 0) :
     constantStrainInverseScale nu a0 h0 0 = h0 := by
   unfold constantStrainInverseScale
-  simp [ha0]
+  field_simp [ha0]
   ring
 
-/-- M128 is an exact solution of `h' + a0 h = 4 nu`. -/
+/-- M128 is an exact solution of `h' + a0 h = 4 nu` for non-zero constant strain. -/
 theorem constantStrainInverseScale_hasDerivAt
-    {nu a0 h0 t : ℝ} :
+    {nu a0 h0 t : ℝ} (ha0 : a0 ≠ 0) :
     HasDerivAt (constantStrainInverseScale nu a0 h0)
       (4 * nu - a0 * constantStrainInverseScale nu a0 h0 t) t := by
   have harg : HasDerivAt (fun tau : ℝ => -a0 * tau) (-a0) t := by
-    convert (hasDerivAt_id t).const_mul (-a0) using 1 <;> ring
+    simpa only [id_eq] using (hasDerivAt_id t).const_mul (-a0)
   have hexp := harg.exp
   have hmul := hexp.const_mul (h0 - 4 * nu / a0)
   have hadd := hmul.const_add (4 * nu / a0)
   unfold constantStrainInverseScale
-  convert hadd using 1 <;> ring
+  convert hadd using 1
+  field_simp [ha0]
+  ring
 
 /-- M129: for constant positive strain, inverse scale converges to `4 nu/a0`. -/
 theorem constantStrainInverseScale_tendsto
@@ -132,7 +133,8 @@ theorem constantStrainInverseScale_tendsto
       (tendsto_id.const_mul_atTop_of_neg (neg_lt_zero.mpr ha0))
   have hmul := hexp.const_mul (h0 - 4 * nu / a0)
   have hadd := hmul.const_add (4 * nu / a0)
-  simpa [constantStrainInverseScale] using hadd
+  unfold constantStrainInverseScale
+  simpa only [neg_mul] using hadd
 
 /-- M129: the positive constant-strain scale converges to the Burgers equilibrium. -/
 theorem constantStrainScale_tendsto
