@@ -90,7 +90,6 @@ theorem zeroStrainScale_hasDerivAt
     rfl
   · unfold zeroStrainScale
     field_simp [hden]
-    ring
 
 /-- The exact zero-strain scale therefore has vanishing scale residual. -/
 theorem zeroStrainScale_residual_zero
@@ -109,7 +108,7 @@ def constantStrainScale (nu a0 h0 t : ℝ) : ℝ :=
   (constantStrainInverseScale nu a0 h0 t)⁻¹
 
 @[simp] theorem constantStrainInverseScale_zero
-    {nu a0 h0 : ℝ} (ha0 : a0 ≠ 0) :
+    {nu a0 h0 : ℝ} (_ha0 : a0 ≠ 0) :
     constantStrainInverseScale nu a0 h0 0 = h0 := by
   simp [constantStrainInverseScale]
 
