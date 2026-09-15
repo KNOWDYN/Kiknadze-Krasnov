@@ -22,6 +22,13 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore existing pinned Lake dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/packages
+          key: lean-packages-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
+          restore-keys: |
+            lean-packages-${{ runner.os }}-
       - name: Resolve pinned dependencies
         run: lake update
       - name: Fetch Mathlib cache
