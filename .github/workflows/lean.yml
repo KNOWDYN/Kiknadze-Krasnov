@@ -22,10 +22,22 @@ jobs:
           curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore pinned Lake dependencies
+        id: lake-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: .lake/packages
+          key: lean-packages-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
       - name: Resolve pinned dependencies
         run: lake update
       - name: Fetch Mathlib cache
         run: lake exe cache get
+      - name: Save pinned Lake dependencies
+        if: steps.lake-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/packages
+          key: lean-packages-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
       - name: Build Lean project
         run: lake build
       - name: Reject proof placeholders
