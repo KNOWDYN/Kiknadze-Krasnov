@@ -20,3 +20,4 @@ import KiknadzeKrasnov.Trajectories
 import KiknadzeKrasnov.MaterialSurface
 import KiknadzeKrasnov.CirculationSurface
 import KiknadzeKrasnov.MaterialSurfaceTheorem
+import KiknadzeKrasnov.MultimodeQualification
