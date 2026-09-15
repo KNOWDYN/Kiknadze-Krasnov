@@ -24,8 +24,20 @@ theorem multimodeDistributedVorticity_equalScale {n : ℕ}
       distributedVorticity (∑ i, circ i) s beta r := by
   classical
   unfold multimodeDistributedVorticity distributedVorticity
-  rw [Finset.sum_mul]
-  ring
+  let K := beta / (Real.pi * gammaFn s) * vorticityShape s (scaledX beta r)
+  calc
+    (∑ i, circ i * beta / (Real.pi * gammaFn s) *
+        vorticityShape s (scaledX beta r)) = ∑ i, circ i * K := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          unfold K
+          ring
+    _ = (∑ i, circ i) * K := by
+          rw [Finset.sum_mul]
+    _ = (∑ i, circ i) * beta / (Real.pi * gammaFn s) *
+        vorticityShape s (scaledX beta r) := by
+          unfold K
+          ring
 
 /-- S033: every finite mode obeys the same scaled-material law, with its own
 scale history. -/
@@ -48,13 +60,12 @@ theorem multimodeDistributedVorticity_hasDerivAt {n : ℕ}
     HasDerivAt (multimodeDistributedVorticity circ s beta)
       (∑ i, deriv (distributedVorticity (circ i) s (beta i)) r) r := by
   classical
+  have hsum := HasDerivAt.sum (u := Finset.univ) (fun i _ =>
+    (distributedVorticity_hasDerivAt_r
+      (circ := circ i) (s := s) (beta := beta i) (r := r)
+      hs (hbeta i) hr).differentiableAt.hasDerivAt)
   unfold multimodeDistributedVorticity
-  have hsum : HasDerivAt (fun x => ∑ i, distributedVorticity (circ i) s (beta i) x)
-      (∑ i, deriv (distributedVorticity (circ i) s (beta i)) r) r := by
-    apply HasDerivAt.sum
-    intro i hi
-    exact distributedVorticity_hasDerivAt_r hs (hbeta i) hr
-  exact hsum
+  simpa only [Finset.sum_apply] using hsum
 
 /-- The derivative of total finite-mode vorticity is exactly the sum of the
 component radial derivatives. -/
@@ -86,7 +97,11 @@ theorem materialRadius_ne_of_beta_ne
   rw [hr] at hsx₁
   have hsqpos : 0 < (materialRadius s beta₂) ^ 2 :=
     sq_pos_of_pos (materialRadius_pos hs hb₂)
-  nlinarith
+  have hmul : beta₁ * (materialRadius s beta₂) ^ 2 =
+      beta₂ * (materialRadius s beta₂) ^ 2 := hsx₁.trans hsx₂.symm
+  have hbeq : beta₁ = beta₂ :=
+    mul_right_cancel₀ (ne_of_gt hsqpos) hmul
+  exact hne hbeq
 
 end
 
