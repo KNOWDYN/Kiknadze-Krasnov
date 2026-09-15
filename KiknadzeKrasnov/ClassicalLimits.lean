@@ -78,12 +78,19 @@ theorem zeroStrainScale_hasDerivAt
     HasDerivAt (zeroStrainScale nu beta0)
       (-4 * nu * (zeroStrainScale nu beta0 t) ^ 2) t := by
   have hlin : HasDerivAt (fun tau : ℝ => beta0⁻¹ + (4 * nu) * tau) (4 * nu) t := by
-    simpa only [id_eq] using
-      (hasDerivAt_const t beta0⁻¹).add ((hasDerivAt_id t).const_mul (4 * nu))
+    have h := (hasDerivAt_const t beta0⁻¹).add
+      ((hasDerivAt_id t).const_mul (4 * nu))
+    convert h using 1
+    · funext tau
+      simp
+    · ring
   have hinv := hlin.inv hden
-  unfold zeroStrainScale
   convert hinv using 1
-  ring
+  · funext tau
+    rfl
+  · unfold zeroStrainScale
+    field_simp [hden]
+    ring
 
 /-- The exact zero-strain scale therefore has vanishing scale residual. -/
 theorem zeroStrainScale_residual_zero
@@ -104,9 +111,7 @@ def constantStrainScale (nu a0 h0 t : ℝ) : ℝ :=
 @[simp] theorem constantStrainInverseScale_zero
     {nu a0 h0 : ℝ} (ha0 : a0 ≠ 0) :
     constantStrainInverseScale nu a0 h0 0 = h0 := by
-  unfold constantStrainInverseScale
-  field_simp [ha0]
-  ring
+  simp [constantStrainInverseScale]
 
 /-- M128 is an exact solution of `h' + a0 h = 4 nu` for non-zero constant strain. -/
 theorem constantStrainInverseScale_hasDerivAt
@@ -114,14 +119,20 @@ theorem constantStrainInverseScale_hasDerivAt
     HasDerivAt (constantStrainInverseScale nu a0 h0)
       (4 * nu - a0 * constantStrainInverseScale nu a0 h0 t) t := by
   have harg : HasDerivAt (fun tau : ℝ => -a0 * tau) (-a0) t := by
-    simpa only [id_eq] using (hasDerivAt_id t).const_mul (-a0)
+    have h := (hasDerivAt_id t).const_mul (-a0)
+    convert h using 1
+    · funext tau
+      simp
+    · ring
   have hexp := harg.exp
   have hmul := hexp.const_mul (h0 - 4 * nu / a0)
   have hadd := hmul.const_add (4 * nu / a0)
-  unfold constantStrainInverseScale
   convert hadd using 1
-  field_simp [ha0]
-  ring
+  · funext tau
+    simp [constantStrainInverseScale]
+  · unfold constantStrainInverseScale
+    field_simp [ha0]
+    ring
 
 /-- M129: for constant positive strain, inverse scale converges to `4 nu/a0`. -/
 theorem constantStrainInverseScale_tendsto
@@ -133,8 +144,10 @@ theorem constantStrainInverseScale_tendsto
       (tendsto_id.const_mul_atTop_of_neg (neg_lt_zero.mpr ha0))
   have hmul := hexp.const_mul (h0 - 4 * nu / a0)
   have hadd := hmul.const_add (4 * nu / a0)
-  unfold constantStrainInverseScale
-  simpa only [neg_mul] using hadd
+  convert hadd using 1
+  · funext t
+    simp [constantStrainInverseScale]
+  · simp
 
 /-- M129: the positive constant-strain scale converges to the Burgers equilibrium. -/
 theorem constantStrainScale_tendsto
