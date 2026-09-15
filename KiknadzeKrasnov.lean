@@ -22,3 +22,5 @@ import KiknadzeKrasnov.CirculationSurface
 import KiknadzeKrasnov.MaterialSurfaceTheorem
 import KiknadzeKrasnov.MultimodeQualification
 import KiknadzeKrasnov.ClassicalLimits
+import KiknadzeKrasnov.ClassicalProfiles
+import KiknadzeKrasnov.HeatTransform
