@@ -23,7 +23,8 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain none
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Restore Lake package cache
-        uses: actions/cache@v4
+        id: lake-cache
+        uses: actions/cache/restore@v4
         with:
           path: .lake/packages
           key: ${{ runner.os }}-lake-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}
@@ -31,6 +32,12 @@ jobs:
         run: lake update
       - name: Fetch Mathlib cache
         run: lake exe cache get
+      - name: Save Lake package cache
+        if: steps.lake-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .lake/packages
+          key: ${{ steps.lake-cache.outputs.cache-primary-key }}
       - name: Build Lean project
         run: lake build
       - name: Reject proof placeholders
