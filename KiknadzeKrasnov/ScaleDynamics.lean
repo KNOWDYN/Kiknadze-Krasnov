@@ -93,6 +93,66 @@ theorem strainAccum_hasDerivAt {a : ℝ → ℝ} (ha : Continuous a) (t : ℝ) :
       (fun y _ => ha.continuousAt) t (mem_univ t)
   exact intervalIntegral.integral_hasDerivAt_right hint hmeas ha.continuousAt
 
+/-- The exponential forcing integral in Eq. (47) has the expected endpoint derivative. -/
+theorem expStrainIntegral_hasDerivAt {a : ℝ → ℝ} (ha : Continuous a) (t : ℝ) :
+    HasDerivAt (expStrainIntegral a) (Real.exp (strainAccum a t)) t := by
+  have hAcont : Continuous (strainAccum a) := by
+    rw [continuous_iff_continuousAt]
+    intro y
+    exact (strainAccum_hasDerivAt ha y).continuousAt
+  have hcont : Continuous (fun y => Real.exp (strainAccum a y)) :=
+    Real.continuous_exp.comp hAcont
+  unfold expStrainIntegral
+  have hint : IntervalIntegrable (fun y => Real.exp (strainAccum a y)) volume 0 t :=
+    hcont.intervalIntegrable _ _
+  have hmeas : StronglyMeasurableAtFilter
+      (fun y => Real.exp (strainAccum a y)) (𝓝 t) volume :=
+    hcont.continuousAt.stronglyMeasurableAtFilter isOpen_univ
+      (fun y _ => hcont.continuousAt) t (mem_univ t)
+  exact intervalIntegral.integral_hasDerivAt_right hint hmeas hcont.continuousAt
+
+/-- Eq. (47) is not merely an algebraic expression: it solves the linear inverse-scale ODE. -/
+theorem inverseScaleExact_hasDerivAt
+    {nu beta0 : ℝ} {a : ℝ → ℝ} (ha : Continuous a) (t : ℝ) :
+    HasDerivAt (inverseScaleExact nu beta0 a)
+      (4 * nu - a t * inverseScaleExact nu beta0 a t) t := by
+  have hA := strainAccum_hasDerivAt ha t
+  have hleft : HasDerivAt
+      (fun y => Real.exp (-strainAccum a y))
+      (Real.exp (-strainAccum a t) * (-a t)) t := by
+    convert hA.neg.exp using 1 <;> ring
+  have hJ := expStrainIntegral_hasDerivAt ha t
+  have hright : HasDerivAt
+      (fun y => beta0⁻¹ + 4 * nu * expStrainIntegral a y)
+      (4 * nu * Real.exp (strainAccum a t)) t := by
+    convert (hJ.const_mul (4 * nu)).const_add beta0⁻¹ using 1 <;> ring
+  have hprod := hleft.mul hright
+  convert hprod using 1
+  · ext y
+    rfl
+  · unfold inverseScaleExact
+    rw [Real.exp_neg]
+    field_simp [Real.exp_ne_zero]
+    ring
+
+/-- The exact inverse-scale formula has zero Eq. (45) residual. -/
+theorem inverseScaleExact_residual_zero
+    {nu beta0 : ℝ} {a : ℝ → ℝ} (ha : Continuous a) (t : ℝ) :
+    inverseScaleResidual nu (a t) (inverseScaleExact nu beta0 a t)
+      (4 * nu - a t * inverseScaleExact nu beta0 a t) = 0 := by
+  unfold inverseScaleResidual
+  ring
+
+/-- Initial value encoded by Eq. (47). -/
+@[simp] theorem inverseScaleExact_zero (nu beta0 : ℝ) (a : ℝ → ℝ) :
+    inverseScaleExact nu beta0 a 0 = beta0⁻¹ := by
+  simp [inverseScaleExact, expStrainIntegral, strainAccum]
+
+/-- Initial value encoded by Eq. (48). -/
+@[simp] theorem betaExact_zero {nu beta0 : ℝ} (a : ℝ → ℝ) (hbeta0 : beta0 ≠ 0) :
+    betaExact nu beta0 a 0 = beta0 := by
+  simp [betaExact, expStrainIntegral, strainAccum, hbeta0]
+
 end
 
 end KiknadzeKrasnov
