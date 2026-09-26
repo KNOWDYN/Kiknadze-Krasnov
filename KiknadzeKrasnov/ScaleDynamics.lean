@@ -93,18 +93,18 @@ theorem inverseScaleExact_order_preserved
     {nu h0i h0j : ℝ} {a : ℝ → ℝ} {t : ℝ}
     (hij : h0i ≤ h0j) :
     inverseScaleExact nu h0i a t ≤ inverseScaleExact nu h0j a t := by
-  rw [sub_nonpos]
-  rw [inverseScaleExact_sub]
-  exact mul_nonpos_of_nonneg_of_nonpos (Real.exp_nonneg _) (sub_nonpos.mpr hij)
+  unfold inverseScaleExact
+  apply mul_le_mul_of_nonneg_left _ (Real.exp_nonneg _)
+  linarith
 
 /-- Strict ordering is likewise preserved. -/
 theorem inverseScaleExact_strict_order_preserved
     {nu h0i h0j : ℝ} {a : ℝ → ℝ} {t : ℝ}
     (hij : h0i < h0j) :
     inverseScaleExact nu h0i a t < inverseScaleExact nu h0j a t := by
-  rw [sub_pos] at hij ⊢
-  rw [inverseScaleExact_sub]
-  exact mul_pos (Real.exp_pos _) hij
+  unfold inverseScaleExact
+  apply mul_lt_mul_of_pos_left _ (Real.exp_pos _)
+  linarith
 
 end
 
