@@ -6,6 +6,7 @@ namespace KiknadzeKrasnov
 noncomputable section
 
 open Set MeasureTheory intervalIntegral
+open scoped Topology
 
 /-- Pointwise residual for the nonlinear radial-scale equation, manuscript Eq. (32). -/
 def scaleResidual (nu a beta betaDot : ℝ) : ℝ :=
@@ -64,7 +65,6 @@ theorem betaExact_inv_eq_inverseScaleExact
   rw [inv_div]
   rw [Real.exp_neg]
   field_simp [hden, Real.exp_ne_zero]
-  ring
 
 /-- Eq. (49): the common forcing cancels from the difference of inverse scales. -/
 theorem inverseScaleExact_sub
@@ -156,7 +156,6 @@ theorem betaExact_hasDerivAt
     rfl
   · unfold betaExact
     field_simp [hden]
-    ring
 
 /-- The explicit scale formula has zero Eq. (32) residual. -/
 theorem betaExact_scaleResidual_zero
