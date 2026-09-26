@@ -24,14 +24,16 @@ def scaledRadialDiffusion (beta x Fpp : ℝ) : ℝ := 4 * beta * x * Fpp
 /-- Algebraic reduction of the pointwise angular-momentum residual to Eq. (31). -/
 theorem angularMomentumResidual_eq_scaled
     {nu a q beta betaDot r x Fp Fpp : ℝ}
-    (hbeta : beta ≠ 0) (hr : r ≠ 0) :
+    (hbeta : beta ≠ 0) (hr : r ≠ 0)
+    (hx : x = scaledX beta r) :
     angularMomentumResidual nu (radialVelocity a q r)
       (scaledLt beta betaDot x Fp)
       (scaledLr beta r Fp)
       (scaledRadialDiffusion beta x Fpp) r
       = scaledAngularMomentumResidual nu a q beta betaDot x Fp Fpp := by
+  subst x
   unfold angularMomentumResidual scaledLt scaledLr scaledRadialDiffusion
-    scaledAngularMomentumResidual radialVelocity
+    scaledAngularMomentumResidual radialVelocity scaledX
   field_simp [hbeta, hr]
   ring
 
@@ -92,14 +94,13 @@ def gammaSecondDerivativeRelation (s x Px Pxx : ℝ) : Prop :=
 theorem scaledResidual_gamma_factor
     {nu a q beta betaDot s x Px Pxx : ℝ}
     (hbeta : beta ≠ 0)
-    (hx : x ≠ 0)
     (hgamma : gammaSecondDerivativeRelation s x Px Pxx) :
     scaledAngularMomentumResidual nu a q beta betaDot x Px Pxx
       = Px * ((x / beta) * betaScaleResidual nu a beta betaDot
           + 2 * beta * (q - 2 * nu * (s - 1))) := by
   unfold gammaSecondDerivativeRelation at hgamma
   unfold scaledAngularMomentumResidual betaScaleResidual
-  field_simp [hbeta, hx] at hgamma ⊢
+  field_simp [hbeta] at hgamma ⊢
   nlinarith
 
 end
