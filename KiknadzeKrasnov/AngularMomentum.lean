@@ -104,8 +104,7 @@ theorem scaledResidual_gamma_factor
   unfold gammaSecondDerivativeRelation at hgamma
   unfold scaledAngularMomentumResidual betaScaleResidual
   field_simp [hbeta]
-  rw [hgamma]
-  ring
+  linear_combination (-4 * nu * beta ^ 2) * hgamma
 
 end
 
