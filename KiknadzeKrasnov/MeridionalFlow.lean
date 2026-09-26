@@ -29,6 +29,34 @@ theorem radialFluxPrimitive_hasDerivAt (a q r : ℝ) :
   convert! (((hasDerivAt_id r).pow 2).const_mul (-(a / 2))).const_add q using 1
   ring
 
+
+/-- Radial derivative of the explicit KK radial velocity on the punctured domain. -/
+theorem radialVelocity_hasDerivAt_r {a q r : ℝ} (hr : r ≠ 0) :
+    HasDerivAt (fun ρ : ℝ => radialVelocity a q ρ)
+      (-a / 2 - q / r ^ 2) r := by
+  have hlin := (hasDerivAt_id r).const_mul (-(a / 2))
+  have hfrac := (hasDerivAt_const r q).div (hasDerivAt_id r) hr
+  unfold radialVelocity
+  convert! hlin.add hfrac using 1 <;> field_simp [hr] <;> ring
+
+/-- Time derivative of the radial velocity when q is fixed. -/
+theorem radialVelocity_hasDerivAt_t
+    {a : ℝ → ℝ} {aDot q r t : ℝ}
+    (ha : HasDerivAt a aDot t) :
+    HasDerivAt (fun τ : ℝ => radialVelocity (a τ) q r)
+      (-(aDot / 2) * r) t := by
+  unfold radialVelocity
+  convert! (ha.const_mul (-r / 2)).add_const (q / r) using 1 <;> ring
+
+/-- Time derivative of the axial velocity under differentiable prescribed a(t), b(t). -/
+theorem axialVelocity_hasDerivAt_t
+    {a b : ℝ → ℝ} {aDot bDot z t : ℝ}
+    (ha : HasDerivAt a aDot t) (hb : HasDerivAt b bDot t) :
+    HasDerivAt (fun τ : ℝ => axialVelocity (a τ) (b τ) z)
+      (aDot * z + bDot) t := by
+  unfold axialVelocity
+  convert! (ha.const_mul z).add hb using 1 <;> ring
+
 /-- Radial contribution to the divergence of the KK meridional field. -/
 def radialDivergenceContribution (a : ℝ) : ℝ := -a
 
