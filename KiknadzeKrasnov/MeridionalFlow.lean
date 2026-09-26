@@ -21,14 +21,6 @@ theorem axialVelocity_hasDerivAt (a b z : ℝ) :
   simpa [axialVelocity] using
     ((hasDerivAt_id z).const_mul a).const_add b
 
-/-- The integrated radial quantity has derivative -a r. -/
-theorem radialFluxPrimitive_hasDerivAt (a q r : ℝ) :
-    HasDerivAt (fun ρ : ℝ => radialFluxPrimitive a q ρ) (-a * r) r := by
-  have hsq : HasDerivAt (fun ρ : ℝ => ρ ^ 2) (2 * r) r := by
-    simpa using (hasDerivAt_id r).pow 2
-  have h := (hsq.const_mul (-(a / 2))).const_add q
-  convert h using 1 <;> ring
-
 /-- Radial contribution to the divergence of the KK meridional field. -/
 def radialDivergenceContribution (a : ℝ) : ℝ := -a
 
@@ -48,7 +40,6 @@ def radialSourceFlux (q r : ℝ) : ℝ :=
 theorem radialSourceFlux_eq {q r : ℝ} (hr : r ≠ 0) :
     radialSourceFlux q r = 2 * Real.pi * q := by
   simp [radialSourceFlux, hr]
-  ring
 
 end
 
