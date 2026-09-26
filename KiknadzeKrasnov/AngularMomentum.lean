@@ -6,6 +6,33 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
+/-- Pointwise azimuthal Navier--Stokes residual written in terms of derivative values. -/
+def azimuthalVelocityResidual
+    (nu ur r uTheta uThetaT uThetaR uThetaRR : ℝ) : ℝ :=
+  uThetaT + ur * uThetaR + ur * uTheta / r -
+    nu * (uThetaRR + uThetaR / r - uTheta / r ^ 2)
+
+/-- Pointwise angular-momentum residual written in terms of derivative values. -/
+def angularMomentumDerivativeResidual
+    (nu ur r LT LR LRR : ℝ) : ℝ :=
+  LT + ur * LR - nu * (LRR - LR / r)
+
+/--
+Multiplying the azimuthal equation by r and using L=r*uTheta gives exactly the
+angular-momentum equation, manuscript Eq. (28).
+-/
+theorem angularMomentum_reduction
+    {nu ur r uTheta uThetaT uThetaR uThetaRR : ℝ} (hr : r ≠ 0) :
+    angularMomentumDerivativeResidual nu ur r
+      (r * uThetaT)
+      (uTheta + r * uThetaR)
+      (2 * uThetaR + r * uThetaRR) =
+    r * azimuthalVelocityResidual nu ur r
+      uTheta uThetaT uThetaR uThetaRR := by
+  unfold angularMomentumDerivativeResidual azimuthalVelocityResidual
+  field_simp [hr]
+  ring
+
 /-- A unit-amplitude KK angular-momentum profile. Circulation prefactors are constant and linear. -/
 def kkProfile (s beta r : ℝ) : ℝ :=
   regLowerGamma s (scaledX beta r)
@@ -117,6 +144,33 @@ theorem angularMomentumResidual_zero
     kkProfileRadialViscous radialVelocity scaledX scaleResidual at *
   field_simp [hr] at *
   nlinarith [hp]
+
+/-- The distributed swirl of the model has the expected angular momentum away from the axis. -/
+theorem radius_mul_distributedSwirl
+    {circ s beta r : ℝ} (hr : r ≠ 0) :
+    r * distributedSwirl circ s beta r =
+      circ / (2 * Real.pi) * kkProfile s beta r := by
+  unfold distributedSwirl kkProfile
+  field_simp [hr, Real.pi_ne_zero]
+  ring
+
+/-- Physical circulation amplitude only multiplies the unit-profile residual. -/
+def singleModeAngularMomentumResidual
+    (circ nu a q beta betaDot s r : ℝ) : ℝ :=
+  circ / (2 * Real.pi) *
+    angularMomentumResidual nu a q beta betaDot s r
+
+/-- A distributed mode with constant circulation satisfies the angular-momentum equation exactly. -/
+theorem singleModeAngularMomentumResidual_zero
+    {circ nu a q beta betaDot s r : ℝ}
+    (hr : r ≠ 0) (hbeta : beta ≠ 0)
+    (hs : 0 < s) (hx : 0 < scaledX beta r)
+    (hscale : scaleResidual nu a beta betaDot = 0)
+    (hq : q = 2 * nu * (s - 1)) :
+    singleModeAngularMomentumResidual circ nu a q beta betaDot s r = 0 := by
+  unfold singleModeAngularMomentumResidual
+  rw [angularMomentumResidual_zero hr hbeta hs hx hscale hq]
+  ring
 
 /-- A constant central line-circulation contribution has zero angular-momentum residual. -/
 theorem constantAngularMomentum_residual_zero (nu a q c r : ℝ) :
