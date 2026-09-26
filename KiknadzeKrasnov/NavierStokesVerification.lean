@@ -29,7 +29,7 @@ def axialNSResidual
 theorem continuityResidual_zero {a r : ℝ} (hr : r ≠ 0) :
     continuityResidual a r = 0 := by
   unfold continuityResidual
-  exact meridional_continuity_residual (q := 0) hr
+  exact meridional_continuity_residual hr
 
 /-- Equation (72), radial part: the exact pressure gradient cancels radial inertia and swirl. -/
 theorem radialNSResidual_zero
