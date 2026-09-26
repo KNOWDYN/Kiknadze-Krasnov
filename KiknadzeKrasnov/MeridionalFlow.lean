@@ -14,20 +14,20 @@ theorem radius_mul_radialVelocity {a q r : ℝ} (hr : r ≠ 0) :
     r * radialVelocity a q r = radialFluxPrimitive a q r := by
   unfold radialVelocity radialFluxPrimitive
   field_simp [hr]
-  ring
 
 /-- The axial KK field has the prescribed constant axial gradient. -/
 theorem axialVelocity_hasDerivAt (a b z : ℝ) :
     HasDerivAt (fun ζ : ℝ => axialVelocity a b ζ) a z := by
   unfold axialVelocity
-  convert (by fun_prop : HasDerivAt (fun ζ : ℝ => a * ζ + b) a z) using 1
+  convert! ((hasDerivAt_id z).const_mul a).const_add b using 1
+  ring
 
 /-- The integrated radial quantity has derivative -a r. -/
 theorem radialFluxPrimitive_hasDerivAt (a q r : ℝ) :
     HasDerivAt (fun ρ : ℝ => radialFluxPrimitive a q ρ) (-a * r) r := by
   unfold radialFluxPrimitive
-  convert (by fun_prop :
-    HasDerivAt (fun ρ : ℝ => -(a / 2) * ρ ^ 2 + q) (-a * r) r) using 1
+  convert! (((hasDerivAt_id r).pow 2).const_mul (-(a / 2))).const_add q using 1
+  ring
 
 /-- Radial contribution to the divergence of the KK meridional field. -/
 def radialDivergenceContribution (a : ℝ) : ℝ := -a
@@ -42,13 +42,12 @@ def axialDivergenceContribution (a : ℝ) : ℝ := a
 
 /-- Flux of the q/r source term through a cylindrical surface per unit axial length. -/
 def radialSourceFlux (q r : ℝ) : ℝ :=
-  ∫ θ in (0 : ℝ)..(2 * Real.pi), (q / r) * r
+  ∫ _θ in (0 : ℝ)..(2 * Real.pi), (q / r) * r
 
 /-- The q/r contribution carries radial flux 2πq on the punctured radial domain. -/
 theorem radialSourceFlux_eq {q r : ℝ} (hr : r ≠ 0) :
     radialSourceFlux q r = 2 * Real.pi * q := by
   simp [radialSourceFlux, hr]
-  ring
 
 end
 
