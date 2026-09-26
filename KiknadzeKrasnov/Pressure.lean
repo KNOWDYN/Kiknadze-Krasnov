@@ -4,7 +4,7 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
-open intervalIntegral
+open MeasureTheory intervalIntegral
 
 /-- Pointwise time derivative of the KK radial velocity for q constant. -/
 def radialVelocityTimeDerivative (aDot r : ℝ) : ℝ := -(aDot / 2) * r
@@ -84,19 +84,41 @@ theorem pressureFieldAtTime_radial_hasDerivAt
     HasDerivAt
       (fun ρr => pressureFieldAtTime rho a aDot b bDot q p0 Pi ρr z)
       (rho * radialPressureGradientOverRho a aDot q uThetaVal r) r := by
+  have hquad :
+      HasDerivAt
+        (fun x : ℝ => rho * (aDot / 4 - a ^ 2 / 8) * x ^ 2)
+        (rho * (aDot / 4 - a ^ 2 / 8) * (2 * r)) r := by
+    convert! ((hasDerivAt_id r).pow 2).const_mul
+      (rho * (aDot / 4 - a ^ 2 / 8)) using 1 <;> ring
+  have hden : 2 * r ^ 2 ≠ 0 := mul_ne_zero (by norm_num) (pow_ne_zero 2 hr)
+  have hrat :
+      HasDerivAt
+        (fun x : ℝ => rho * q ^ 2 / (2 * x ^ 2))
+        ((0 * (2 * r ^ 2) - (rho * q ^ 2) * (2 * (2 * r))) /
+          (2 * r ^ 2) ^ 2) r := by
+    have hnum : HasDerivAt (fun _x : ℝ => rho * q ^ 2) 0 r :=
+      hasDerivAt_const r _
+    have hdenDeriv :
+        HasDerivAt (fun x : ℝ => 2 * x ^ 2) (2 * (2 * r)) r := by
+      convert! ((hasDerivAt_id r).pow 2).const_mul 2 using 1 <;> ring
+    exact hnum.div hdenDeriv hden
+  have hbase :
+      HasDerivAt
+        (fun x : ℝ =>
+          p0
+            + rho * (aDot / 4 - a ^ 2 / 8) * x ^ 2
+            - rho * q ^ 2 / (2 * x ^ 2))
+        (0
+          + rho * (aDot / 4 - a ^ 2 / 8) * (2 * r)
+          - ((0 * (2 * r ^ 2) - (rho * q ^ 2) * (2 * (2 * r))) /
+            (2 * r ^ 2) ^ 2)) r := by
+    exact ((hasDerivAt_const r p0).add hquad).sub hrat
+  have hall :=
+    (((hbase.sub_const (rho / 2 * (aDot + a ^ 2) * z ^ 2))
+      .sub_const (rho * (bDot + a * b) * z))
+      .add (hPi.const_mul rho))
   unfold pressureFieldAtTime radialPressureGradientOverRho
-  convert (by fun_prop :
-    HasDerivAt
-      (fun ρr : ℝ =>
-        p0
-          + rho * (aDot / 4 - a ^ 2 / 8) * ρr ^ 2
-          - rho * q ^ 2 / (2 * ρr ^ 2)
-          - rho / 2 * (aDot + a ^ 2) * z ^ 2
-          - rho * (bDot + a * b) * z
-          + rho * Pi ρr)
-      _ r) using 1
-  field_simp [hr]
-  ring
+  convert! hall using 1 <;> field_simp [hr] <;> ring
 
 /-- Axial derivative of the exact pressure field. -/
 theorem pressureFieldAtTime_axial_hasDerivAt
@@ -105,18 +127,26 @@ theorem pressureFieldAtTime_axial_hasDerivAt
     HasDerivAt
       (fun ζ => pressureFieldAtTime rho a aDot b bDot q p0 Pi r ζ)
       (rho * axialPressureGradientOverRho a aDot b bDot z) z := by
-  unfold pressureFieldAtTime axialPressureGradientOverRho
-  convert (by fun_prop :
-    HasDerivAt
-      (fun ζ : ℝ =>
+  have hquad :
+      HasDerivAt
+        (fun x : ℝ => -(rho / 2 * (aDot + a ^ 2)) * x ^ 2)
+        (-(rho / 2 * (aDot + a ^ 2)) * (2 * z)) z := by
+    convert! ((hasDerivAt_id z).pow 2).const_mul
+      (-(rho / 2 * (aDot + a ^ 2))) using 1 <;> ring
+  have hlin :
+      HasDerivAt
+        (fun x : ℝ => -(rho * (bDot + a * b)) * x)
+        (-(rho * (bDot + a * b))) z := by
+    convert! (hasDerivAt_id z).const_mul (-(rho * (bDot + a * b))) using 1 <;> ring
+  have hconst : HasDerivAt
+      (fun _x : ℝ =>
         p0
           + rho * (aDot / 4 - a ^ 2 / 8) * r ^ 2
           - rho * q ^ 2 / (2 * r ^ 2)
-          - rho / 2 * (aDot + a ^ 2) * ζ ^ 2
-          - rho * (bDot + a * b) * ζ
           + rho * Pi r)
-      _ z) using 1
-  ring
+      0 z := hasDerivAt_const z _
+  unfold pressureFieldAtTime axialPressureGradientOverRho
+  convert! (hconst.add hquad |>.add hlin) using 1 <;> ring
 
 end
 
