@@ -24,8 +24,8 @@ theorem axialVelocity_hasDerivAt (a b z : ℝ) :
 /-- The integrated radial quantity has derivative -a r. -/
 theorem radialFluxPrimitive_hasDerivAt (a q r : ℝ) :
     HasDerivAt (fun ρ : ℝ => radialFluxPrimitive a q ρ) (-a * r) r := by
-  have hsq : HasDerivAt (fun ρ : ℝ => ρ * ρ) (r + r) r :=
-    (hasDerivAt_id r).mul (hasDerivAt_id r)
+  have hsq : HasDerivAt (fun ρ : ℝ => ρ * ρ) (r + r) r := by
+    simpa using ((hasDerivAt_id r).mul (hasDerivAt_id r))
   have h := (hsq.const_mul (-(a / 2))).const_add q
   have hfun :
       (fun ρ : ℝ => radialFluxPrimitive a q ρ)
