@@ -76,7 +76,7 @@ theorem kkProfile_radial_viscous_identity
 
 /-- The separated profile equation in the dimensional q, nu notation of Eq. (33). -/
 theorem kkProfile_separated_ode
-    {nu q s x : ℝ} (hnu : nu ≠ 0) (hs : 0 < s) (hx : 0 < x)
+    {nu q s x : ℝ} (hs : 0 < s) (hx : 0 < x)
     (hq : q = 2 * nu * (s - 1)) :
     2 * nu * x * regLowerGammaSecond s x +
       (2 * nu * x - q) * regLowerGammaPrime s x = 0 := by
@@ -112,7 +112,7 @@ theorem angularMomentumResidual_zero
     (hq : q = 2 * nu * (s - 1)) :
     angularMomentumResidual nu a q beta betaDot s r = 0 := by
   have hp := kkProfile_separated_ode (nu := nu) (q := q) (s := s)
-    (x := scaledX beta r) (mul_ne_zero (by norm_num) hbeta) hs hx hq
+    (x := scaledX beta r) hs hx hq
   unfold angularMomentumResidual kkProfileTimeDeriv kkProfileRadialDeriv
     kkProfileRadialViscous radialVelocity scaledX scaleResidual at *
   field_simp [hr] at *
