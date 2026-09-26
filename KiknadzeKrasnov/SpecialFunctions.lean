@@ -95,10 +95,11 @@ theorem regLowerGamma_hasDerivAt_prime {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
 theorem regLowerGammaPrime_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
     HasDerivAt (regLowerGammaPrime s) (regLowerGammaSecond s x) x := by
   have hexp : HasDerivAt (fun y : ℝ => Real.exp (-y)) (-Real.exp (-x)) x := by
-    convert ((hasDerivAt_id x).neg.exp) using 1 <;> ring
+    simpa using ((hasDerivAt_id x).neg.exp)
   have hpow : HasDerivAt (fun y : ℝ => y ^ (s - 1))
       ((s - 1) * x ^ (s - 2)) x := by
-    convert Real.hasDerivAt_rpow_const (x := x) (p := s - 1) (Or.inl hx.ne') using 1 <;> ring
+    convert Real.hasDerivAt_rpow_const (x := x) (p := s - 1) (Or.inl hx.ne') using 1 <;>
+      ring_nf
   have hprod := hexp.mul hpow
   convert hprod.div_const (gammaFn s) using 1
   · ext y
