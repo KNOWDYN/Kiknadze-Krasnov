@@ -16,6 +16,40 @@ def radialVelocityRadialDeriv (a q r : ℝ) : ℝ := -(a / 2) - q / r ^ 2
 /-- Closed second radial derivative of the radial KK velocity. -/
 def radialVelocityRadialSecond (q r : ℝ) : ℝ := 2 * q / r ^ 3
 
+/-- Equation (51): radial derivative of the KK radial velocity off the axis. -/
+theorem radialVelocity_hasDerivAt_radius
+    {a q r : ℝ} (hr : r ≠ 0) :
+    HasDerivAt (radialVelocity a q) (radialVelocityRadialDeriv a q r) r := by
+  have hlin : HasDerivAt (fun y : ℝ => -(a / 2) * y) (-(a / 2)) r := by
+    simpa using (hasDerivAt_id r).const_mul (-(a / 2))
+  have hinv : HasDerivAt (fun y : ℝ => q * y⁻¹) (-q / r ^ 2) r := by
+    convert ((hasDerivAt_id r).inv hr).const_mul q using 1 <;>
+      field_simp [hr] <;> ring
+  convert hlin.add hinv using 1
+  · ext y
+    simp [radialVelocity, div_eq_mul_inv]
+    ring
+  · unfold radialVelocityRadialDeriv
+    ring
+
+/-- Equation (51): time derivative of the KK radial velocity for constant q. -/
+theorem radialVelocity_hasDerivAt_time
+    {a : ℝ → ℝ} {aDot q r t : ℝ}
+    (ha : HasDerivAt a aDot t) :
+    HasDerivAt (fun tau => radialVelocity (a tau) q r)
+      (radialVelocityTimeDeriv aDot r) t := by
+  convert (ha.const_mul (-(r / 2))).const_add (q / r) using 1 <;>
+    simp [radialVelocity, radialVelocityTimeDeriv] <;> ring
+
+/-- Equation (55): time derivative of the axial KK velocity. -/
+theorem axialVelocity_hasDerivAt_time
+    {a b : ℝ → ℝ} {aDot bDot z t : ℝ}
+    (ha : HasDerivAt a aDot t) (hb : HasDerivAt b bDot t) :
+    HasDerivAt (fun tau => axialVelocity (a tau) (b tau) z)
+      (aDot * z + bDot) t := by
+  convert (ha.const_mul z).add hb using 1 <;>
+    simp [axialVelocity] <;> ring
+
 /-- Equation (52): cross terms proportional to a*q/r cancel. -/
 theorem radial_convective_acceleration
     {a q r : ℝ} (hr : r ≠ 0) :
