@@ -79,7 +79,7 @@ theorem inverseScaleExact_order_preserved
     {nu beta0i beta0j : ℝ} {a : ℝ → ℝ} {t : ℝ}
     (hij : beta0i⁻¹ ≤ beta0j⁻¹) :
     inverseScaleExact nu beta0i a t ≤ inverseScaleExact nu beta0j a t := by
-  rw [sub_nonpos.mp]
+  rw [← sub_nonpos]
   rw [inverseScaleExact_sub]
   exact mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le (sub_nonpos.mpr hij)
 
@@ -89,8 +89,7 @@ theorem strainAccum_hasDerivAt {a : ℝ → ℝ} (ha : Continuous a) (t : ℝ) :
   unfold strainAccum
   have hint : IntervalIntegrable a volume 0 t := ha.intervalIntegrable _ _
   have hmeas : StronglyMeasurableAtFilter a (𝓝 t) volume :=
-    ha.continuousAt.stronglyMeasurableAtFilter isOpen_univ
-      (fun y _ => ha.continuousAt) t (mem_univ t)
+    ha.stronglyMeasurableAtFilter volume (𝓝 t)
   exact intervalIntegral.integral_hasDerivAt_right hint hmeas ha.continuousAt
 
 /-- The exponential forcing integral in Eq. (47) has the expected endpoint derivative. -/
@@ -107,8 +106,7 @@ theorem expStrainIntegral_hasDerivAt {a : ℝ → ℝ} (ha : Continuous a) (t : 
     hcont.intervalIntegrable _ _
   have hmeas : StronglyMeasurableAtFilter
       (fun y => Real.exp (strainAccum a y)) (𝓝 t) volume :=
-    hcont.continuousAt.stronglyMeasurableAtFilter isOpen_univ
-      (fun y _ => hcont.continuousAt) t (mem_univ t)
+    hcont.stronglyMeasurableAtFilter volume (𝓝 t)
   exact intervalIntegral.integral_hasDerivAt_right hint hmeas hcont.continuousAt
 
 /-- Eq. (47) is not merely an algebraic expression: it solves the linear inverse-scale ODE. -/
@@ -134,6 +132,41 @@ theorem inverseScaleExact_hasDerivAt
     rw [Real.exp_neg]
     field_simp [Real.exp_ne_zero]
     ring
+
+/-- Eq. (48) differentiates to the nonlinear scale equation whenever its denominator is nonzero. -/
+theorem betaExact_hasDerivAt
+    {nu beta0 : ℝ} {a : ℝ → ℝ} (ha : Continuous a) {t : ℝ}
+    (hden : beta0⁻¹ + 4 * nu * expStrainIntegral a t ≠ 0) :
+    HasDerivAt (betaExact nu beta0 a)
+      (a t * betaExact nu beta0 a t -
+        4 * nu * (betaExact nu beta0 a t) ^ 2) t := by
+  have hA := strainAccum_hasDerivAt ha t
+  have hnum : HasDerivAt
+      (fun y => Real.exp (strainAccum a y))
+      (Real.exp (strainAccum a t) * a t) t :=
+    hA.exp
+  have hJ := expStrainIntegral_hasDerivAt ha t
+  have hdenDeriv : HasDerivAt
+      (fun y => beta0⁻¹ + 4 * nu * expStrainIntegral a y)
+      (4 * nu * Real.exp (strainAccum a t)) t := by
+    convert (hJ.const_mul (4 * nu)).const_add beta0⁻¹ using 1 <;> ring
+  have hquot := hnum.div hdenDeriv hden
+  convert hquot using 1
+  · ext y
+    rfl
+  · unfold betaExact
+    field_simp [hden]
+    ring
+
+/-- The explicit scale formula has zero Eq. (32) residual. -/
+theorem betaExact_scaleResidual_zero
+    {nu beta0 : ℝ} {a : ℝ → ℝ} (ha : Continuous a) {t : ℝ}
+    (hden : beta0⁻¹ + 4 * nu * expStrainIntegral a t ≠ 0) :
+    scaleResidual nu (a t) (betaExact nu beta0 a t)
+      (a t * betaExact nu beta0 a t -
+        4 * nu * (betaExact nu beta0 a t) ^ 2) = 0 := by
+  unfold scaleResidual
+  ring
 
 /-- The exact inverse-scale formula has zero Eq. (45) residual. -/
 theorem inverseScaleExact_residual_zero
