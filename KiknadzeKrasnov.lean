@@ -3,3 +3,8 @@ import KiknadzeKrasnov.Domains
 import KiknadzeKrasnov.SpecialFunctions
 import KiknadzeKrasnov.Model
 import KiknadzeKrasnov.Kinematics
+import KiknadzeKrasnov.MeridionalFlow
+import KiknadzeKrasnov.AngularMomentum
+import KiknadzeKrasnov.ScaleDynamics
+import KiknadzeKrasnov.Pressure
+import KiknadzeKrasnov.NavierStokesVerification
