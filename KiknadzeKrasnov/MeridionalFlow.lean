@@ -25,7 +25,8 @@ theorem axialVelocity_hasDerivAt (a b z : ℝ) :
 theorem radialFluxPrimitive_hasDerivAt (a q r : ℝ) :
     HasDerivAt (fun ρ : ℝ => radialFluxPrimitive a q ρ) (-a * r) r := by
   have hsq : HasDerivAt (fun ρ : ℝ => ρ * ρ) (r + r) r := by
-    simpa using ((hasDerivAt_id r).mul (hasDerivAt_id r))
+    simpa only [Pi.mul_apply, id_eq, one_mul, mul_one] using!
+      ((hasDerivAt_id r).mul (hasDerivAt_id r))
   have h := (hsq.const_mul (-(a / 2))).const_add q
   have hfun :
       (fun ρ : ℝ => radialFluxPrimitive a q ρ)
