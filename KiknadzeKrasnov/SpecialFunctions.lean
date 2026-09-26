@@ -77,6 +77,44 @@ theorem deriv_regLowerGamma {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
   simp only [gammaKernel]
   ring
 
+/-- Closed form for the first derivative of the regularised lower incomplete gamma. -/
+def regLowerGammaPrime (s x : ℝ) : ℝ :=
+  gammaKernel s x / gammaFn s
+
+/-- Closed form for the second derivative used in the KK profile equation. -/
+def regLowerGammaSecond (s x : ℝ) : ℝ :=
+  ((s - 1) * Real.exp (-x) * x ^ (s - 2) -
+      Real.exp (-x) * x ^ (s - 1)) / gammaFn s
+
+/-- The first derivative wrapper agrees with the derivative already certified above. -/
+theorem regLowerGamma_hasDerivAt_prime {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
+    HasDerivAt (regLowerGamma s) (regLowerGammaPrime s x) x := by
+  simpa [regLowerGammaPrime] using regLowerGamma_hasDerivAt hs hx
+
+/-- The gamma-density derivative gives the second radial-profile derivative. -/
+theorem regLowerGammaPrime_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
+    HasDerivAt (regLowerGammaPrime s) (regLowerGammaSecond s x) x := by
+  have hexp : HasDerivAt (fun y : ℝ => Real.exp (-y)) (-Real.exp (-x)) x := by
+    convert ((hasDerivAt_id x).neg.exp) using 1 <;> ring
+  have hpow : HasDerivAt (fun y : ℝ => y ^ (s - 1))
+      ((s - 1) * x ^ (s - 2)) x := by
+    convert Real.hasDerivAt_rpow_const (x := x) (p := s - 1) (Or.inl hx.ne') using 1 <;> ring
+  have hprod := hexp.mul hpow
+  convert hprod.div_const (gammaFn s) using 1
+  · ext y
+    rfl
+  · unfold regLowerGammaSecond
+    ring
+
+/-- The incomplete-gamma profile satisfies the separated KK profile ODE. -/
+theorem regLowerGamma_profile_ode {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
+    x * regLowerGammaSecond s x + (x - (s - 1)) * regLowerGammaPrime s x = 0 := by
+  unfold regLowerGammaSecond regLowerGammaPrime gammaKernel
+  rw [show s - 2 = (s - 1) - 1 by ring]
+  rw [Real.rpow_sub_one hx.ne' (s - 1)]
+  field_simp [gammaFn_ne_zero hs, hx.ne']
+  ring
+
 end
 
 end KiknadzeKrasnov
