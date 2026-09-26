@@ -71,14 +71,23 @@ theorem inverseScaleExact_hasDerivAt
 /-- The exact β formula is reciprocal to the exact inverse-scale formula. -/
 theorem betaExact_mul_inverseScaleExact
     {nu beta0 t : ℝ} {a : ℝ → ℝ}
-    (hbeta0 : beta0 ≠ 0)
     (hden : beta0⁻¹ + 4 * nu * scaleIntegral a t ≠ 0) :
     betaExact nu beta0 a t *
       inverseScaleExact nu beta0⁻¹ a t = 1 := by
   unfold betaExact inverseScaleExact
-  field_simp [hden, hbeta0, Real.exp_ne_zero (strainAccum a t)]
-  rw [← Real.exp_add]
-  simp
+  rw [div_eq_mul_inv]
+  calc
+    Real.exp (strainAccum a t)
+          * (beta0⁻¹ + 4 * nu * scaleIntegral a t)⁻¹
+          * (Real.exp (-strainAccum a t)
+            * (beta0⁻¹ + 4 * nu * scaleIntegral a t))
+        = (Real.exp (strainAccum a t) * Real.exp (-strainAccum a t))
+          * ((beta0⁻¹ + 4 * nu * scaleIntegral a t)⁻¹
+            * (beta0⁻¹ + 4 * nu * scaleIntegral a t)) := by ring
+    _ = 1 := by
+      rw [inv_mul_cancel₀ hden]
+      rw [← Real.exp_add]
+      simp
 
 /-- Difference of two inverse-scale solutions with the same strain history. -/
 theorem inverseScaleExact_sub
