@@ -6,7 +6,7 @@ noncomputable section
 
 /-- Pointwise residual of the radial angular-momentum advection-diffusion equation. -/
 def angularMomentumResidual
-    (nu ur Lt Lr LrrMinus r : ℝ) : ℝ :=
+    (nu ur Lt Lr LrrMinus : ℝ) : ℝ :=
   Lt + ur * Lr - nu * LrrMinus
 
 /-- Residual after the substitution L(r,t)=F(β(t)r²), written in the paper's scaled variables. -/
@@ -29,7 +29,7 @@ theorem angularMomentumResidual_eq_scaled
     angularMomentumResidual nu (radialVelocity a q r)
       (scaledLt beta betaDot x Fp)
       (scaledLr beta r Fp)
-      (scaledRadialDiffusion beta x Fpp) r
+      (scaledRadialDiffusion beta x Fpp)
       = scaledAngularMomentumResidual nu a q beta betaDot x Fp Fpp := by
   subst x
   unfold angularMomentumResidual scaledLt scaledLr scaledRadialDiffusion
@@ -52,11 +52,14 @@ theorem scaledAngularMomentumResidual_eq_zero
     (hscale : betaScaleResidual nu a beta betaDot = 0)
     (hprofile : profileResidual nu q x Fp Fpp = 0) :
     scaledAngularMomentumResidual nu a q beta betaDot x Fp Fpp = 0 := by
-  unfold betaScaleResidual at hscale
-  unfold profileResidual at hprofile
-  unfold scaledAngularMomentumResidual
-  field_simp [hbeta]
-  nlinarith
+  calc
+    scaledAngularMomentumResidual nu a q beta betaDot x Fp Fpp
+        = (x * Fp / beta) * betaScaleResidual nu a beta betaDot
+          - 2 * beta * profileResidual nu q x Fp Fpp := by
+            unfold scaledAngularMomentumResidual betaScaleResidual profileResidual
+            field_simp [hbeta]
+            ring
+    _ = 0 := by rw [hscale, hprofile]; ring
 
 /-- A fixed nontrivial radial profile forces the source coefficient to be time-independent.
 
@@ -100,8 +103,9 @@ theorem scaledResidual_gamma_factor
           + 2 * beta * (q - 2 * nu * (s - 1))) := by
   unfold gammaSecondDerivativeRelation at hgamma
   unfold scaledAngularMomentumResidual betaScaleResidual
-  field_simp [hbeta] at hgamma ⊢
-  nlinarith
+  field_simp [hbeta]
+  rw [hgamma]
+  ring
 
 end
 
