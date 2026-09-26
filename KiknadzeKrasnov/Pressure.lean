@@ -6,6 +6,7 @@ namespace KiknadzeKrasnov
 noncomputable section
 
 open Set MeasureTheory intervalIntegral
+open scoped Topology
 
 /-- Closed time derivative of the radial KK velocity, manuscript Eq. (51). -/
 def radialVelocityTimeDeriv (aDot r : ℝ) : ℝ := -(aDot / 2) * r
