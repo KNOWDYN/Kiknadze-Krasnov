@@ -30,7 +30,6 @@ theorem oneModeAngularMomentumWithLine_eq_radius_mul_swirl
   rw [distributedAngularMomentum_eq_radius_mul_swirl hr]
   unfold centralLineSwirl
   field_simp [hr0, Real.pi_ne_zero]
-  ring
 
 /-- The actual continuity residual of the meridional KK field. -/
 def continuityResidualActual (a b q r z : ℝ) : ℝ :=
