@@ -37,9 +37,7 @@ theorem centralLineAngularMomentum_hasDerivAt_zero
   dsimp [c] at hprod ⊢
   convert hprod using 1
   · funext rho
-    change rho * gammaLine * Real.pi⁻¹ * rho⁻¹ * (1 / 2) =
-      rho * (gammaLine * Real.pi⁻¹ * rho⁻¹ * (1 / 2))
-    ring
+    rfl
   · field_simp [hr0]
     ring
 
