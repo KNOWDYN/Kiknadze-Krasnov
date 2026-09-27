@@ -36,8 +36,11 @@ theorem centralLineAngularMomentum_hasDerivAt_zero
   unfold centralLineSwirl
   dsimp [c] at hprod ⊢
   convert hprod using 1
-  field_simp [hr0]
-  ring
+  · funext rho
+    simp only [id_eq]
+    ring
+  · field_simp [hr0]
+    ring
 
 /--
 Claim C010, classical part: the optional central line circulation contributes
