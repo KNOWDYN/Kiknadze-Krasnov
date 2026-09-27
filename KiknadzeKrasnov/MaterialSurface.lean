@@ -259,6 +259,94 @@ theorem materialSurface_no_crossing
     (mul_eq_zero.mp hI).resolve_left hexp
   exact hinit (sub_eq_zero.mp hzero)
 
+/-- Outside ordering relative to the material cylinder is preserved. -/
+theorem materialOffsetSq_pos_iff
+    {a beta y betaDot : ℝ → ℝ} {nu q s t₁ t₂ : ℝ}
+    (hA : ∀ t, HasDerivAt (strainAccum a) (a t) t)
+    (hbeta : ∀ t, HasDerivAt beta (betaDot t) t)
+    (hbetane : ∀ t, beta t ≠ 0)
+    (hy : ∀ t, HasDerivAt y (-a t * y t + 2 * q) t)
+    (hscale : ∀ t, betaScaleResidual nu (a t) (beta t) (betaDot t) = 0)
+    (hcompat : q = 2 * nu * (s - 1)) :
+    0 < materialOffsetSq s (beta t₁) (y t₁) ↔
+      0 < materialOffsetSq s (beta t₂) (y t₂) := by
+  have hI := radialInvariant_eq hA hbeta hbetane hy hscale hcompat
+    (t₁ := t₁) (t₂ := t₂)
+  unfold radialInvariant at hI
+  constructor
+  · intro hpos
+    have hleft :
+        0 < Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) :=
+      mul_pos (Real.exp_pos _) hpos
+    rw [hI] at hleft
+    by_contra hnot
+    have hnonpos : materialOffsetSq s (beta t₂) (y t₂) ≤ 0 :=
+      le_of_not_gt hnot
+    have hright :
+        Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le hnonpos
+    linarith
+  · intro hpos
+    have hright :
+        0 < Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) :=
+      mul_pos (Real.exp_pos _) hpos
+    rw [← hI] at hright
+    by_contra hnot
+    have hnonpos : materialOffsetSq s (beta t₁) (y t₁) ≤ 0 :=
+      le_of_not_gt hnot
+    have hleft :
+        Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le hnonpos
+    linarith
+
+/-- Inside ordering relative to the material cylinder is preserved. -/
+theorem materialOffsetSq_neg_iff
+    {a beta y betaDot : ℝ → ℝ} {nu q s t₁ t₂ : ℝ}
+    (hA : ∀ t, HasDerivAt (strainAccum a) (a t) t)
+    (hbeta : ∀ t, HasDerivAt beta (betaDot t) t)
+    (hbetane : ∀ t, beta t ≠ 0)
+    (hy : ∀ t, HasDerivAt y (-a t * y t + 2 * q) t)
+    (hscale : ∀ t, betaScaleResidual nu (a t) (beta t) (betaDot t) = 0)
+    (hcompat : q = 2 * nu * (s - 1)) :
+    materialOffsetSq s (beta t₁) (y t₁) < 0 ↔
+      materialOffsetSq s (beta t₂) (y t₂) < 0 := by
+  have hI := radialInvariant_eq hA hbeta hbetane hy hscale hcompat
+    (t₁ := t₁) (t₂ := t₂)
+  unfold radialInvariant at hI
+  constructor
+  · intro hneg
+    have hleft :
+        Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) < 0 :=
+      mul_neg_of_pos_of_neg (Real.exp_pos _) hneg
+    rw [hI] at hleft
+    by_contra hnot
+    have hnonneg : 0 ≤ materialOffsetSq s (beta t₂) (y t₂) :=
+      le_of_not_gt hnot
+    have hright :
+        0 ≤ Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) :=
+      mul_nonneg (Real.exp_pos _).le hnonneg
+    linarith
+  · intro hneg
+    have hright :
+        Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) < 0 :=
+      mul_neg_of_pos_of_neg (Real.exp_pos _) hneg
+    rw [← hI] at hright
+    by_contra hnot
+    have hnonneg : 0 ≤ materialOffsetSq s (beta t₁) (y t₁) :=
+      le_of_not_gt hnot
+    have hleft :
+        0 ≤ Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) :=
+      mul_nonneg (Real.exp_pos _).le hnonneg
+    linarith
+
 end
 
 end KiknadzeKrasnov
