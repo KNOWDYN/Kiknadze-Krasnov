@@ -95,8 +95,7 @@ theorem profileAngularMomentum_time_hasDerivAt
       (betaDot * r ^ 2 * Fp) t := by
   have hx : HasDerivAt (fun τ : ℝ => scaledX (beta τ) r)
       (betaDot * r ^ 2) t := by
-    unfold scaledX
-    convert hbeta.mul_const (r ^ 2) using 1 <;> ring
+    simpa [scaledX] using hbeta.mul_const (r ^ 2)
   convert hF.comp t hx using 1
   · rfl
   · ring
