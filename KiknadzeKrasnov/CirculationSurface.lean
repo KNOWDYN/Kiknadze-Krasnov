@@ -13,6 +13,13 @@ Supplementary Eqs. (30)--(35).
 def materialCirculationFromX (circ s x : ℝ) : ℝ :=
   circ * regLowerGamma s x
 
+/-- The scaled material-circulation notation is exactly the existing physical one-mode circulation. -/
+@[simp] theorem materialCirculationFromX_scaled_eq
+    (circ s beta r : ℝ) :
+    materialCirculationFromX circ s (scaledX beta r) =
+      distributedCirculation circ s beta r := by
+  rfl
+
 /-- Exact material circulation-rate expression from manuscript Eq. (119). -/
 def materialCirculationRate (nu beta circ s x : ℝ) : ℝ :=
   (4 * nu * beta * circ / gammaFn s) *
