@@ -133,7 +133,7 @@ theorem distributedCirculation_eq_two_pi_radius_swirl
 
 /-- Radial derivative of enclosed distributed circulation equals 2 pi r omega_z. -/
 theorem distributedCirculation_hasDerivAt_r
-    {circ s beta r : ℝ} (hs : 0 < s) (hbeta : 0 < beta) (hr : PuncturedRadius r) :
+    {circ s beta r : ℝ} (_hs : 0 < s) (hbeta : 0 < beta) (hr : PuncturedRadius r) :
     HasDerivAt (distributedCirculation circ s beta)
       (2 * Real.pi * r * distributedVorticity circ s beta r) r := by
   have hx : 0 < scaledX beta r := by
