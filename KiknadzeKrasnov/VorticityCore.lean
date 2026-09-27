@@ -120,6 +120,15 @@ theorem distributedVorticity_eq_swirl_curl
   unfold distributedVorticity vorticityShape regLowerGammaDensity gammaKernel
   field_simp [hr0, Real.pi_ne_zero, gammaFn_ne_zero hs]
 
+/-- The enclosed distributed circulation is exactly 2 pi r u_theta on r>0. -/
+theorem distributedCirculation_eq_two_pi_radius_swirl
+    {circ s beta r : ℝ} (hr : PuncturedRadius r) :
+    distributedCirculation circ s beta r =
+      2 * Real.pi * r * distributedSwirl circ s beta r := by
+  have hr0 : r ≠ 0 := ne_of_gt hr
+  unfold distributedCirculation distributedSwirl
+  field_simp [hr0, Real.pi_ne_zero]
+
 /-- Radial derivative of enclosed distributed circulation equals 2 pi r omega_z. -/
 theorem distributedCirculation_hasDerivAt_r
     {circ s beta r : ℝ} (hs : 0 < s) (hbeta : 0 < beta) (hr : PuncturedRadius r) :
