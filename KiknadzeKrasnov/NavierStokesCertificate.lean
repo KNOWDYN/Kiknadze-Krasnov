@@ -26,10 +26,9 @@ theorem oneModeAngularMomentumWithLine_eq_radius_mul_swirl
     oneModeAngularMomentumWithLine gammaLine circ s beta r
       = r * oneModeSwirlWithLine gammaLine circ s beta r := by
   have hr0 : r ≠ 0 := ne_of_gt hr
-  rw [show distributedAngularMomentum circ s beta r =
-      r * distributedSwirl circ s beta r from
-        distributedAngularMomentum_eq_radius_mul_swirl hr]
-  unfold oneModeAngularMomentumWithLine oneModeSwirlWithLine centralLineSwirl
+  unfold oneModeAngularMomentumWithLine oneModeSwirlWithLine
+  rw [distributedAngularMomentum_eq_radius_mul_swirl hr]
+  unfold centralLineSwirl
   field_simp [hr0, Real.pi_ne_zero]
   ring
 
@@ -54,6 +53,7 @@ def radialViscousOperatorActual (a q r : ℝ) : ℝ :=
 theorem radialViscousOperatorActual_zero
     {a q r : ℝ} (hr : PuncturedRadius r) :
     radialViscousOperatorActual a q r = 0 := by
+  unfold radialViscousOperatorActual
   rw [(radialVelocityRadialDerivative_hasDerivAt hr).deriv]
   rw [(radialVelocity_radial_hasDerivAt hr).deriv]
   exact radial_viscous_operator_zero hr
@@ -170,7 +170,6 @@ theorem regLowerGammaSecondDensity_relation
       (regLowerGammaDensity s x) (regLowerGammaSecondDensity s x) := by
   unfold gammaProfileSecondDerivativeRelation regLowerGammaSecondDensity
   field_simp [hx.ne']
-  ring
 
 /-- Actual time-derivative coefficient of one distributed angular momentum mode. -/
 def distributedAngularMomentumTimeDerivative
@@ -243,7 +242,7 @@ theorem distributedAngularMomentumRadialDerivative_hasDerivAt
   unfold distributedAngularMomentumRadialDerivative
     distributedAngularMomentumSecondRadialDerivative
     regLowerGammaSecondDensity
-  simp only [Function.comp_apply] at hScaled
+  simp only [Function.comp_apply, Pi.mul_apply] at hScaled
   convert hScaled using 1
   · funext rho
     ring
