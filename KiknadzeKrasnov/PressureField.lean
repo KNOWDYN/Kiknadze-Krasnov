@@ -27,18 +27,17 @@ theorem radialVelocity_time_hasDerivAt
     (ha : HasDerivAt a aDot t) :
     HasDerivAt (fun tau => radialVelocity (a tau) q r)
       (radialVelocityTimeDerivative aDot r) t := by
-  have hstrain : HasDerivAt (fun tau => -(a tau / 2) * r)
-      (-(aDot / 2) * r) t := by
-    convert (ha.const_mul (-(1 / 2 : ℝ))).mul_const r using 1 <;> ring
-  have hsource : HasDerivAt (fun _tau : ℝ => q / r) 0 t :=
-    hasDerivAt_const t _
   unfold radialVelocity radialVelocityTimeDerivative
-  convert hstrain.add hsource using 1 <;> ring
+  have h := (ha.mul_const (-r / 2)).add_const (q / r)
+  convert h using 1
+  · funext tau
+    ring
+  · ring
 
 /-- The radial derivative in Eq. (51) is the derivative of the actual u_r field. -/
 theorem radialVelocity_radial_hasDerivAt
     {a q r : ℝ} (hr : PuncturedRadius r) :
-    HasDerivAt (radialVelocity a q)
+    HasDerivAt (fun rho => radialVelocity a q rho)
       (radialVelocityRadialDerivative a q r) r := by
   simpa [radialVelocityRadialDerivative] using
     (radialVelocity_hasDerivAt (a := a) (q := q) hr)
@@ -50,7 +49,10 @@ theorem radialVelocityRadialDerivative_hasDerivAt
       (radialVelocitySecondRadialDerivative q r) r := by
   have hr0 : r ≠ 0 := ne_of_gt hr
   have hden : HasDerivAt (fun x : ℝ => x ^ 2) (2 * r) r := by
-    convert (hasDerivAt_id r).pow 2 using 1 <;> ring
+    convert (hasDerivAt_id r).pow 2 using 1
+    · funext y
+      simp
+    · simp
   have hquot := (hasDerivAt_const r q).div hden (pow_ne_zero 2 hr0)
   have hconst : HasDerivAt (fun _x : ℝ => -a / 2) 0 r :=
     hasDerivAt_const r _
@@ -91,7 +93,7 @@ theorem axialVelocity_time_hasDerivAt
     HasDerivAt (fun tau => axialVelocity (a tau) (b tau) z)
       (axialVelocityTimeDerivative aDot bDot z) t := by
   unfold axialVelocity axialVelocityTimeDerivative
-  convert (ha.mul_const z).add hb using 1 <;> ring
+  exact (ha.mul_const z).add hb
 
 /-- Eq. (55): axial material acceleration. -/
 def axialAcceleration (a aDot b bDot z : ℝ) : ℝ :=
@@ -140,7 +142,7 @@ theorem swirlPressurePotential_hasDerivAt
     {uTheta : ℝ → ℝ} {rRef r : ℝ}
     (hint : IntervalIntegrable (fun xi => uTheta xi ^ 2 / xi) volume rRef r)
     (hmeas : StronglyMeasurableAtFilter
-      (fun xi => uTheta xi ^ 2 / xi) (𝓝 r) volume)
+      (fun xi => uTheta xi ^ 2 / xi) (nhds r) volume)
     (hcont : ContinuousAt (fun xi => uTheta xi ^ 2 / xi) r) :
     HasDerivAt (swirlPressurePotential uTheta rRef)
       (uTheta r ^ 2 / r) r := by
@@ -176,7 +178,7 @@ theorem pressureFieldAtTime_radial_hasDerivAt
   unfold pressureFieldAtTime radialPressureGradientOverRho
   convert hsum using 1
   · funext y
-    simp [div_eq_mul_inv, inv_pow]
+    simp [div_eq_mul_inv]
     ring
   · field_simp [hr0]
     ring
@@ -208,7 +210,7 @@ theorem pressureFieldAtTime_axial_hasDerivAt
   unfold pressureFieldAtTime axialPressureGradientOverRho
   convert hsum using 1
   · funext y
-    simp [div_eq_mul_inv, inv_pow]
+    simp [div_eq_mul_inv]
     ring
   · ring
 
