@@ -75,9 +75,18 @@ theorem inverseScaleExact_hasDerivAt
       Real.exp (-strainAccum a t) * Real.exp (strainAccum a t) = 1 := by
     rw [← Real.exp_add]
     simp
+  have heTerm :
+      Real.exp (-strainAccum a t) * nu * Real.exp (strainAccum a t) * 4
+        = nu * 4 := by
+    calc
+      Real.exp (-strainAccum a t) * nu * Real.exp (strainAccum a t) * 4
+          = nu * 4 *
+              (Real.exp (-strainAccum a t) * Real.exp (strainAccum a t)) := by
+              ring
+      _ = nu * 4 := by rw [he]; ring
   convert hExp.mul hBracket using 1
   · ring_nf
-    rw [he]
+    rw [heTerm]
 
 /-- The exact inverse-scale solution satisfies Eq. (45) pointwise. -/
 theorem inverseScaleExact_residual_zero
