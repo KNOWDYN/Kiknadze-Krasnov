@@ -243,7 +243,7 @@ theorem scaledX_vorticityPeakRadius {s beta : ℝ}
 
 /-- Radial derivative of one-mode vorticity. -/
 theorem distributedVorticity_hasDerivAt_r
-    {circ s beta r : ℝ} (hs : 0 < s) (hbeta : 0 < beta) (hr : PuncturedRadius r) :
+    {circ s beta r : ℝ} (_hs : 0 < s) (hbeta : 0 < beta) (hr : PuncturedRadius r) :
     HasDerivAt (distributedVorticity circ s beta)
       (circ * beta / (Real.pi * gammaFn s) *
         (((s - 1) / scaledX beta r - 1) * vorticityShape s (scaledX beta r)) *

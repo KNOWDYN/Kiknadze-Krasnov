@@ -11,3 +11,7 @@ import KiknadzeKrasnov.VorticityCore
 import KiknadzeKrasnov.MaterialSurface
 import KiknadzeKrasnov.CirculationSurface
 import KiknadzeKrasnov.PrincipalSurface
+
+import KiknadzeKrasnov.ScaleDynamics
+import KiknadzeKrasnov.PressureField
+import KiknadzeKrasnov.NavierStokesCertificate
