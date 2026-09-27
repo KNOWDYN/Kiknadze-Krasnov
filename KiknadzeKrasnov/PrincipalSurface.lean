@@ -63,7 +63,6 @@ theorem principalSurface_snapshot
             |distributedVorticity circ s beta rStar|) := by
   dsimp
   have hs : 1 < shape p q := hann
-  have hs0 : 0 < shape p q := lt_trans zero_lt_one hs
   have hrpos : 0 < materialRadius (shape p q) beta :=
     materialRadius_pos hs hbeta
   have hxstar :
@@ -136,7 +135,7 @@ theorem exactMaterialCirculationSurface
     have snap := principalSurface_snapshot p hann (hbetaPos t ht) hcirc
     dsimp at snap ⊢
     exact ⟨snap.2.1, snap.2.2.2.1, snap.2.2.2.2.1,
-      snap.2.2.2.2.2.2.1, snap.2.2.2.2.2.2.2⟩
+      snap.2.2.2.2.2.1, snap.2.2.2.2.2.2⟩
 
 end
 
