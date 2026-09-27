@@ -211,6 +211,24 @@ theorem materialCirculationWithLine_hasDerivAt
   simpa [materialCirculationWithLine] using
     (hasDerivAt_const t gammaLine).add h
 
+/-- The optional constant line circulation preserves zero transfer on x=s-1. -/
+theorem materialCirculationWithLine_hasDerivAt_zero_at_star
+    {x : ℝ → ℝ} {gammaLine nu beta circ s t : ℝ}
+    (hs : 1 < s)
+    (hxdot : HasDerivAt x
+      (4 * nu * beta * ((s - 1) - x t)) t)
+    (hstar : x t = s - 1) :
+    HasDerivAt
+      (fun tau => materialCirculationWithLine gammaLine circ s (x tau))
+      0 t := by
+  have hx : 0 < x t := by rw [hstar]; linarith
+  have h :=
+    materialCirculationWithLine_hasDerivAt
+      (x := x) (gammaLine := gammaLine) (nu := nu) (beta := beta)
+      (circ := circ) (s := s) (t := t) (by linarith) hx hxdot
+  rw [hstar] at h
+  simpa [materialCirculationRate] using h
+
 /-- Enclosed circulation at the distinguished cylinder, including a constant line term. -/
 theorem materialCirculationWithLine_at_star
     (gammaLine circ s : ℝ) :
