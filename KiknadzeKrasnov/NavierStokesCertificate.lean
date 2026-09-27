@@ -336,10 +336,23 @@ theorem azimuthalMomentumResidualActual_zero
     (hshape : q = 2 * nu * (s - 1)) :
     azimuthalMomentumResidualActual
       nu a q gammaLine circ s r beta t = 0 := by
-  rw [azimuthalMomentumResidualActual]
-  rw [(oneModeAngularMomentumWithLine_time_hasDerivAt
-    (gammaLine := gammaLine) (circ := circ) (s := s)
-    (t := t) (r := r) hs hbetaPos hr hbeta).deriv]
+  have hline :
+      HasDerivAt (fun _tau : ℝ => gammaLine / (2 * Real.pi)) 0 t :=
+    hasDerivAt_const t _
+  have hdist :=
+    distributedAngularMomentum_time_hasDerivAt_actual
+      (circ := circ) (s := s) (t := t) (r := r)
+      hs hbetaPos hr hbeta
+  have htotal :
+      HasDerivAt
+        (fun tau =>
+          oneModeAngularMomentumWithLine gammaLine circ s (beta tau) r)
+        (distributedAngularMomentumTimeDerivative
+          circ s (beta t) betaDot r) t := by
+    unfold oneModeAngularMomentumWithLine
+    convert hline.add hdist using 1
+    ring
+  rw [azimuthalMomentumResidualActual, htotal.deriv]
   change distributedAngularMomentumResidualActual
     nu a q (beta t) betaDot circ s r / r = 0
   rw [distributedAngularMomentumResidualActual_zero
