@@ -173,7 +173,10 @@ theorem exactMaterialCirculationSurface
     (∀ t ∈ TimeDomain T,
       let s := shape p q
       let rStar := materialRadius s (beta t)
-      scaledX (beta t) rStar = s - 1
+      0 < rStar
+        ∧ scaledX (beta t) rStar = s - 1
+        ∧ materialRadiusSq s (beta t) =
+            q / (2 * p.nu * beta t)
         ∧ deriv (distributedVorticity circ s (beta t)) rStar = 0
         ∧ 2 * Real.pi * p.nu * rStar *
             deriv (distributedVorticity circ s (beta t)) rStar = 0
@@ -189,8 +192,7 @@ theorem exactMaterialCirculationSurface
   intro t ht
   have snap := principalSurface_snapshot p hann (hbetaPos t ht) hcirc
   dsimp at snap ⊢
-  exact ⟨snap.2.1, snap.2.2.2.1, snap.2.2.2.2.1,
-    snap.2.2.2.2.2.1, snap.2.2.2.2.2.2⟩
+  exact snap
 
 end
 
