@@ -46,7 +46,7 @@ theorem regLowerGammaDensity_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
       (((s - 1) / x - 1) * regLowerGammaDensity s x) x := by
   unfold regLowerGammaDensity
   convert (gammaKernel_hasDerivAt_profile (s := s) hx).div_const (gammaFn s) using 1
-  field_simp [gammaFn_ne_zero hs] <;> ring
+  field_simp [gammaFn_ne_zero hs]
 
 /-- Denominator-free second-profile relation used in the residual and circulation audits. -/
 theorem regLowerGammaDensity_second_relation
@@ -55,7 +55,6 @@ theorem regLowerGammaDensity_second_relation
       (s - 1 - x) * regLowerGammaDensity s x := by
   rw [(regLowerGammaDensity_hasDerivAt hs hx).deriv]
   field_simp [hx.ne']
-  ring
 
 end
 
