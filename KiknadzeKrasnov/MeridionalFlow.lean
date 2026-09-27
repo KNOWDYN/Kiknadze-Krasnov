@@ -36,12 +36,12 @@ theorem radialVelocity_hasDerivAt
   have hlin : HasDerivAt (fun ρ : ℝ => -(a / 2) * ρ) (-(a / 2)) r := by
     simpa using (hasDerivAt_id r).const_mul (-(a / 2))
   have hsource : HasDerivAt (fun ρ : ℝ => q / ρ) (-q / r ^ 2) r := by
-    convert (hasDerivAt_const r q).div (hasDerivAt_id r) hr0 using 1
-    · funext x
-      rfl
-    · field_simp [hr0]
-      ring
-  simpa [radialVelocity] using hlin.add hsource
+    convert (hasDerivAt_const r q).div (hasDerivAt_id r) hr0 using 1 <;>
+      simp [hr0]
+  convert hlin.add hsource using 1
+  · funext x
+    simp [radialVelocity]
+  · ring
 
 /--
 Eq. (23): the derivative of the actual radial flux `r u_r` is `-a r`.
@@ -56,7 +56,8 @@ theorem radialFlux_hasDerivAt
   convert hprod using 1
   · funext x
     simp
-  · unfold radialVelocity
+  · simp only [id_eq]
+    unfold radialVelocity
     field_simp [hr0]
     ring
 
@@ -78,7 +79,6 @@ theorem radius_mul_radialVelocity
   have hr0 : r ≠ 0 := ne_of_gt hr
   unfold radialVelocity radialFluxPrimitive
   field_simp [hr0]
-  ring
 
 /--
 Eq. (25): on `r > 0`, the integrated relation uniquely determines the
@@ -89,15 +89,11 @@ theorem radialVelocity_eq_of_integrated_relation
     (hflux : r * ur = radialFluxPrimitive a q r) :
     ur = radialVelocity a q r := by
   have hr0 : r ≠ 0 := ne_of_gt hr
-  unfold radialFluxPrimitive at hflux
-  unfold radialVelocity
-  apply (eq_div_iff hr0).2
-  calc
-    ur * r = r * ur := by ring
-    _ = -(a / 2) * r ^ 2 + q := hflux
-    _ = (-(a / 2) * r + q / r) * r := by
-      field_simp [hr0]
-      ring
+  have hmodel :
+      r * radialVelocity a q r = radialFluxPrimitive a q r :=
+    radius_mul_radialVelocity hr
+  have hmul : r * ur = r * radialVelocity a q r := hflux.trans hmodel.symm
+  exact mul_left_cancel₀ hr0 hmul
 
 /--
 Eq. (14) specialised to the KK meridional field: continuity is proved from
