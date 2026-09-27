@@ -49,22 +49,6 @@ theorem radialSquared_hasDerivAt_of_materialTrajectory
   ring
 
 /--
-Manuscript Eqs. (103)--(106), directly from an actual radial material
-trajectory rather than from a preassigned squared-radius evolution law.
--/
-theorem scaledRadius_hasDerivAt_of_materialTrajectory
-    {beta r : ℝ → ℝ} {betaDot nu a q s t : ℝ}
-    (hrpos : PuncturedRadius (r t))
-    (hbeta : HasDerivAt beta betaDot t)
-    (hr : HasDerivAt r (radialVelocity a q (r t)) t)
-    (hscale : betaScaleResidual nu a (beta t) betaDot = 0)
-    (hcompat : q = 2 * nu * (s - 1)) :
-    HasDerivAt (fun tau => beta tau * (r tau) ^ 2)
-      (4 * nu * beta t * ((s - 1) - beta t * (r t) ^ 2)) t := by
-  have hy := radialSquared_hasDerivAt_of_materialTrajectory hrpos hr
-  exact scaledMaterial_hasDerivAt hbeta hy hscale hcompat
-
-/--
 Manuscript Eqs. (103)--(106): for a material squared-radius y=r^2,
 x=beta*y has rate 4 nu beta ((s-1)-x).
 -/
@@ -81,6 +65,22 @@ theorem scaledMaterial_hasDerivAt
   have hbdot := (betaScaleResidual_zero_iff_rate.mp hscale)
   rw [hbdot, hcompat]
   ring
+
+/--
+Manuscript Eqs. (103)--(106), directly from an actual radial material
+trajectory rather than from a preassigned squared-radius evolution law.
+-/
+theorem scaledRadius_hasDerivAt_of_materialTrajectory
+    {beta r : ℝ → ℝ} {betaDot nu a q s t : ℝ}
+    (hrpos : PuncturedRadius (r t))
+    (hbeta : HasDerivAt beta betaDot t)
+    (hr : HasDerivAt r (radialVelocity a q (r t)) t)
+    (hscale : betaScaleResidual nu a (beta t) betaDot = 0)
+    (hcompat : q = 2 * nu * (s - 1)) :
+    HasDerivAt (fun tau => beta tau * (r tau) ^ 2)
+      (4 * nu * beta t * ((s - 1) - beta t * (r t) ^ 2)) t := by
+  have hy := radialSquared_hasDerivAt_of_materialTrajectory hrpos hr
+  exact scaledMaterial_hasDerivAt hbeta hy hscale hcompat
 
 /-- At x=s-1, the material scaled-radius rate vanishes exactly. -/
 theorem scaledMaterial_hasDerivAt_zero_at_star
