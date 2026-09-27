@@ -6,6 +6,8 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
+open Set
+
 /-!
 Pass 4 material-motion layer for manuscript Eqs. (103)--(112) and
 Supplementary Eqs. (18)--(26).  The source-bearing distinguished radius is
@@ -219,6 +221,186 @@ theorem radialInvariant_eq
   · intro t
     exact (radialInvariant_hasDerivAt_zero
       (hA t) (hbeta t) (hbetane t) (hy t) (hscale t) hcompat).deriv
+
+
+/--
+Source-domain form of the radial invariant: the integrating-factor quantity
+is constant between any two times in the physical interval [0,T), using only
+the differential hypotheses on that interval.
+-/
+theorem radialInvariant_eq_on
+    {T : ℝ} {a beta y betaDot : ℝ → ℝ} {nu q s t₁ t₂ : ℝ}
+    (hA : ∀ t ∈ TimeDomain T, HasDerivAt (strainAccum a) (a t) t)
+    (hbeta : ∀ t ∈ TimeDomain T, HasDerivAt beta (betaDot t) t)
+    (hbetane : ∀ t ∈ TimeDomain T, beta t ≠ 0)
+    (hy : ∀ t ∈ TimeDomain T,
+      HasDerivAt y (-a t * y t + 2 * q) t)
+    (hscale : ∀ t ∈ TimeDomain T,
+      betaScaleResidual nu (a t) (beta t) (betaDot t) = 0)
+    (hcompat : q = 2 * nu * (s - 1))
+    (ht₁ : t₁ ∈ TimeDomain T) (ht₂ : t₂ ∈ TimeDomain T) :
+    radialInvariant a s beta y t₁ = radialInvariant a s beta y t₂ := by
+  have hbound :
+      ‖radialInvariant a s beta y t₂ - radialInvariant a s beta y t₁‖ ≤ 0 := by
+    simpa using
+      (Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
+        (f := radialInvariant a s beta y)
+        (f' := fun _ : ℝ => 0)
+        (s := TimeDomain T)
+        (C := 0)
+        (fun t ht =>
+          (radialInvariant_hasDerivAt_zero
+            (hA t ht) (hbeta t ht) (hbetane t ht)
+            (hy t ht) (hscale t ht) hcompat).hasDerivWithinAt)
+        (fun _ _ => by simp)
+        (by simpa [TimeDomain] using (convex_Ico (0 : ℝ) T))
+        ht₁ ht₂)
+  have hn :
+      ‖radialInvariant a s beta y t₂ - radialInvariant a s beta y t₁‖ = 0 :=
+    le_antisymm hbound (norm_nonneg _)
+  have hsub :
+      radialInvariant a s beta y t₂ - radialInvariant a s beta y t₁ = 0 :=
+    norm_eq_zero.mp hn
+  exact (sub_eq_zero.mp hsub).symm
+
+/-- Physical-time-domain invariance of the distinguished material cylinder. -/
+theorem materialSurface_invariant_on
+    {T : ℝ} {a beta y betaDot : ℝ → ℝ} {nu q s t₀ t : ℝ}
+    (hA : ∀ tau ∈ TimeDomain T, HasDerivAt (strainAccum a) (a tau) tau)
+    (hbeta : ∀ tau ∈ TimeDomain T, HasDerivAt beta (betaDot tau) tau)
+    (hbetane : ∀ tau ∈ TimeDomain T, beta tau ≠ 0)
+    (hy : ∀ tau ∈ TimeDomain T,
+      HasDerivAt y (-a tau * y tau + 2 * q) tau)
+    (hscale : ∀ tau ∈ TimeDomain T,
+      betaScaleResidual nu (a tau) (beta tau) (betaDot tau) = 0)
+    (hcompat : q = 2 * nu * (s - 1))
+    (ht₀ : t₀ ∈ TimeDomain T) (ht : t ∈ TimeDomain T)
+    (hinit : y t₀ = materialRadiusSq s (beta t₀)) :
+    y t = materialRadiusSq s (beta t) := by
+  have hI :=
+    radialInvariant_eq_on hA hbeta hbetane hy hscale hcompat ht₀ ht
+  unfold radialInvariant materialOffsetSq at hI
+  rw [hinit, sub_self, mul_zero] at hI
+  have hexp : Real.exp (strainAccum a t) ≠ 0 := (Real.exp_pos _).ne'
+  exact sub_eq_zero.mp ((mul_eq_zero.mp hI.symm).resolve_left hexp)
+
+/-- Physical-time-domain no-crossing theorem for the distinguished cylinder. -/
+theorem materialSurface_no_crossing_on
+    {T : ℝ} {a beta y betaDot : ℝ → ℝ} {nu q s t₀ t : ℝ}
+    (hA : ∀ tau ∈ TimeDomain T, HasDerivAt (strainAccum a) (a tau) tau)
+    (hbeta : ∀ tau ∈ TimeDomain T, HasDerivAt beta (betaDot tau) tau)
+    (hbetane : ∀ tau ∈ TimeDomain T, beta tau ≠ 0)
+    (hy : ∀ tau ∈ TimeDomain T,
+      HasDerivAt y (-a tau * y tau + 2 * q) tau)
+    (hscale : ∀ tau ∈ TimeDomain T,
+      betaScaleResidual nu (a tau) (beta tau) (betaDot tau) = 0)
+    (hcompat : q = 2 * nu * (s - 1))
+    (ht₀ : t₀ ∈ TimeDomain T) (ht : t ∈ TimeDomain T)
+    (hinit : y t₀ ≠ materialRadiusSq s (beta t₀)) :
+    y t ≠ materialRadiusSq s (beta t) := by
+  intro hcross
+  have hI :=
+    radialInvariant_eq_on hA hbeta hbetane hy hscale hcompat ht₀ ht
+  unfold radialInvariant materialOffsetSq at hI
+  rw [hcross, sub_self, mul_zero] at hI
+  have hexp : Real.exp (strainAccum a t₀) ≠ 0 := (Real.exp_pos _).ne'
+  have hzero : y t₀ - materialRadiusSq s (beta t₀) = 0 :=
+    (mul_eq_zero.mp hI).resolve_left hexp
+  exact hinit (sub_eq_zero.mp hzero)
+
+/-- Outside ordering is preserved on the physical time interval. -/
+theorem materialOffsetSq_pos_iff_on
+    {T : ℝ} {a beta y betaDot : ℝ → ℝ} {nu q s t₁ t₂ : ℝ}
+    (hA : ∀ t ∈ TimeDomain T, HasDerivAt (strainAccum a) (a t) t)
+    (hbeta : ∀ t ∈ TimeDomain T, HasDerivAt beta (betaDot t) t)
+    (hbetane : ∀ t ∈ TimeDomain T, beta t ≠ 0)
+    (hy : ∀ t ∈ TimeDomain T,
+      HasDerivAt y (-a t * y t + 2 * q) t)
+    (hscale : ∀ t ∈ TimeDomain T,
+      betaScaleResidual nu (a t) (beta t) (betaDot t) = 0)
+    (hcompat : q = 2 * nu * (s - 1))
+    (ht₁ : t₁ ∈ TimeDomain T) (ht₂ : t₂ ∈ TimeDomain T) :
+    0 < materialOffsetSq s (beta t₁) (y t₁) ↔
+      0 < materialOffsetSq s (beta t₂) (y t₂) := by
+  have hI :=
+    radialInvariant_eq_on hA hbeta hbetane hy hscale hcompat ht₁ ht₂
+  unfold radialInvariant at hI
+  constructor
+  · intro hpos
+    have hleft :
+        0 < Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) :=
+      mul_pos (Real.exp_pos _) hpos
+    rw [hI] at hleft
+    by_contra hnot
+    have hnonpos : materialOffsetSq s (beta t₂) (y t₂) ≤ 0 :=
+      le_of_not_gt hnot
+    have hright :
+        Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le hnonpos
+    linarith
+  · intro hpos
+    have hright :
+        0 < Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) :=
+      mul_pos (Real.exp_pos _) hpos
+    rw [← hI] at hright
+    by_contra hnot
+    have hnonpos : materialOffsetSq s (beta t₁) (y t₁) ≤ 0 :=
+      le_of_not_gt hnot
+    have hleft :
+        Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos (Real.exp_pos _).le hnonpos
+    linarith
+
+/-- Inside ordering is preserved on the physical time interval. -/
+theorem materialOffsetSq_neg_iff_on
+    {T : ℝ} {a beta y betaDot : ℝ → ℝ} {nu q s t₁ t₂ : ℝ}
+    (hA : ∀ t ∈ TimeDomain T, HasDerivAt (strainAccum a) (a t) t)
+    (hbeta : ∀ t ∈ TimeDomain T, HasDerivAt beta (betaDot t) t)
+    (hbetane : ∀ t ∈ TimeDomain T, beta t ≠ 0)
+    (hy : ∀ t ∈ TimeDomain T,
+      HasDerivAt y (-a t * y t + 2 * q) t)
+    (hscale : ∀ t ∈ TimeDomain T,
+      betaScaleResidual nu (a t) (beta t) (betaDot t) = 0)
+    (hcompat : q = 2 * nu * (s - 1))
+    (ht₁ : t₁ ∈ TimeDomain T) (ht₂ : t₂ ∈ TimeDomain T) :
+    materialOffsetSq s (beta t₁) (y t₁) < 0 ↔
+      materialOffsetSq s (beta t₂) (y t₂) < 0 := by
+  have hI :=
+    radialInvariant_eq_on hA hbeta hbetane hy hscale hcompat ht₁ ht₂
+  unfold radialInvariant at hI
+  constructor
+  · intro hneg
+    have hleft :
+        Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) < 0 :=
+      mul_neg_of_pos_of_neg (Real.exp_pos _) hneg
+    rw [hI] at hleft
+    by_contra hnot
+    have hnonneg : 0 ≤ materialOffsetSq s (beta t₂) (y t₂) :=
+      le_of_not_gt hnot
+    have hright :
+        0 ≤ Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) :=
+      mul_nonneg (Real.exp_pos _).le hnonneg
+    linarith
+  · intro hneg
+    have hright :
+        Real.exp (strainAccum a t₂) *
+          materialOffsetSq s (beta t₂) (y t₂) < 0 :=
+      mul_neg_of_pos_of_neg (Real.exp_pos _) hneg
+    rw [← hI] at hright
+    by_contra hnot
+    have hnonneg : 0 ≤ materialOffsetSq s (beta t₁) (y t₁) :=
+      le_of_not_gt hnot
+    have hleft :
+        0 ≤ Real.exp (strainAccum a t₁) *
+          materialOffsetSq s (beta t₁) (y t₁) :=
+      mul_nonneg (Real.exp_pos _).le hnonneg
+    linarith
 
 /-- A trajectory initially on the distinguished cylinder remains on it. -/
 theorem materialSurface_invariant
