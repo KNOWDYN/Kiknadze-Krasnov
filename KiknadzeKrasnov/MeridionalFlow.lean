@@ -34,7 +34,7 @@ theorem axial_affine_of_prescribed_gradient
       deriv uz z = a := hgrad z
       _ = deriv (fun ζ : ℝ => a * ζ) z := by
         symm
-        exact ((hasDerivAt_id z).const_mul a).deriv
+        simpa only [id_eq, mul_one] using ((hasDerivAt_id z).const_mul a).deriv
   obtain ⟨b, hb⟩ :=
     isOpen_univ.exists_eq_add_of_deriv_eq isPreconnected_univ
       huz.differentiableOn hlin.differentiableOn hderiv
