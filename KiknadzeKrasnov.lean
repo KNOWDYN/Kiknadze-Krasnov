@@ -5,3 +5,9 @@ import KiknadzeKrasnov.Model
 import KiknadzeKrasnov.Kinematics
 import KiknadzeKrasnov.MeridionalFlow
 import KiknadzeKrasnov.AngularMomentum
+
+import KiknadzeKrasnov.GammaProfile
+import KiknadzeKrasnov.VorticityCore
+import KiknadzeKrasnov.MaterialSurface
+import KiknadzeKrasnov.CirculationSurface
+import KiknadzeKrasnov.PrincipalSurface
