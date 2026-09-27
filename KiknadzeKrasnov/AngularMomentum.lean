@@ -141,6 +141,19 @@ def profileRadialDerivative
   2 * beta * r * Fp (scaledX beta r)
 
 /--
+When `Fp` is genuinely the derivative of the fixed profile `F`, the
+auxiliary radial-derivative expression is the derivative of the actual
+composed angular-momentum profile at every radius.
+-/
+theorem profileAngularMomentum_radial_deriv_eq
+    {F Fp : ℝ → ℝ} {beta r : ℝ}
+    (hF : ∀ x : ℝ, HasDerivAt F (Fp x) x) :
+    deriv (fun ρ : ℝ => F (scaledX beta ρ)) r
+      = profileRadialDerivative beta Fp r := by
+  rw [(profileAngularMomentum_radial_hasDerivAt (hF (scaledX beta r))).deriv]
+  rfl
+
+/--
 Derivative of the first radial derivative.  This is the actual second
 radial derivative of the scaled profile whenever `Fp` is its profile derivative.
 -/
@@ -185,12 +198,56 @@ theorem profile_radial_diffusion_operator_eq
   field_simp [hr0]
   ring
 
+/--
+The third identity in Eq. (30) for the actual composed profile, not merely
+for an auxiliary jet: if `Fp=F'` globally and `Fp'(x)=Fpp` at the point,
+then `L_rr-(1/r)L_r=4βxFpp`.
+-/
+theorem profileAngularMomentum_radial_second_operator_eq
+    {F Fp : ℝ → ℝ} {beta r Fpp : ℝ}
+    (hr : PuncturedRadius r)
+    (hF : ∀ x : ℝ, HasDerivAt F (Fp x) x)
+    (hFp : HasDerivAt Fp Fpp (scaledX beta r)) :
+    deriv (fun ρ : ℝ =>
+      deriv (fun σ : ℝ => F (scaledX beta σ)) ρ) r
+      - deriv (fun σ : ℝ => F (scaledX beta σ)) r / r
+      = 4 * beta * scaledX beta r * Fpp := by
+  have hfun :
+      (fun ρ : ℝ => deriv (fun σ : ℝ => F (scaledX beta σ)) ρ)
+        = profileRadialDerivative beta Fp := by
+    funext ρ
+    exact profileAngularMomentum_radial_deriv_eq hF
+  rw [hfun]
+  exact profile_radial_diffusion_operator_eq hr hFp
+
 /-- Eq. (31) moved to the left-hand side. -/
 def preSeparationResidual
     (nu a q beta betaDot x Fp Fpp : ℝ) : ℝ :=
   (betaDot / beta - a) * x * Fp
     + 2 * beta * q * Fp
     - 4 * nu * beta * x * Fpp
+
+/--
+Manuscript Eq. (31) is exactly the angular-momentum residual after substituting
+Eq. (25) and the three chain-rule coefficients in Eq. (30).  This theorem
+connects the reduced residual to the actual KK radial velocity rather than
+introducing Eq. (31) as an independent assumption.
+-/
+theorem angularMomentumResidual_eq_preSeparationResidual
+    {nu a q beta betaDot r Fp Fpp : ℝ}
+    (hr : PuncturedRadius r)
+    (hbeta : beta ≠ 0) :
+    angularMomentumResidual nu (radialVelocity a q r) r
+      ((betaDot / beta) * scaledX beta r * Fp)
+      (2 * beta * r * Fp)
+      (2 * beta * Fp + 4 * beta ^ 2 * r ^ 2 * Fpp)
+      =
+    preSeparationResidual nu a q beta betaDot
+      (scaledX beta r) Fp Fpp := by
+  have hr0 : r ≠ 0 := ne_of_gt hr
+  unfold angularMomentumResidual preSeparationResidual radialVelocity scaledX
+  field_simp [hr0, hbeta]
+  ring
 
 /-- Eq. (32) moved to the left-hand side. -/
 def betaScaleResidual (nu a beta betaDot : ℝ) : ℝ :=
