@@ -84,6 +84,52 @@ theorem materialCirculation_at_star_hasDerivAt_zero_on
     (s := shape p q) (t := t) hs hx hstar
 
 /--
+The manuscript permits an optional constant central line circulation.  It
+adds a constant to the enclosed circulation and therefore leaves the zero
+transfer statement on the distinguished material cylinder unchanged.
+-/
+theorem materialCirculationWithLine_at_star_hasDerivAt_zero_on
+    (p : FluidParams) {T q gammaLine circ : ℝ}
+    {a beta betaDot : ℝ → ℝ}
+    (hann : AnnularSourceBranch p q)
+    (hbetaPos : PositiveScaleOn T beta)
+    (hbeta : ∀ t ∈ TimeDomain T, HasDerivAt beta (betaDot t) t)
+    (hscale : ∀ t ∈ TimeDomain T,
+      betaScaleResidual p.nu (a t) (beta t) (betaDot t) = 0) :
+    ∀ t ∈ TimeDomain T,
+      HasDerivAt
+        (fun tau =>
+          materialCirculationWithLine gammaLine circ (shape p q)
+            (beta tau * materialRadiusSq (shape p q) (beta tau)))
+        0 t := by
+  intro t ht
+  have hs : 1 < shape p q := hann
+  have hb : 0 < beta t := hbetaPos t ht
+  have hcompat : q = 2 * p.nu * (shape p q - 1) :=
+    source_eq_two_nu_mul_shape_sub_one p q
+  have hy :=
+    materialRadiusSq_history_hasDerivAt
+      (beta := beta) (betaDot := betaDot t) (nu := p.nu)
+      (a := a t) (q := q) (s := shape p q) (t := t)
+      (hbeta t ht) hb.ne' (hscale t ht) hcompat
+  have hx :=
+    scaledMaterial_hasDerivAt
+      (beta := beta)
+      (y := fun tau => materialRadiusSq (shape p q) (beta tau))
+      (betaDot := betaDot t) (nu := p.nu) (a := a t)
+      (q := q) (s := shape p q) (t := t)
+      (hbeta t ht) hy (hscale t ht) hcompat
+  have hstar :
+      beta t * materialRadiusSq (shape p q) (beta t) =
+        shape p q - 1 :=
+    scaledX_materialRadiusSq hb.ne'
+  exact materialCirculationWithLine_hasDerivAt_zero_at_star
+    (x := fun tau =>
+      beta tau * materialRadiusSq (shape p q) (beta tau))
+    (gammaLine := gammaLine) (nu := p.nu) (beta := beta t)
+    (circ := circ) (s := shape p q) (t := t) hs hx hstar
+
+/--
 At each physical time, the material radius maps to x=s-1, equals the unique
 positive-radius maximum of |omega_z| for nonzero distributed circulation, has
 zero radial vorticity gradient and zero viscous circulation transfer, and
