@@ -227,14 +227,11 @@ theorem pressureFieldAtTime_axial_hasDerivAt
 theorem pressureFieldAtTime_radial_deriv_eq
     {rho a aDot b bDot q p0 r z uThetaVal : ℝ}
     {Pi : ℝ → ℝ}
+    (hrho : rho ≠ 0)
     (hr : PuncturedRadius r)
     (hPi : HasDerivAt Pi (uThetaVal ^ 2 / r) r) :
     deriv (fun rr => pressureFieldAtTime rho a aDot b bDot q p0 Pi rr z) r / rho
       = radialPressureGradientOverRho a aDot q uThetaVal r := by
-  have hrho : rho ≠ 0 := by
-    intro h
-    subst rho
-    simp at *
   rw [(pressureFieldAtTime_radial_hasDerivAt hr hPi).deriv]
   field_simp [hrho]
 
