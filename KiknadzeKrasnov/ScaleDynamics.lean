@@ -76,7 +76,8 @@ theorem inverseScaleExact_hasDerivAt
     rw [← Real.exp_add]
     simp
   convert hExp.mul hBracket using 1
-  · nlinarith [he]
+  · ring_nf
+    rw [he]
 
 /-- The exact inverse-scale solution satisfies Eq. (45) pointwise. -/
 theorem inverseScaleExact_residual_zero
