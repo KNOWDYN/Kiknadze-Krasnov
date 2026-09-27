@@ -209,7 +209,8 @@ theorem materialCirculationWithLine_hasDerivAt
       (circ := circ) (s := s) (nu := nu) (beta := beta)
       (t := t) hs hx hxdot
   have hc := (hasDerivAt_const t gammaLine).add h
-  simpa [materialCirculationWithLine] using hc
+  unfold materialCirculationWithLine
+  convert hc using 1 <;> simp
 
 /-- The optional constant line circulation preserves zero transfer on x=s-1. -/
 theorem materialCirculationWithLine_hasDerivAt_zero_at_star
@@ -282,7 +283,8 @@ theorem materialCirculationWithLine_hasDerivAt_viscousFlux
       (x := x) (nu := nu) (beta := beta) (circ := circ)
       (s := s) (r := r) (t := t) hs hbeta hr hxval hxdot
   have hc := (hasDerivAt_const t gammaLine).add h
-  simpa [materialCirculationWithLine] using hc
+  unfold materialCirculationWithLine
+  convert hc using 1 <;> simp
 
 end
 
