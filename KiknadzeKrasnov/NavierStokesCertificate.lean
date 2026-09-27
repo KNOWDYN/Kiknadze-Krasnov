@@ -211,8 +211,7 @@ theorem distributedAngularMomentum_time_hasDerivAt_actual
   have h := hP.const_mul (circ / (2 * Real.pi))
   unfold distributedAngularMomentum distributedAngularMomentumTimeDerivative
     regLowerGammaDensity
-  convert h using 1
-  ring
+  simpa only [Function.comp_apply, mul_assoc] using h
 
 /-- The named first radial coefficient is the derivative of the actual mode. -/
 theorem distributedAngularMomentum_radial_hasDerivAt_actual
@@ -244,6 +243,7 @@ theorem distributedAngularMomentumRadialDerivative_hasDerivAt
   unfold distributedAngularMomentumRadialDerivative
     distributedAngularMomentumSecondRadialDerivative
     regLowerGammaSecondDensity
+  simp only [Function.comp_apply] at hScaled
   convert hScaled using 1
   · funext rho
     ring
@@ -281,7 +281,7 @@ theorem distributedAngularMomentumResidualActual_eq_preSeparation
     distributedAngularMomentumTimeDerivative
     distributedAngularMomentumRadialDerivative
     distributedAngularMomentumSecondRadialDerivative
-    preSeparationResidual radialVelocity regLowerGammaSecondDensity
+    preSeparationResidual radialVelocity regLowerGammaSecondDensity scaledX
   field_simp [hr0, hbeta.ne', hx.ne', Real.pi_ne_zero]
   ring
 
@@ -351,7 +351,9 @@ theorem oneModeAngularMomentumWithLine_time_hasDerivAt
         circ s (beta t) betaDot r) t := by
   have hline := centralLineAngularMomentum_time_hasDerivAt_zero gammaLine t
   have hdist :=
-    distributedAngularMomentum_time_hasDerivAt_actual hs hbetaPos hr hbeta
+    distributedAngularMomentum_time_hasDerivAt_actual
+      (circ := circ) (s := s) (t := t) (r := r)
+      hs hbetaPos hr hbeta
   unfold oneModeAngularMomentumWithLine
   convert hline.add hdist using 1
   ring
