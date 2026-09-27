@@ -38,7 +38,7 @@ theorem gammaKernel_hasDerivAt_profile {s x : ℝ} (hx : 0 < x) :
   unfold gammaKernel
   convert hmul using 1
   rw [Real.rpow_sub_one hx.ne' (s - 1)]
-  field_simp [hx.ne'] <;> ring
+  field_simp [hx.ne']; ring
 
 /-- Supplementary Eq. (14): P_xx=((s-1)/x-1)P_x on x>0. -/
 theorem regLowerGammaDensity_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
