@@ -32,6 +32,39 @@ def radialInvariant (a : ℝ → ℝ) (s : ℝ) (beta y : ℝ → ℝ) (t : ℝ)
   Real.exp (strainAccum a t) * materialOffsetSq s (beta t) (y t)
 
 /--
+Manuscript Eq. (105): an actual radial material trajectory
+r' = -a r/2 + q/r induces (r^2)' = -a r^2 + 2q on r>0.
+-/
+theorem radialSquared_hasDerivAt_of_materialTrajectory
+    {r : ℝ → ℝ} {a q t : ℝ}
+    (hrpos : PuncturedRadius (r t))
+    (hr : HasDerivAt r (radialVelocity a q (r t)) t) :
+    HasDerivAt (fun tau => (r tau) ^ 2)
+      (-a * (r t) ^ 2 + 2 * q) t := by
+  have hsq := hr.pow 2
+  have hr0 : r t ≠ 0 := ne_of_gt hrpos
+  convert hsq using 1
+  unfold radialVelocity
+  field_simp [hr0]
+  ring
+
+/--
+Manuscript Eqs. (103)--(106), directly from an actual radial material
+trajectory rather than from a preassigned squared-radius evolution law.
+-/
+theorem scaledRadius_hasDerivAt_of_materialTrajectory
+    {beta r : ℝ → ℝ} {betaDot nu a q s t : ℝ}
+    (hrpos : PuncturedRadius (r t))
+    (hbeta : HasDerivAt beta betaDot t)
+    (hr : HasDerivAt r (radialVelocity a q (r t)) t)
+    (hscale : betaScaleResidual nu a (beta t) betaDot = 0)
+    (hcompat : q = 2 * nu * (s - 1)) :
+    HasDerivAt (fun tau => beta tau * (r tau) ^ 2)
+      (4 * nu * beta t * ((s - 1) - beta t * (r t) ^ 2)) t := by
+  have hy := radialSquared_hasDerivAt_of_materialTrajectory hrpos hr
+  exact scaledMaterial_hasDerivAt hbeta hy hscale hcompat
+
+/--
 Manuscript Eqs. (103)--(106): for a material squared-radius y=r^2,
 x=beta*y has rate 4 nu beta ((s-1)-x).
 -/
