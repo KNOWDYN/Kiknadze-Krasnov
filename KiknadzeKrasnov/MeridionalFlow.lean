@@ -36,8 +36,9 @@ theorem radialVelocity_hasDerivAt
   have hlin : HasDerivAt (fun ρ : ℝ => -(a / 2) * ρ) (-(a / 2)) r := by
     simpa using (hasDerivAt_id r).const_mul (-(a / 2))
   have hsource : HasDerivAt (fun ρ : ℝ => q / ρ) (-q / r ^ 2) r := by
-    convert (hasDerivAt_const r q).div (hasDerivAt_id r) hr0 using 1 <;>
-      simp [hr0]
+    convert (hasDerivAt_const r q).div (hasDerivAt_id r) hr0 using 1
+    · rfl
+    · simp
   convert hlin.add hsource using 1
   · funext x
     simp [radialVelocity]
