@@ -52,10 +52,9 @@ def betaExact (nu beta0 : ℝ) (a : ℝ → ℝ) (t : ℝ) : ℝ :=
     inverseScaleExact nu h0 a 0 = h0 := by
   simp [inverseScaleExact, strainAccum]
 
-@[simp] theorem betaExact_zero {nu beta0 : ℝ} {a : ℝ → ℝ}
-    (hbeta0 : beta0 ≠ 0) :
+@[simp] theorem betaExact_zero (nu beta0 : ℝ) (a : ℝ → ℝ) :
     betaExact nu beta0 a 0 = beta0 := by
-  simp [betaExact, strainAccum, hbeta0]
+  simp [betaExact, strainAccum]
 
 /-- Eq. (47) differentiates back to h' + a h = 4 nu. -/
 theorem inverseScaleExact_hasDerivAt
@@ -71,13 +70,13 @@ theorem inverseScaleExact_hasDerivAt
   have hBracket : HasDerivAt
       (fun x => h0 + 4 * nu * scaleIntegral a x)
       (4 * nu * Real.exp (strainAccum a t)) t := by
-    convert (hJ.const_mul (4 * nu)).const_add h0 using 1
-    ring
+    simpa [add_comm] using (hJ.const_mul (4 * nu)).const_add h0
+  have he :
+      Real.exp (-strainAccum a t) * Real.exp (strainAccum a t) = 1 := by
+    rw [← Real.exp_add]
+    simp
   convert hExp.mul hBracket using 1
-  · ring
-  · simp [Real.exp_neg]
-    field_simp [Real.exp_ne_zero (strainAccum a t)]
-    ring
+  · nlinarith [he]
 
 /-- The exact inverse-scale solution satisfies Eq. (45) pointwise. -/
 theorem inverseScaleExact_residual_zero
@@ -104,13 +103,11 @@ theorem betaExact_hasDerivAt
   have hdenDeriv : HasDerivAt
       (fun x => beta0⁻¹ + 4 * nu * scaleIntegral a x)
       (4 * nu * Real.exp (strainAccum a t)) t := by
-    convert (hJ.const_mul (4 * nu)).const_add beta0⁻¹ using 1
-    ring
+    simpa [add_comm] using (hJ.const_mul (4 * nu)).const_add beta0⁻¹
   have hquot := hnum.div hdenDeriv hden
   unfold betaExact
   convert hquot using 1
   field_simp [hden]
-  ring
 
 /-- The explicit beta solution satisfies Eq. (32) pointwise. -/
 theorem betaExact_scaleResidual_zero
