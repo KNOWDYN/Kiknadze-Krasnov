@@ -218,6 +218,7 @@ theorem profileAngularMomentum_radial_second_operator_eq
     funext ρ
     exact profileAngularMomentum_radial_deriv_eq hF
   rw [hfun]
+  rw [profileAngularMomentum_radial_deriv_eq hF]
   exact profile_radial_diffusion_operator_eq hr hFp
 
 /-- Eq. (31) moved to the left-hand side. -/
