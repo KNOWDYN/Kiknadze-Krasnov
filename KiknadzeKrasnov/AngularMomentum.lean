@@ -97,7 +97,9 @@ theorem profileAngularMomentum_time_hasDerivAt
       (betaDot * r ^ 2) t := by
     unfold scaledX
     convert hbeta.mul_const (r ^ 2) using 1 <;> ring
-  simpa [profileAngularMomentum] using hF.comp t hx
+  convert hF.comp t hx using 1
+  · rfl
+  · ring
 
 /--
 First identity in Eq. (30): `L_t=(βdot/β)xF'`, stated pointwise for
@@ -113,7 +115,6 @@ theorem profileAngularMomentum_time_deriv_eq
   rw [(profileAngularMomentum_time_hasDerivAt hbeta hF).deriv]
   unfold scaledX
   field_simp [hbeta0]
-  ring
 
 /-- Radial chain rule for `L=F(βr²)`, the second identity in Eq. (30). -/
 theorem profileAngularMomentum_radial_hasDerivAt
@@ -130,7 +131,9 @@ theorem profileAngularMomentum_radial_hasDerivAt
       simp [pow_two]
     · simp
       ring
-  convert hF.comp r hx using 1 <;> ring
+  convert hF.comp r hx using 1
+  · rfl
+  · ring
 
 /-- The explicit first radial derivative appearing in Eq. (30). -/
 def profileRadialDerivative
@@ -306,7 +309,7 @@ theorem preSeparationResidual_gamma_factor
   unfold gammaProfileSecondDerivativeRelation at hgamma
   unfold preSeparationResidual betaScaleResidual
   field_simp [hbeta]
-  nlinarith [hgamma]
+  linear_combination -4 * beta ^ 2 * nu * hgamma
 
 /-- Supplementary Eq. (17): the two compatibility conditions annihilate the residual. -/
 theorem gamma_profile_residual_zero
