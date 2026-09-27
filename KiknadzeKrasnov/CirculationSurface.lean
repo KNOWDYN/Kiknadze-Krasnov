@@ -178,6 +178,87 @@ theorem materialCirculationRate_pos_after_star_of_circ_neg
     exact mul_neg_of_neg_of_pos hfrac hshape
   exact mul_pos_of_neg_of_neg hpre (sub_neg.mpr hafter)
 
+
+/--
+Material-loop circulation including the optional constant central line
+circulation allowed by the manuscript.  The line term is additive and carries
+zero time derivative.
+-/
+def materialCirculationWithLine
+    (gammaLine circ s x : ℝ) : ℝ :=
+  gammaLine + materialCirculationFromX circ s x
+
+/-- A constant central line circulation does not alter the material circulation rate. -/
+theorem materialCirculationWithLine_hasDerivAt
+    {x : ℝ → ℝ} {gammaLine nu beta circ s t : ℝ}
+    (hs : 0 < s) (hx : 0 < x t)
+    (hxdot : HasDerivAt x
+      (4 * nu * beta * ((s - 1) - x t)) t) :
+    HasDerivAt
+      (fun tau => materialCirculationWithLine gammaLine circ s (x tau))
+      (materialCirculationRate nu beta circ s (x t)) t := by
+  have h :=
+    materialCirculationFromX_hasDerivAt
+      (circ := circ) (s := s) (nu := nu) (beta := beta)
+      (t := t) hs hx hxdot
+  simpa [materialCirculationWithLine] using
+    (hasDerivAt_const t gammaLine).add h
+
+/-- Enclosed circulation at the distinguished cylinder, including a constant line term. -/
+theorem materialCirculationWithLine_at_star
+    (gammaLine circ s : ℝ) :
+    materialCirculationWithLine gammaLine circ s (s - 1) =
+      gammaLine + circ * regLowerGamma s (s - 1) := by
+  rfl
+
+/--
+Manuscript Eqs. (119)--(121) in one certificate: differentiating the
+material-loop circulation and evaluating the same point as a physical cylinder
+gives exactly the viscous transfer 2 pi nu r partial_r omega_z.
+-/
+theorem materialCirculationFromX_hasDerivAt_viscousFlux
+    {x : ℝ → ℝ} {nu beta circ s r t : ℝ}
+    (hs : 0 < s) (hbeta : 0 < beta) (hr : PuncturedRadius r)
+    (hxval : x t = scaledX beta r)
+    (hxdot : HasDerivAt x
+      (4 * nu * beta * ((s - 1) - x t)) t) :
+    HasDerivAt
+      (fun tau => materialCirculationFromX circ s (x tau))
+      (2 * Real.pi * nu * r *
+        deriv (distributedVorticity circ s beta) r) t := by
+  have hxpos : 0 < x t := by
+    rw [hxval]
+    unfold scaledX
+    exact mul_pos hbeta (pow_pos hr 2)
+  have h :=
+    materialCirculationFromX_hasDerivAt
+      (circ := circ) (s := s) (nu := nu) (beta := beta)
+      (t := t) hs hxpos hxdot
+  rw [hxval] at h
+  rw [materialCirculationRate_eq_viscousFlux hs hbeta hr] at h
+  exact h
+
+/--
+The same viscous-flux identity holds when the constant central line
+circulation is included; its derivative is identically zero.
+-/
+theorem materialCirculationWithLine_hasDerivAt_viscousFlux
+    {x : ℝ → ℝ} {gammaLine nu beta circ s r t : ℝ}
+    (hs : 0 < s) (hbeta : 0 < beta) (hr : PuncturedRadius r)
+    (hxval : x t = scaledX beta r)
+    (hxdot : HasDerivAt x
+      (4 * nu * beta * ((s - 1) - x t)) t) :
+    HasDerivAt
+      (fun tau => materialCirculationWithLine gammaLine circ s (x tau))
+      (2 * Real.pi * nu * r *
+        deriv (distributedVorticity circ s beta) r) t := by
+  have h :=
+    materialCirculationFromX_hasDerivAt_viscousFlux
+      (x := x) (nu := nu) (beta := beta) (circ := circ)
+      (s := s) (r := r) (t := t) hs hbeta hr hxval hxdot
+  simpa [materialCirculationWithLine] using
+    (hasDerivAt_const t gammaLine).add h
+
 end
 
 end KiknadzeKrasnov
