@@ -29,7 +29,7 @@ theorem radialFluxPrimitive_hasDerivAt (a q r : ℝ) :
   · funext x
     simp [radialFluxPrimitive]
     ring
-  · simp
+  · ring_nf
 
 /-- Radial contribution to the divergence of the KK meridional field. -/
 def radialDivergenceContribution (a : ℝ) : ℝ := -a
