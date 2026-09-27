@@ -37,7 +37,6 @@ theorem centralLineAngularMomentum_hasDerivAt_zero
   dsimp [c] at hprod ⊢
   convert hprod using 1
   · funext rho
-    simp only [id_eq]
     ring
   · field_simp [hr0]
     ring
