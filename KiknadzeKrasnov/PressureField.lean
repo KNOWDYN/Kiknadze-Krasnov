@@ -39,8 +39,9 @@ theorem radialVelocity_radial_hasDerivAt
     {a q r : ℝ} (hr : PuncturedRadius r) :
     HasDerivAt (fun rho => radialVelocity a q rho)
       (radialVelocityRadialDerivative a q r) r := by
-  simpa [radialVelocityRadialDerivative] using
-    (radialVelocity_hasDerivAt (a := a) (q := q) hr)
+  change HasDerivAt (fun rho : ℝ => radialVelocity a q rho)
+    (-(a / 2) - q / r ^ 2) r
+  exact radialVelocity_hasDerivAt (a := a) (q := q) hr
 
 /-- The second radial derivative in Eq. (53) is likewise obtained from the actual field. -/
 theorem radialVelocityRadialDerivative_hasDerivAt
