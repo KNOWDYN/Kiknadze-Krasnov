@@ -309,25 +309,41 @@ theorem distributedAngularMomentumResidualActual_zero
   ring
 
 /--
-R_theta in velocity units.  Pass 3B proves on r>0 that the angular-momentum
-residual is exactly r times the z-independent azimuthal velocity residual.
-The constant line-circulation angular momentum is constant, so it contributes
-zero to this residual.
+R_theta in velocity units, with the time derivative taken from the actual
+one-mode-plus-constant-line angular-momentum history.  The remaining radial
+coefficients are separately certified above as derivatives of the actual
+profile.  On r>0, Pass 3B identifies this angular-momentum residual divided
+by r with the z-independent azimuthal velocity residual.
 -/
 def azimuthalMomentumResidualActual
-    (nu a q beta betaDot circ s r : ℝ) : ℝ :=
-  distributedAngularMomentumResidualActual
-    nu a q beta betaDot circ s r / r
+    (nu a q gammaLine circ s r : ℝ) (beta : ℝ → ℝ) (t : ℝ) : ℝ :=
+  (deriv
+      (fun tau =>
+        oneModeAngularMomentumWithLine gammaLine circ s (beta tau) r) t
+    + radialVelocity a q r *
+        distributedAngularMomentumRadialDerivative circ s (beta t) r
+    - nu *
+        (distributedAngularMomentumSecondRadialDerivative circ s (beta t) r
+          - distributedAngularMomentumRadialDerivative circ s (beta t) r / r))
+    / r
 
 /-- Eq. (77), azimuthal part: the actual one-mode-plus-constant-line residual vanishes. -/
 theorem azimuthalMomentumResidualActual_zero
-    {nu a q beta betaDot circ s r : ℝ}
-    (hbeta : 0 < beta) (hr : PuncturedRadius r)
-    (hscale : betaScaleResidual nu a beta betaDot = 0)
+    {beta : ℝ → ℝ} {nu a q gammaLine betaDot circ s r t : ℝ}
+    (hs : 0 < s) (hbetaPos : 0 < beta t) (hr : PuncturedRadius r)
+    (hbeta : HasDerivAt beta betaDot t)
+    (hscale : betaScaleResidual nu a (beta t) betaDot = 0)
     (hshape : q = 2 * nu * (s - 1)) :
-    azimuthalMomentumResidualActual nu a q beta betaDot circ s r = 0 := by
-  rw [azimuthalMomentumResidualActual,
-    distributedAngularMomentumResidualActual_zero hbeta hr hscale hshape]
+    azimuthalMomentumResidualActual
+      nu a q gammaLine circ s r beta t = 0 := by
+  rw [azimuthalMomentumResidualActual]
+  rw [(oneModeAngularMomentumWithLine_time_hasDerivAt
+    (gammaLine := gammaLine) (circ := circ) (s := s)
+    (t := t) (r := r) hs hbetaPos hr hbeta).deriv]
+  change distributedAngularMomentumResidualActual
+    nu a q (beta t) betaDot circ s r / r = 0
+  rw [distributedAngularMomentumResidualActual_zero
+    hbetaPos hr hscale hshape]
   simp
 
 /-- Constant line angular momentum has zero time derivative. -/
@@ -409,7 +425,7 @@ theorem kk_exact_navier_stokes_certificate
       ∧ radialMomentumResidualActual
           p a b aDot bDot q p0 t r z Pi uTheta = 0
       ∧ azimuthalMomentumResidualActual
-          p.nu (a t) q (beta t) betaDot circ s r = 0
+          p.nu (a t) q gammaLine circ s r beta t = 0
       ∧ axialMomentumResidualActual
           p a b aDot bDot q p0 t r z Pi = 0 := by
   dsimp
@@ -418,7 +434,8 @@ theorem kk_exact_navier_stokes_certificate
     source_eq_two_nu_mul_shape_sub_one p q
   refine ⟨continuityResidualActual_zero hr, ?_⟩
   refine ⟨radialMomentumResidualActual_zero p ha hr hPi, ?_⟩
-  refine ⟨azimuthalMomentumResidualActual_zero hbetaPos hr hscale hshape, ?_⟩
+  refine ⟨azimuthalMomentumResidualActual_zero
+    (by linarith [hs]) hbetaPos hr hbeta hscale hshape, ?_⟩
   exact axialMomentumResidualActual_zero p ha hb
 
 end
