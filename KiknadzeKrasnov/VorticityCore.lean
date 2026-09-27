@@ -14,6 +14,43 @@ sign-correct annular vorticity extremum used by the principal material-surface
 theorem.
 -/
 
+
+/-- Optional central line-circulation swirl Gamma_line/(2 pi r) on the punctured domain. -/
+def centralLineSwirl (gammaLine r : ℝ) : ℝ :=
+  (gammaLine / (2 * Real.pi)) / r
+
+/--
+The angular momentum of the central 1/r circulation has zero radial
+derivative at every r>0.
+-/
+theorem centralLineAngularMomentum_hasDerivAt_zero
+    {gammaLine r : ℝ} (hr : PuncturedRadius r) :
+    HasDerivAt (fun rho => rho * centralLineSwirl gammaLine rho) 0 r := by
+  have hr0 : r ≠ 0 := ne_of_gt hr
+  let c : ℝ := gammaLine / (2 * Real.pi)
+  have hsource : HasDerivAt (fun rho : ℝ => c / rho) (-c / r ^ 2) r := by
+    convert (hasDerivAt_const r c).div (hasDerivAt_id r) hr0 using 1
+    · rfl
+    · simp
+  have hprod := (hasDerivAt_id r).mul hsource
+  unfold centralLineSwirl
+  dsimp [c] at hprod ⊢
+  convert hprod using 1
+  field_simp [hr0]
+  ring
+
+/--
+Claim C010, classical part: the optional central line circulation contributes
+zero classical axial vorticity on r>0.  The distribution concentrated on the
+excluded axis is intentionally outside this real-variable formalisation.
+-/
+theorem centralLineClassicalVorticity_zero
+    {gammaLine r : ℝ} (hr : PuncturedRadius r) :
+    deriv (fun rho => rho * centralLineSwirl gammaLine rho) r / r = 0 := by
+  rw [(centralLineAngularMomentum_hasDerivAt_zero
+    (gammaLine := gammaLine) hr).deriv]
+  simp
+
 /-- One distributed mode's angular momentum L = Gamma P(s,beta r^2)/(2 pi). -/
 def distributedAngularMomentum (circ s beta r : ℝ) : ℝ :=
   circ / (2 * Real.pi) * regLowerGamma s (scaledX beta r)
