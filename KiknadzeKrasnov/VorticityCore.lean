@@ -77,8 +77,7 @@ theorem distributedVorticity_eq_swirl_curl
     by_cases hzero : rho = 0
     · subst rho
       simp [distributedAngularMomentum, distributedSwirl]
-    · have hp : PuncturedRadius rho ∨ rho < 0 := lt_or_gt_of_ne hzero.symm
-      unfold distributedAngularMomentum distributedSwirl
+    · unfold distributedAngularMomentum distributedSwirl
       field_simp [hzero, Real.pi_ne_zero]
   rw [hfun, (distributedAngularMomentum_hasDerivAt (circ := circ) hs hx).deriv]
   unfold distributedVorticity vorticityShape regLowerGammaDensity gammaKernel
@@ -241,8 +240,11 @@ theorem abs_distributedVorticity_lt_peak
       simpa [scaledX] using hscaled
     have hr2 : r ^ 2 = (vorticityPeakRadius s beta) ^ 2 :=
       mul_left_cancel₀ hbeta.ne' hmul
+    have hrpos : 0 < r := hr
+    have hpeakpos : 0 < vorticityPeakRadius s beta :=
+      vorticityPeakRadius_pos hs hbeta
     have hrEq : r = vorticityPeakRadius s beta := by
-      nlinarith [hr, vorticityPeakRadius_pos hs hbeta]
+      nlinarith [hr2, hrpos, hpeakpos]
     exact hne hrEq
   have hshape := vorticityShape_lt_peak hs hx hxr_ne
   unfold distributedVorticity
