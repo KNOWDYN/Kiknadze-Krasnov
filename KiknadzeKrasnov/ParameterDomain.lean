@@ -50,20 +50,22 @@ theorem annular_parameter_threshold (p : FluidParams) (q : ℝ) :
 /-- The finite-circulation sink subbranch 0<s<1 is exactly -2nu<q<0. -/
 theorem sink_shape_interval_iff (p : FluidParams) (q : ℝ) :
     (0 < shape p q ∧ shape p q < 1) ↔ (-2 * p.nu < q ∧ q < 0) := by
-  rw [finiteCirculationBranch_iff p q] at *
+  have hden : 0 < 2 * p.nu := mul_pos (by norm_num) p.nu_pos
+  unfold shape
   constructor
-  · intro h
-    refine ⟨h.1, ?_⟩
-    unfold shape at h
-    have hden : 0 < 2 * p.nu := mul_pos (by norm_num) p.nu_pos
-    have : q / (2 * p.nu) < 0 := by linarith
-    exact (div_neg_iff hden).mp this
-  · intro h
-    refine ⟨h.1, ?_⟩
-    unfold shape
-    have hden : 0 < 2 * p.nu := mul_pos (by norm_num) p.nu_pos
-    have hdiv : q / (2 * p.nu) < 0 := div_neg_of_neg_of_pos h.2 hden
-    linarith
+  · rintro ⟨hpos, hlt⟩
+    have hlo : (-1 : ℝ) < q / (2 * p.nu) := by linarith
+    have hhi : q / (2 * p.nu) < 0 := by linarith
+    have hqlo : -2 * p.nu < q := by
+      have := (lt_div_iff₀ hden).mp hlo
+      nlinarith
+    exact ⟨hqlo, (div_neg_iff hden).mp hhi⟩
+  · rintro ⟨hqlo, hqneg⟩
+    have hlo : (-1 : ℝ) < q / (2 * p.nu) := by
+      apply (lt_div_iff₀ hden).mpr
+      nlinarith
+    have hhi : q / (2 * p.nu) < 0 := div_neg_of_neg_of_pos hqneg hden
+    constructor <;> linarith
 
 /-- For s>1 the dimensionless vorticity kernel tends to zero at the axis. -/
 theorem vorticityShape_tendsto_zero_nhdsGT
@@ -72,15 +74,16 @@ theorem vorticityShape_tendsto_zero_nhdsGT
   have hpfull :=
     (Real.continuous_rpow_const (sub_nonneg.mpr hs.le)).tendsto 0
   have hp : Tendsto (fun x : ℝ => x ^ (s - 1)) (𝓝[>] 0) (𝓝 0) := by
-    have h := hpfull.mono_left inf_le_left
+    have h := tendsto_nhdsWithin_of_tendsto_nhds hpfull
     simpa [Real.zero_rpow (sub_pos.mpr hs).ne'] using h
   have hefull :
       Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝 0) (𝓝 1) := by
     simpa using (by fun_prop :
       ContinuousAt (fun x : ℝ => Real.exp (-x)) 0).tendsto
-  have he := hefull.mono_left inf_le_left
+  have he : Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝[>] 0) (𝓝 1) :=
+    tendsto_nhdsWithin_of_tendsto_nhds hefull
   unfold vorticityShape
-  exact hp.mul he
+  simpa using hp.mul he
 
 /-- At s=1 the dimensionless vorticity kernel tends to its finite on-axis value one. -/
 theorem vorticityShape_one_tendsto_one :
@@ -89,7 +92,8 @@ theorem vorticityShape_one_tendsto_one :
       Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝 0) (𝓝 1) := by
     simpa using (by fun_prop :
       ContinuousAt (fun x : ℝ => Real.exp (-x)) 0).tendsto
-  have he := hefull.mono_left inf_le_left
+  have he : Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝[>] 0) (𝓝 1) :=
+    tendsto_nhdsWithin_of_tendsto_nhds hefull
   simpa [vorticityShape] using he
 
 /-- For 0<s<1 the dimensionless distributed-vorticity kernel diverges toward
@@ -99,12 +103,13 @@ theorem vorticityShape_tendsto_atTop_nhdsGT
     Tendsto (vorticityShape s) (𝓝[>] 0) atTop := by
   have hp :
       Tendsto (fun x : ℝ => x ^ (s - 1)) (𝓝[>] 0) atTop :=
-    Real.tendsto_rpow_neg_nhdsGT_zero (sub_neg.mpr hs1)
+    tendsto_rpow_neg_nhdsGT_zero (sub_neg.mpr hs1)
   have hefull :
       Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝 0) (𝓝 1) := by
     simpa using (by fun_prop :
       ContinuousAt (fun x : ℝ => Real.exp (-x)) 0).tendsto
-  have he := hefull.mono_left inf_le_left
+  have he : Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝[>] 0) (𝓝 1) :=
+    tendsto_nhdsWithin_of_tendsto_nhds hefull
   unfold vorticityShape
   exact hp.atTop_mul_pos zero_lt_one he
 
