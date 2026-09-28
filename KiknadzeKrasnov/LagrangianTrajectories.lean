@@ -161,7 +161,6 @@ theorem radialTrajectory_hasDerivAt
     unfold radialVelocity
     field_simp [hsqrtpos.ne']
     rw [Real.sq_sqrt hY.le]
-    ring
   unfold radialTrajectory
   rw [hcoeff]
   exact hsqrt'
