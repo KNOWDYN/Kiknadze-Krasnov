@@ -61,7 +61,11 @@ theorem lowerGamma_tendsto_atTop {s : ℝ} (hs : 0 < s) :
     intervalIntegral_tendsto_integral_Ioi
       0 (Real.GammaIntegral_convergent hs) tendsto_id
   rw [gammaFn, Real.Gamma_eq_integral hs]
-  simpa only [lowerGamma, gammaKernel] using h
+  change Tendsto
+    (fun x : ℝ => ∫ xi in 0..x, Real.exp (-xi) * xi ^ (s - 1))
+    atTop
+    (𝓝 (∫ x in Ioi (0 : ℝ), Real.exp (-x) * x ^ (s - 1) ∂volume))
+  simpa only [id_eq] using h
 
 /-- The finite-circulation profile satisfies P(s,x) -> 1 as x -> +infinity. -/
 theorem regLowerGamma_tendsto_one {s : ℝ} (hs : 0 < s) :
