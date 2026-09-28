@@ -32,12 +32,13 @@ theorem lowerGamma_one {x : ℝ} (hx : 0 ≤ x) :
       · funext z
         simp
       · ring
-    simpa using hexp.neg
+    have hneg := hexp.neg
+    convert hneg using 1 <;> simp
   have hint : IntervalIntegrable (fun y : ℝ => Real.exp (-y)) volume 0 x :=
     (by fun_prop : Continuous fun y : ℝ => Real.exp (-y)).intervalIntegrable 0 x
   have h := intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le
     hx (by fun_prop) hderiv hint
-  simpa using h
+  convert h using 1 <;> simp
 
 /-- Regularised lower gamma at shape one. -/
 theorem regLowerGamma_one {x : ℝ} (hx : 0 ≤ x) :
@@ -108,7 +109,12 @@ theorem oseen_vorticity_formula
   rw [distributedVorticity_one]
   rw [scaledX_zeroStrainScale_eq hnu.ne' hbeta0.ne']
   rw [zeroStrainScale_eq_oseenAge hnu.ne' hbeta0.ne']
-  simp only [div_eq_mul_inv]
+  have hage : 0 < oseenAgeShift nu beta0 := by
+    unfold oseenAgeShift
+    positivity
+  have hsum : t + oseenAgeShift nu beta0 ≠ 0 :=
+    ne_of_gt (add_pos_of_nonneg_of_pos ht hage)
+  field_simp [hnu.ne', hsum, Real.pi_ne_zero]
   ring
 
 /-- At the constant-strain Burgers scale, x=a0 r^2/(4 nu). -/
@@ -117,7 +123,6 @@ theorem scaledX_burgersScale_eq
     scaledX (burgersScale nu a0) r = a0 * r ^ 2 / (4 * nu) := by
   unfold scaledX burgersScale
   field_simp [hnu]
-  ring
 
 /-- Eq. (130): stationary Burgers swirl under the adopted strain convention. -/
 theorem burgers_swirl_formula
