@@ -98,25 +98,22 @@ theorem radialSqTrajectory_hasDerivAt
   have hprod := hexp.mul hbracket
   unfold radialSqTrajectory
   convert hprod using 1
-  · funext tau
-    ring
-  · have hcancel :
-        Real.exp (-(strainAccum a t)) * Real.exp (strainAccum a t) = 1 := by
-      rw [← Real.exp_add]
-      simp
-    calc
-      Real.exp (-(strainAccum a t)) * (-a t) *
+  have hcancel :
+      Real.exp (-(strainAccum a t)) * Real.exp (strainAccum a t) = 1 := by
+    rw [← Real.exp_add]
+    simp
+  simp only [Pi.add_apply]
+  calc
+    -a t * (Real.exp (-(strainAccum a t)) *
+          (r0 ^ 2 + 2 * q * scaleIntegral a t)) + 2 * q
+      =
+        Real.exp (-(strainAccum a t)) * (-a t) *
             (r0 ^ 2 + 2 * q * scaleIntegral a t) +
           Real.exp (-(strainAccum a t)) *
-            (0 + 2 * q * Real.exp (strainAccum a t))
-        =
-          -a t * (Real.exp (-(strainAccum a t)) *
-            (r0 ^ 2 + 2 * q * scaleIntegral a t)) +
-          2 * q * (Real.exp (-(strainAccum a t)) *
-            Real.exp (strainAccum a t)) := by ring
-      _ = -a t * (Real.exp (-(strainAccum a t)) *
-            (r0 ^ 2 + 2 * q * scaleIntegral a t)) + 2 * q := by
-            rw [hcancel]; ring
+            (0 + 2 * q * Real.exp (strainAccum a t)) := by
+          rw [show Real.exp (-(strainAccum a t)) *
+              Real.exp (strainAccum a t) = 1 from hcancel]
+          ring
 
 @[simp] theorem radialSqTrajectory_zero (a : ℝ → ℝ) (q r0 : ℝ) :
     radialSqTrajectory a q r0 0 = r0 ^ 2 := by
@@ -135,25 +132,22 @@ theorem axialTrajectory_hasDerivAt
   have hprod := hexp.mul hbracket
   unfold axialTrajectory axialVelocity
   convert hprod using 1
-  · funext tau
-    ring
-  · have hcancel :
-        Real.exp (strainAccum a t) * Real.exp (-(strainAccum a t)) = 1 := by
-      rw [← Real.exp_add]
-      simp
-    calc
-      Real.exp (strainAccum a t) * a t *
+  have hcancel :
+      Real.exp (strainAccum a t) * Real.exp (-(strainAccum a t)) = 1 := by
+    rw [← Real.exp_add]
+    simp
+  simp only [Pi.add_apply]
+  calc
+    a t * (Real.exp (strainAccum a t) *
+          (z0 + weightedAxialIntegral a b t)) + b t
+      =
+        Real.exp (strainAccum a t) * a t *
             (z0 + weightedAxialIntegral a b t) +
           Real.exp (strainAccum a t) *
-            (0 + Real.exp (-(strainAccum a t)) * b t)
-        =
-          a t * (Real.exp (strainAccum a t) *
-            (z0 + weightedAxialIntegral a b t)) +
-          (Real.exp (strainAccum a t) *
-            Real.exp (-(strainAccum a t))) * b t := by ring
-      _ = a t * (Real.exp (strainAccum a t) *
-            (z0 + weightedAxialIntegral a b t)) + b t := by
-            rw [hcancel]; ring
+            (0 + Real.exp (-(strainAccum a t)) * b t) := by
+          rw [show Real.exp (strainAccum a t) *
+              Real.exp (-(strainAccum a t)) = 1 from hcancel]
+          ring
 
 @[simp] theorem axialTrajectory_zero (a b : ℝ → ℝ) (z0 : ℝ) :
     axialTrajectory a b z0 0 = z0 := by
