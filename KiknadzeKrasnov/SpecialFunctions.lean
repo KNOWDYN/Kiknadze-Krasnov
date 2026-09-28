@@ -6,7 +6,7 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
-open Set MeasureTheory intervalIntegral
+open Set MeasureTheory intervalIntegral Filter
 open scoped Topology
 
 /-- Euler gamma function, given a collision-free project name. -/
