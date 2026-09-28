@@ -1,4 +1,4 @@
-import KiknadzeKrasnov.HeatTransform
+import KiknadzeKrasnov.FiniteTimeCriteria
 import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 namespace KiknadzeKrasnov
