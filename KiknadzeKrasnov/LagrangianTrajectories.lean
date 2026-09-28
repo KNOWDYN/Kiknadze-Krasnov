@@ -151,19 +151,20 @@ theorem radialTrajectory_hasDerivAt
         (fun tau => Real.sqrt (radialSqTrajectory a q r0 tau))
         ((1 / (2 * Real.sqrt (radialSqTrajectory a q r0 t))) *
           (-a t * radialSqTrajectory a q r0 t + 2 * q)) t := by
-    simpa only [Function.comp_apply] using hsqrt
-  have hrpos : 0 < radialTrajectory a q r0 t := by
-    unfold radialTrajectory
-    exact Real.sqrt_pos.2 hY
-  have hsqeq := radialTrajectory_sq
-    (a := a) (q := q) (r0 := r0) (t := t) hY.le
-  unfold radialTrajectory
-  convert hsqrt' using 1
-  unfold radialVelocity
+    simpa only [Function.comp_def] using hsqrt
   have hsqrtpos : 0 < Real.sqrt (radialSqTrajectory a q r0 t) :=
     Real.sqrt_pos.2 hY
-  field_simp [hsqrtpos.ne']
-  nlinarith
+  have hcoeff :
+      radialVelocity (a t) q (Real.sqrt (radialSqTrajectory a q r0 t)) =
+        (1 / (2 * Real.sqrt (radialSqTrajectory a q r0 t))) *
+          (-a t * radialSqTrajectory a q r0 t + 2 * q) := by
+    unfold radialVelocity
+    field_simp [hsqrtpos.ne']
+    rw [Real.sq_sqrt hY.le]
+    ring
+  unfold radialTrajectory
+  rw [hcoeff]
+  exact hsqrt'
 
 @[simp] theorem radialTrajectory_zero
     {a : ℝ → ℝ} {q r0 : ℝ} (hr0 : 0 ≤ r0) :
@@ -199,7 +200,7 @@ theorem axialTrajectory_hasDerivAt
     E * a t * B + E * (0 + F * b t)
   calc
     a t * (E * B) + b t = E * a t * B + b t := by ring
-    _ = E * a t * B + (E * F) * b t := by rw [hEF]
+    _ = E * a t * B + (E * F) * b t := by rw [hEF]; ring
     _ = E * a t * B + E * (0 + F * b t) := by ring
 
 @[simp] theorem axialTrajectory_zero (a b : ℝ → ℝ) (z0 : ℝ) :
