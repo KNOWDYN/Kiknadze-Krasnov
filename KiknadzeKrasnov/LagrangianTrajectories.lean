@@ -119,6 +119,49 @@ theorem radialSqTrajectory_hasDerivAt
     radialSqTrajectory a q r0 0 = r0 ^ 2 := by
   simp [radialSqTrajectory, strainAccum]
 
+/-- Positive radial branch corresponding to the exact squared-radius trajectory. -/
+def radialTrajectory (a : ℝ → ℝ) (q r0 t : ℝ) : ℝ :=
+  Real.sqrt (radialSqTrajectory a q r0 t)
+
+/-- The positive radial trajectory squares to Eq. (100) whenever the latter is nonnegative. -/
+theorem radialTrajectory_sq
+    {a : ℝ → ℝ} {q r0 t : ℝ}
+    (hY : 0 ≤ radialSqTrajectory a q r0 t) :
+    radialTrajectory a q r0 t ^ 2 = radialSqTrajectory a q r0 t := by
+  unfold radialTrajectory
+  exact Real.sq_sqrt hY
+
+/-- On intervals where Eq. (100) remains strictly positive, its positive
+square-root satisfies the original punctured radial particle equation Eq. (99). -/
+theorem radialTrajectory_hasDerivAt
+    {a : ℝ → ℝ} {q r0 t : ℝ}
+    (hA : HasDerivAt (strainAccum a) (a t) t)
+    (hJ : HasDerivAt (scaleIntegral a)
+      (Real.exp (strainAccum a t)) t)
+    (hY : 0 < radialSqTrajectory a q r0 t) :
+    HasDerivAt (radialTrajectory a q r0)
+      (radialVelocity (a t) q (radialTrajectory a q r0 t)) t := by
+  have hsq := radialSqTrajectory_hasDerivAt
+    (a := a) (q := q) (r0 := r0) hA hJ
+  have hsqrt :=
+    (Real.hasDerivAt_sqrt (ne_of_gt hY)).comp t hsq
+  have hrpos : 0 < radialTrajectory a q r0 t := by
+    unfold radialTrajectory
+    exact Real.sqrt_pos.2 hY
+  have hsqeq := radialTrajectory_sq (a := a) (q := q) (r0 := r0) (t := t) hY.le
+  unfold radialTrajectory at hsqrt ⊢
+  convert hsqrt using 1
+  unfold radialVelocity
+  field_simp [hrpos.ne']
+  nlinarith
+
+@[simp] theorem radialTrajectory_zero
+    {a : ℝ → ℝ} {q r0 : ℝ} (hr0 : 0 ≤ r0) :
+    radialTrajectory a q r0 0 = r0 := by
+  unfold radialTrajectory
+  rw [radialSqTrajectory_zero]
+  simpa [abs_of_nonneg hr0] using Real.sqrt_sq_eq_abs r0
+
 /-- Eq. (101) satisfies z'=a z+b. -/
 theorem axialTrajectory_hasDerivAt
     {a b : ℝ → ℝ} {z0 t : ℝ}
