@@ -31,3 +31,5 @@ import KiknadzeKrasnov.HeatTransform
 
 import KiknadzeKrasnov.FiniteTimeCriteria
 import KiknadzeKrasnov.FiniteTimeAsymptotics
+
+import KiknadzeKrasnov.AxisRegularity
