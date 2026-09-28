@@ -29,4 +29,5 @@ import KiknadzeKrasnov.ClassicalLimits
 import KiknadzeKrasnov.ClassicalProfiles
 import KiknadzeKrasnov.HeatTransform
 
+import KiknadzeKrasnov.FiniteTimeCriteria
 import KiknadzeKrasnov.FiniteTimeAsymptotics
