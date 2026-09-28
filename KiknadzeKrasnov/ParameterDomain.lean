@@ -5,7 +5,7 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
-open Filter
+open Set Filter
 open scoped Topology
 
 /-!
