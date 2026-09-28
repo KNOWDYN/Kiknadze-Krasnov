@@ -112,13 +112,13 @@ theorem enstrophyPairClosed_diagonal_eq_single
     exact Real.mul_rpow (by positivity) hbeta.le
   have hbetasplit : beta ^ (2 * s) = beta * beta ^ (2 * s - 1) := by
     calc
-      beta ^ (2 * s) = beta ^ ((1 : ℝ) + (2 * s - 1)) := by congr 1 <;> ring
+      beta ^ (2 * s) = beta ^ ((1 : ℝ) + (2 * s - 1)) := by congr 1; ring
       _ = beta ^ (1 : ℝ) * beta ^ (2 * s - 1) := Real.rpow_add hbeta 1 (2 * s - 1)
       _ = beta * beta ^ (2 * s - 1) := by rw [Real.rpow_one]
   have htwosplit : (2 : ℝ) ^ (2 * s) =
       2 * (2 : ℝ) ^ (2 * s - 1) := by
     calc
-      (2 : ℝ) ^ (2 * s) = (2 : ℝ) ^ ((1 : ℝ) + (2 * s - 1)) := by congr 1 <;> ring
+      (2 : ℝ) ^ (2 * s) = (2 : ℝ) ^ ((1 : ℝ) + (2 * s - 1)) := by congr 1; ring
       _ = (2 : ℝ) ^ (1 : ℝ) * (2 : ℝ) ^ (2 * s - 1) :=
         Real.rpow_add (by positivity) 1 (2 * s - 1)
       _ = 2 * (2 : ℝ) ^ (2 * s - 1) := by rw [Real.rpow_one]
