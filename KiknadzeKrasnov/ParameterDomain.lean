@@ -4,6 +4,9 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
+open Filter
+open scoped Topology
+
 /-!
 Parameter-domain audit from Supplementary Table II.  These lemmas keep the
 different thresholds separate instead of silently identifying them.
