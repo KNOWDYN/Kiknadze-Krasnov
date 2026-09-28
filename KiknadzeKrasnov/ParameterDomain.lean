@@ -59,7 +59,11 @@ theorem sink_shape_interval_iff (p : FluidParams) (q : ℝ) :
     have hqlo : -2 * p.nu < q := by
       have := (lt_div_iff₀ hden).mp hlo
       nlinarith
-    exact ⟨hqlo, (div_neg_iff hden).mp hhi⟩
+    have hqneg : q < 0 := by
+      rcases (div_neg_iff.mp hhi) with hbad | hgood
+      · exact (not_lt_of_ge hden.le hbad.2).elim
+      · exact hgood.1
+    exact ⟨hqlo, hqneg⟩
   · rintro ⟨hqlo, hqneg⟩
     have hlo : (-1 : ℝ) < q / (2 * p.nu) := by
       apply (lt_div_iff₀ hden).mpr
@@ -74,7 +78,8 @@ theorem vorticityShape_tendsto_zero_nhdsGT
   have hpfull :=
     (Real.continuous_rpow_const (sub_nonneg.mpr hs.le)).tendsto 0
   have hp : Tendsto (fun x : ℝ => x ^ (s - 1)) (𝓝[>] 0) (𝓝 0) := by
-    have h := tendsto_nhdsWithin_of_tendsto_nhds hpfull
+    have h := tendsto_nhdsWithin_of_tendsto_nhds
+      (s := Ioi (0 : ℝ)) hpfull
     simpa [Real.zero_rpow (sub_pos.mpr hs).ne'] using h
   have hefull :
       Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝 0) (𝓝 1) := by
@@ -93,8 +98,13 @@ theorem vorticityShape_one_tendsto_one :
     simpa using (by fun_prop :
       ContinuousAt (fun x : ℝ => Real.exp (-x)) 0).tendsto
   have he : Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝[>] 0) (𝓝 1) :=
-    tendsto_nhdsWithin_of_tendsto_nhds hefull
-  simpa [vorticityShape] using he
+    tendsto_nhdsWithin_of_tendsto_nhds (s := Ioi (0 : ℝ)) hefull
+  have hfun :
+      vorticityShape 1 = (fun x : ℝ => Real.exp (-x)) := by
+    funext x
+    simp [vorticityShape]
+  rw [hfun]
+  exact he
 
 /-- For 0<s<1 the dimensionless distributed-vorticity kernel diverges toward
 the excluded axis, exactly as stated in the parameter audit. -/
@@ -109,7 +119,7 @@ theorem vorticityShape_tendsto_atTop_nhdsGT
     simpa using (by fun_prop :
       ContinuousAt (fun x : ℝ => Real.exp (-x)) 0).tendsto
   have he : Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝[>] 0) (𝓝 1) :=
-    tendsto_nhdsWithin_of_tendsto_nhds hefull
+    tendsto_nhdsWithin_of_tendsto_nhds (s := Ioi (0 : ℝ)) hefull
   unfold vorticityShape
   exact hp.atTop_mul_pos zero_lt_one he
 
