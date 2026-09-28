@@ -103,17 +103,18 @@ theorem radialSqTrajectory_hasDerivAt
     rw [← Real.exp_add]
     simp
   simp only [Pi.add_apply]
+  let E := Real.exp (-(strainAccum a t))
+  let F := Real.exp (strainAccum a t)
+  let B := r0 ^ 2 + 2 * q * scaleIntegral a t
+  have hEF : E * F = 1 := by
+    simpa [E, F] using hcancel
+  change -a t * (E * B) + 2 * q =
+    E * (-a t) * B + E * (0 + 2 * q * F)
   calc
-    -a t * (Real.exp (-(strainAccum a t)) *
-          (r0 ^ 2 + 2 * q * scaleIntegral a t)) + 2 * q
-      =
-        Real.exp (-(strainAccum a t)) * (-a t) *
-            (r0 ^ 2 + 2 * q * scaleIntegral a t) +
-          Real.exp (-(strainAccum a t)) *
-            (0 + 2 * q * Real.exp (strainAccum a t)) := by
-          rw [show Real.exp (-(strainAccum a t)) *
-              Real.exp (strainAccum a t) = 1 from hcancel]
-          ring
+    -a t * (E * B) + 2 * q
+        = E * (-a t) * B + 2 * q := by ring
+    _ = E * (-a t) * B + 2 * q * (E * F) := by rw [hEF]; ring
+    _ = E * (-a t) * B + E * (0 + 2 * q * F) := by ring
 
 @[simp] theorem radialSqTrajectory_zero (a : ℝ → ℝ) (q r0 : ℝ) :
     radialSqTrajectory a q r0 0 = r0 ^ 2 := by
@@ -145,14 +146,23 @@ theorem radialTrajectory_hasDerivAt
     (a := a) (q := q) (r0 := r0) hA hJ
   have hsqrt :=
     (Real.hasDerivAt_sqrt (ne_of_gt hY)).comp t hsq
+  have hsqrt' :
+      HasDerivAt
+        (fun tau => Real.sqrt (radialSqTrajectory a q r0 tau))
+        ((1 / (2 * Real.sqrt (radialSqTrajectory a q r0 t))) *
+          (-a t * radialSqTrajectory a q r0 t + 2 * q)) t := by
+    simpa only [Function.comp_apply] using hsqrt
   have hrpos : 0 < radialTrajectory a q r0 t := by
     unfold radialTrajectory
     exact Real.sqrt_pos.2 hY
-  have hsqeq := radialTrajectory_sq (a := a) (q := q) (r0 := r0) (t := t) hY.le
-  unfold radialTrajectory at hsqrt ⊢
-  convert hsqrt using 1
+  have hsqeq := radialTrajectory_sq
+    (a := a) (q := q) (r0 := r0) (t := t) hY.le
+  unfold radialTrajectory
+  convert hsqrt' using 1
   unfold radialVelocity
-  field_simp [hrpos.ne']
+  have hsqrtpos : 0 < Real.sqrt (radialSqTrajectory a q r0 t) :=
+    Real.sqrt_pos.2 hY
+  field_simp [hsqrtpos.ne']
   nlinarith
 
 @[simp] theorem radialTrajectory_zero
@@ -180,17 +190,17 @@ theorem axialTrajectory_hasDerivAt
     rw [← Real.exp_add]
     simp
   simp only [Pi.add_apply]
+  let E := Real.exp (strainAccum a t)
+  let F := Real.exp (-(strainAccum a t))
+  let B := z0 + weightedAxialIntegral a b t
+  have hEF : E * F = 1 := by
+    simpa [E, F] using hcancel
+  change a t * (E * B) + b t =
+    E * a t * B + E * (0 + F * b t)
   calc
-    a t * (Real.exp (strainAccum a t) *
-          (z0 + weightedAxialIntegral a b t)) + b t
-      =
-        Real.exp (strainAccum a t) * a t *
-            (z0 + weightedAxialIntegral a b t) +
-          Real.exp (strainAccum a t) *
-            (0 + Real.exp (-(strainAccum a t)) * b t) := by
-          rw [show Real.exp (strainAccum a t) *
-              Real.exp (-(strainAccum a t)) = 1 from hcancel]
-          ring
+    a t * (E * B) + b t = E * a t * B + b t := by ring
+    _ = E * a t * B + (E * F) * b t := by rw [hEF]
+    _ = E * a t * B + E * (0 + F * b t) := by ring
 
 @[simp] theorem axialTrajectory_zero (a b : ℝ → ℝ) (z0 : ℝ) :
     axialTrajectory a b z0 0 = z0 := by
