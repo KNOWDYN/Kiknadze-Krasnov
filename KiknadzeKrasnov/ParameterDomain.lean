@@ -1,4 +1,5 @@
 import KiknadzeKrasnov.VorticityTransport
+import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
 
 namespace KiknadzeKrasnov
 
