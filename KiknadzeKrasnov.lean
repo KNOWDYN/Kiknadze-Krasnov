@@ -24,3 +24,7 @@ import KiknadzeKrasnov.LagrangianTrajectories
 import KiknadzeKrasnov.VorticityTransport
 
 import KiknadzeKrasnov.ParameterDomain
+
+import KiknadzeKrasnov.ClassicalLimits
+import KiknadzeKrasnov.ClassicalProfiles
+import KiknadzeKrasnov.HeatTransform
