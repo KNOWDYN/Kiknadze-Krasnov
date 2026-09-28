@@ -61,7 +61,7 @@ theorem vorticityTransportScaledResidual_zero
     (hcompat : q = 2 * nu * (s - 1)) :
     vorticityTransportScaledResidual nu a q beta betaDot s x = 0 := by
   have hbdot : betaDot = a * beta - 4 * nu * beta ^ 2 :=
-    betaScaleResidual_zero_iff.mp hscale
+    betaScaleResidual_zero_iff_rate.mp hscale
   unfold vorticityTransportScaledResidual
   rw [hbdot, hcompat]
   field_simp [hbeta, hx]
