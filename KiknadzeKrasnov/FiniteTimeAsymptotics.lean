@@ -206,6 +206,21 @@ theorem inverse_ratio_tendsto_one
   filter_upwards [hH, hR] with x hHx hRx
   field_simp [hHx, hRx]
 
+/-- A ratio tending to one is eventually nonzero in its numerator whenever
+the reference denominator is eventually nonzero. -/
+theorem eventually_ne_zero_of_ratio_tendsto_one
+    {α : Type*} {l : Filter α} {H R : α → ℝ}
+    (hlim : Tendsto (fun x => H x / R x) l (𝓝 1))
+    (hR : ∀ᶠ x in l, R x ≠ 0) :
+    ∀ᶠ x in l, H x ≠ 0 := by
+  have hratio :
+      ∀ᶠ x in l, 0 < H x / R x :=
+    hlim.eventually (Ioi_mem_nhds zero_lt_one)
+  filter_upwards [hratio, hR] with x hx hRx
+  intro hHx
+  rw [hHx] at hx
+  simp [hRx] at hx
+
 /-- Supplementary Eq. (47) in beta form. -/
 theorem beta_subcritical_ratio_tendsto_one
     {nu T h0 lambda : ℝ}
@@ -218,31 +233,67 @@ theorem beta_subcritical_ratio_tendsto_one
           betaFromInverseScale
             ((h0 + 4 * nu * T / (1 - lambda)) * y ^ lambda))
       (𝓝[>] 0) (𝓝 1) := by
-  apply inverse_ratio_tendsto_one
-    (reciprocalInverseScale_subcritical_ratio_tendsto_one
-      hlambda0 hlambda1 hC)
-  · filter_upwards [self_mem_nhdsWithin,
-      (Iio_mem_nhds (show (0 : ℝ) < 1 by norm_num))] with y hy hy1
-    have hratio :=
-      reciprocalInverseScale_subcritical_ratio_tendsto_one
-        (nu := nu) (T := T) (h0 := h0)
-        hlambda0 hlambda1 hC
-    have hR : (h0 + 4 * nu * T / (1 - lambda)) * y ^ lambda ≠ 0 :=
-      mul_ne_zero hC (Real.rpow_pos_of_pos hy lambda).ne'
-    by_contra hH
-    have : reciprocalInverseScaleNoncritical nu T h0 lambda y /
-        ((h0 + 4 * nu * T / (1 - lambda)) * y ^ lambda) = 0 := by
-      simp [hH, hR]
-    have hdecomp := reciprocalInverseScaleNoncritical_decomp
-      (nu := nu) (T := T) (h0 := h0) (lambda := lambda)
-      hy (ne_of_lt hlambda1)
-    rw [hdecomp] at hH
-    exact hH (by
-      have hpowpos := Real.rpow_pos_of_pos hy lambda
-      -- Exact nonvanishing is only needed eventually; use the ratio limit below.
-      nlinarith)
-  · filter_upwards [self_mem_nhdsWithin] with y hy
+  have hlim :=
+    reciprocalInverseScale_subcritical_ratio_tendsto_one
+      (nu := nu) (T := T) (h0 := h0)
+      hlambda0 hlambda1 hC
+  have hR :
+      ∀ᶠ y in 𝓝[>] (0 : ℝ),
+        (h0 + 4 * nu * T / (1 - lambda)) * y ^ lambda ≠ 0 := by
+    filter_upwards [self_mem_nhdsWithin] with y hy
     exact mul_ne_zero hC (Real.rpow_pos_of_pos hy lambda).ne'
+  have hH := eventually_ne_zero_of_ratio_tendsto_one hlim hR
+  simpa [betaFromInverseScale] using
+    (inverse_ratio_tendsto_one hlim hH hR)
+
+/-- Supplementary Eq. (50) in beta form. -/
+theorem beta_supercritical_ratio_tendsto_one
+    {nu T h0 lambda : ℝ}
+    (hlambda : 1 < lambda)
+    (hC : 4 * nu * T / (lambda - 1) ≠ 0) :
+    Tendsto
+      (fun y =>
+        betaFromInverseScale
+            (reciprocalInverseScaleNoncritical nu T h0 lambda y) /
+          betaFromInverseScale
+            ((4 * nu * T / (lambda - 1)) * y))
+      (𝓝[>] 0) (𝓝 1) := by
+  have hlim :=
+    reciprocalInverseScale_supercritical_ratio_tendsto_one
+      (nu := nu) (T := T) (h0 := h0) hlambda hC
+  have hR :
+      ∀ᶠ y in 𝓝[>] (0 : ℝ),
+        (4 * nu * T / (lambda - 1)) * y ≠ 0 := by
+    filter_upwards [self_mem_nhdsWithin] with y hy
+    exact mul_ne_zero hC hy.ne'
+  have hH := eventually_ne_zero_of_ratio_tendsto_one hlim hR
+  simpa [betaFromInverseScale] using
+    (inverse_ratio_tendsto_one hlim hH hR)
+
+/-- Supplementary Eq. (49) in beta form. -/
+theorem beta_critical_ratio_tendsto_one
+    {nu T h0 : ℝ} (hK : 4 * nu * T ≠ 0) :
+    Tendsto
+      (fun y =>
+        betaFromInverseScale (reciprocalInverseScaleCritical nu T h0 y) /
+          betaFromInverseScale
+            (4 * nu * T * y * Real.log (y⁻¹)))
+      (𝓝[>] 0) (𝓝 1) := by
+  have hlim :=
+    reciprocalInverseScale_critical_ratio_tendsto_one
+      (nu := nu) (T := T) (h0 := h0) hK
+  have hR :
+      ∀ᶠ y in 𝓝[>] (0 : ℝ),
+        4 * nu * T * y * Real.log (y⁻¹) ≠ 0 := by
+    filter_upwards [self_mem_nhdsWithin,
+      (Iio_mem_nhds (show (0 : ℝ) < 1 by norm_num))] with y hy hy1
+    have hlog : 0 < Real.log (y⁻¹) := by
+      rw [Real.log_pos_iff]
+      exact (one_lt_inv₀ hy).2 hy1
+    exact mul_ne_zero (mul_ne_zero hK hy.ne') hlog.ne'
+  have hH := eventually_ne_zero_of_ratio_tendsto_one hlim hR
+  simpa [betaFromInverseScale] using
+    (inverse_ratio_tendsto_one hlim hH hR)
 
 end
 
