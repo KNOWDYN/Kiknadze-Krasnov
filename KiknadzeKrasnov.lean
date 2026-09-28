@@ -22,3 +22,5 @@ import KiknadzeKrasnov.Enstrophy
 import KiknadzeKrasnov.MultimodeQualification
 import KiknadzeKrasnov.LagrangianTrajectories
 import KiknadzeKrasnov.VorticityTransport
+
+import KiknadzeKrasnov.ParameterDomain
