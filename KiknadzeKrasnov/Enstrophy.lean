@@ -144,7 +144,7 @@ theorem singleModeEnstrophy_hasDerivAt
     (hscale : betaScaleResidual nu a (beta t) betaDot = 0) :
     HasDerivAt (fun tau => singleModeEnstrophyClosed circ s (beta tau))
       ((a - 4 * nu * beta t) * singleModeEnstrophyClosed circ s (beta t)) t := by
-  have hb := betaScaleResidual_zero_iff.mp hscale
+  have hb := betaScaleResidual_zero_iff_rate.mp hscale
   unfold singleModeEnstrophyClosed
   have hconst := hbeta.const_mul
     (circ ^ 2 * gammaFn (2 * s - 1) /
