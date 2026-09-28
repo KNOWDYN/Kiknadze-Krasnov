@@ -15,3 +15,10 @@ import KiknadzeKrasnov.PrincipalSurface
 import KiknadzeKrasnov.ScaleDynamics
 import KiknadzeKrasnov.PressureField
 import KiknadzeKrasnov.NavierStokesCertificate
+
+import KiknadzeKrasnov.GammaMoments
+import KiknadzeKrasnov.SwirlExtrema
+import KiknadzeKrasnov.Enstrophy
+import KiknadzeKrasnov.MultimodeQualification
+import KiknadzeKrasnov.LagrangianTrajectories
+import KiknadzeKrasnov.VorticityTransport
