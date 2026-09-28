@@ -7,6 +7,37 @@ noncomputable section
 
 open Set MeasureTheory
 
+/-- Manuscript Eq. (82): normalised circulation density in scaled squared radius. -/
+def scaledCirculationDensity (s x : ℝ) : ℝ :=
+  x ^ (s - 1) * Real.exp (-x) / gammaFn s
+
+/-- Eq. (82): the cumulative distributed-circulation fraction differentiates
+to the gamma density on x>0. -/
+theorem regLowerGamma_hasDerivAt_scaledDensity
+    {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
+    HasDerivAt (regLowerGamma s) (scaledCirculationDensity s x) x := by
+  simpa [scaledCirculationDensity, gammaKernel, mul_comm, mul_left_comm, mul_assoc]
+    using regLowerGamma_hasDerivAt hs hx
+
+/-- Eq. (82) including the physical circulation amplitude. -/
+theorem distributedCirculationFraction_hasDerivAt
+    {circ s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
+    HasDerivAt (fun y => circ * regLowerGamma s y)
+      (circ * scaledCirculationDensity s x) x := by
+  simpa using (regLowerGamma_hasDerivAt_scaledDensity hs hx).const_mul circ
+
+/-- The gamma circulation density is normalised on the positive scaled-radius axis. -/
+theorem integral_scaledCirculationDensity_eq_one
+    {s : ℝ} (hs : 0 < s) :
+    ∫ x in Ioi (0 : ℝ), scaledCirculationDensity s x = 1 := by
+  rw [show (fun x : ℝ => scaledCirculationDensity s x) =
+      fun x => (gammaFn s)⁻¹ * (x ^ (s - 1) * Real.exp (-x)) by
+    funext x
+    simp [scaledCirculationDensity, div_eq_mul_inv, mul_comm]]
+  rw [MeasureTheory.integral_const_mul]
+  rw [← Real.Gamma_eq_integral hs]
+  simp [gammaFn, gammaFn_ne_zero hs]
+
 /-- Normalised raw moment of the scaled gamma circulation density. -/
 def scaledGammaMoment (s : ℝ) (n : ℕ) : ℝ :=
   (∫ x in Ioi (0 : ℝ), x ^ (s + (n : ℝ) - 1) * Real.exp (-x)) / gammaFn s
