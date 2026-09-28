@@ -167,13 +167,26 @@ theorem multimodeCirculationValue_hasDerivAt {n : ℕ}
     HasDerivAt (multimodeCirculationValue gammaLine circ s beta)
       (2 * Real.pi * r * multimodeDistributedVorticity circ s beta r) r := by
   classical
+  have hsum' :
+      HasDerivAt
+        (∑ i : Fin n, distributedCirculation (circ i) s (beta i))
+        (∑ i : Fin n,
+          2 * Real.pi * r * distributedVorticity (circ i) s (beta i) r) r := by
+    apply HasDerivAt.sum
+    intro i hi
+    exact distributedCirculation_hasDerivAt_r hs (hbeta i) hr
+  have hfun :
+      (fun y => ∑ i : Fin n, distributedCirculation (circ i) s (beta i) y) =
+        (∑ i : Fin n, distributedCirculation (circ i) s (beta i)) := by
+    funext y
+    simp only [Finset.sum_apply]
   have hsum :
       HasDerivAt
-        (fun y => ∑ i, distributedCirculation (circ i) s (beta i) y)
-        (∑ i, 2 * Real.pi * r * distributedVorticity (circ i) s (beta i) r) r := by
-    simpa only [Finset.sum_apply] using
-      (HasDerivAt.sum (u := Finset.univ) (fun i _ =>
-        distributedCirculation_hasDerivAt_r hs (hbeta i) hr))
+        (fun y => ∑ i : Fin n, distributedCirculation (circ i) s (beta i) y)
+        (∑ i : Fin n,
+          2 * Real.pi * r * distributedVorticity (circ i) s (beta i) r) r := by
+    rw [hfun]
+    exact hsum'
   have htotal := (hasDerivAt_const r gammaLine).add hsum
   convert htotal using 1
   · funext y
