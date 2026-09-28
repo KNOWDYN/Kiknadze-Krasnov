@@ -60,7 +60,8 @@ theorem lowerGamma_tendsto_atTop {s : ℝ} (hs : 0 < s) :
   have h :=
     intervalIntegral_tendsto_integral_Ioi
       0 (Real.GammaIntegral_convergent hs) tendsto_id
-  simpa [lowerGamma, gammaKernel, gammaFn, Real.Gamma_eq_integral hs] using h
+  rw [gammaFn, Real.Gamma_eq_integral hs]
+  simpa only [lowerGamma, gammaKernel] using h
 
 /-- The finite-circulation profile satisfies P(s,x) -> 1 as x -> +infinity. -/
 theorem regLowerGamma_tendsto_one {s : ℝ} (hs : 0 < s) :
