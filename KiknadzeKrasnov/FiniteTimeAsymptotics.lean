@@ -5,7 +5,7 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
-open Filter Set
+open Filter Set MeasureTheory intervalIntegral
 open scoped Topology
 
 /-!
@@ -49,6 +49,144 @@ theorem rpow_tendsto_zero_nhdsGT {q : ℝ} (hq : 0 < q) :
   have hfull := (Real.continuous_rpow_const hq.le).tendsto 0
   have h := hfull.mono_left inf_le_left
   simpa [Real.zero_rpow hq.ne'] using h
+
+/-- Exact y-space viscous integral obtained from Eq. (42) after
+t=T(1-y). -/
+def singularExpIntegralY (lambda p y : ℝ) : ℝ :=
+  ∫ v in y..1, Real.exp (singularAccumNoncritical lambda p v)
+
+/-- Exact inverse scale in the p≠1 singular family, expressed in y. -/
+def singularInverseScaleY
+    (nu T h0 lambda p y : ℝ) : ℝ :=
+  Real.exp (-(singularAccumNoncritical lambda p y)) *
+    (h0 + 4 * nu * T * singularExpIntegralY lambda p y)
+
+/-- Corresponding beta in the p≠1 singular family. -/
+def singularBetaY
+    (nu T h0 lambda p y : ℝ) : ℝ :=
+  (singularInverseScaleY nu T h0 lambda p y)⁻¹
+
+/-- For 0<p<1 the accumulated strain has the finite terminal value
+lambda/(1-p), Supplementary Eq. (45). -/
+theorem singularAccumNoncritical_subcritical_tendsto
+    {lambda p : ℝ} (hp1 : p < 1) :
+    Tendsto (singularAccumNoncritical lambda p)
+      (𝓝[>] 0) (𝓝 (lambda / (1 - p))) := by
+  have hpow := rpow_tendsto_zero_nhdsGT (sub_pos.mpr hp1)
+  unfold singularAccumNoncritical
+  simpa using (hpow.const_sub 1).const_mul (lambda / (1 - p))
+
+/-- The y-space exponential integrand is continuous when p<1. -/
+theorem singularExpIntegrand_continuous
+    {lambda p : ℝ} (hp1 : p < 1) :
+    Continuous (fun y : ℝ =>
+      Real.exp (singularAccumNoncritical lambda p y)) := by
+  have hpow : Continuous (fun y : ℝ => y ^ (1 - p)) :=
+    Real.continuous_rpow_const (sub_nonneg.mpr hp1.le)
+  unfold singularAccumNoncritical
+  exact Real.continuous_exp.comp
+    (continuous_const.mul (continuous_const.sub hpow))
+
+/-- For 0<p<1 the exact viscous integral has a finite terminal value. -/
+theorem singularExpIntegralY_subcritical_tendsto
+    {lambda p : ℝ} (hp1 : p < 1) :
+    Tendsto (singularExpIntegralY lambda p)
+      (𝓝[>] 0)
+      (𝓝 (∫ v in 0..1,
+        Real.exp (singularAccumNoncritical lambda p v))) := by
+  let E : ℝ → ℝ :=
+    fun v => Real.exp (singularAccumNoncritical lambda p v)
+  have hE : Continuous E := singularExpIntegrand_continuous hp1
+  have hInt : ∀ a b : ℝ, IntervalIntegrable E volume a b :=
+    fun a b => hE.intervalIntegrable a b
+  have hP :
+      Tendsto (fun y => ∫ v in 0..y, E v)
+        (𝓝[>] 0) (𝓝 0) := by
+    have hc := intervalIntegral.continuous_primitive hInt 0
+    have hc0 : Tendsto (fun y => ∫ v in 0..y, E v)
+        (𝓝 0) (𝓝 0) := by
+      simpa using hc.continuousAt.tendsto
+    exact tendsto_nhdsWithin_of_tendsto_nhds
+      (s := Ioi (0 : ℝ)) hc0
+  have hlim :
+      Tendsto
+        (fun y => (∫ v in 0..1, E v) - ∫ v in 0..y, E v)
+        (𝓝[>] 0) (𝓝 (∫ v in 0..1, E v)) := by
+    simpa using tendsto_const_nhds.sub hP
+  apply hlim.congr'
+  filter_upwards with y
+  unfold singularExpIntegralY E
+  rw [intervalIntegral.integral_add_adjacent_intervals
+    (hInt 0 y) (hInt y 1)]
+  ring
+
+/-- The exact inverse scale has a finite positive terminal limit for
+0<p<1 when h0,nu,T are positive. -/
+theorem singularInverseScaleY_subcritical_tendsto
+    {nu T h0 lambda p : ℝ}
+    (hnu : 0 < nu) (hT : 0 < T) (hh0 : 0 < h0)
+    (hp0 : 0 < p) (hp1 : p < 1) :
+    let H :=
+      Real.exp (-(lambda / (1 - p))) *
+        (h0 + 4 * nu * T *
+          (∫ v in 0..1,
+            Real.exp (singularAccumNoncritical lambda p v)))
+    Tendsto (singularInverseScaleY nu T h0 lambda p)
+      (𝓝[>] 0) (𝓝 H) ∧ 0 < H := by
+  dsimp
+  have hA := singularAccumNoncritical_subcritical_tendsto
+    (lambda := lambda) hp1
+  have hE :
+      Tendsto
+        (fun y => Real.exp (-(singularAccumNoncritical lambda p y)))
+        (𝓝[>] 0) (𝓝 (Real.exp (-(lambda / (1 - p))))) :=
+    hA.neg.exp
+  have hJ := singularExpIntegralY_subcritical_tendsto
+    (lambda := lambda) hp1
+  have hbracket :
+      Tendsto
+        (fun y => h0 + 4 * nu * T * singularExpIntegralY lambda p y)
+        (𝓝[>] 0)
+        (𝓝 (h0 + 4 * nu * T *
+          (∫ v in 0..1,
+            Real.exp (singularAccumNoncritical lambda p v)))) := by
+    simpa using (hJ.const_mul (4 * nu * T)).const_add h0
+  have hlim := hE.mul hbracket
+  have hIntNonneg :
+      0 ≤ ∫ v in 0..1,
+        Real.exp (singularAccumNoncritical lambda p v) := by
+    exact intervalIntegral.integral_nonneg zero_le_one
+      (fun v hv => (Real.exp_pos _).le)
+  have hbrpos :
+      0 < h0 + 4 * nu * T *
+        (∫ v in 0..1,
+          Real.exp (singularAccumNoncritical lambda p v)) := by
+    have hcoef : 0 ≤ 4 * nu * T := by positivity
+    nlinarith [mul_nonneg hcoef hIntNonneg]
+  constructor
+  · simpa [singularInverseScaleY] using hlim
+  · exact mul_pos (Real.exp_pos _) hbrpos
+
+/-- Supplementary p<1 conclusion in beta form: the distributed scale has a
+finite positive terminal value, hence no distributed-core collapse occurs. -/
+theorem singularBetaY_subcritical_tendsto_finite
+    {nu T h0 lambda p : ℝ}
+    (hnu : 0 < nu) (hT : 0 < T) (hh0 : 0 < h0)
+    (hp0 : 0 < p) (hp1 : p < 1) :
+    let H :=
+      Real.exp (-(lambda / (1 - p))) *
+        (h0 + 4 * nu * T *
+          (∫ v in 0..1,
+            Real.exp (singularAccumNoncritical lambda p v)))
+    Tendsto (singularBetaY nu T h0 lambda p)
+      (𝓝[>] 0) (𝓝 H⁻¹) ∧ 0 < H⁻¹ := by
+  dsimp
+  rcases singularInverseScaleY_subcritical_tendsto
+      hnu hT hh0 hp0 hp1 with ⟨hH, hHpos⟩
+  constructor
+  · unfold singularBetaY
+    exact hH.inv₀ hHpos.ne'
+  · exact inv_pos.mpr hHpos
 
 /-- log(1/y) diverges to +infinity at the terminal endpoint. -/
 theorem log_inv_tendsto_atTop_nhdsGT :
