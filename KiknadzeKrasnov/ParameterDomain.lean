@@ -87,7 +87,7 @@ theorem vorticityShape_tendsto_zero_nhdsGT
     simpa using (by fun_prop :
       ContinuousAt (fun x : ℝ => Real.exp (-x)) 0).tendsto
   have he : Tendsto (fun x : ℝ => Real.exp (-x)) (𝓝[>] 0) (𝓝 1) :=
-    tendsto_nhdsWithin_of_tendsto_nhds hefull
+    tendsto_nhdsWithin_of_tendsto_nhds (s := Ioi (0 : ℝ)) hefull
   unfold vorticityShape
   simpa using hp.mul he
 
