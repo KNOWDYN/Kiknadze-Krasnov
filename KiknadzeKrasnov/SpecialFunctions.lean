@@ -54,6 +54,22 @@ theorem gammaKernel_intervalIntegrable {s x : ℝ} (hs : 0 < s) (hx : 0 ≤ x) :
   rw [intervalIntegrable_iff_integrableOn_Ioc_of_le hx]
   exact (Real.GammaIntegral_convergent hs).mono_set Ioc_subset_Ioi_self
 
+/-- For positive shape, the lower incomplete gamma tends to the complete gamma. -/
+theorem lowerGamma_tendsto_atTop {s : ℝ} (hs : 0 < s) :
+    Tendsto (lowerGamma s) atTop (𝓝 (gammaFn s)) := by
+  have h :=
+    intervalIntegral_tendsto_integral_Ioi
+      0 (Real.GammaIntegral_convergent hs) tendsto_id
+  simpa [lowerGamma, gammaKernel, gammaFn, Real.Gamma_eq_integral hs] using h
+
+/-- The finite-circulation profile satisfies P(s,x) -> 1 as x -> +infinity. -/
+theorem regLowerGamma_tendsto_one {s : ℝ} (hs : 0 < s) :
+    Tendsto (regLowerGamma s) atTop (𝓝 1) := by
+  have h := (lowerGamma_tendsto_atTop hs).div_const (gammaFn s)
+  unfold regLowerGamma
+  convert h using 1
+  field_simp [gammaFn_ne_zero hs]
+
 /-- Fundamental derivative identity for the lower incomplete gamma function. -/
 theorem lowerGamma_hasDerivAt {s x : ℝ} (hs : 0 < s) (hx : 0 < x) :
     HasDerivAt (lowerGamma s) (gammaKernel s x) x := by
