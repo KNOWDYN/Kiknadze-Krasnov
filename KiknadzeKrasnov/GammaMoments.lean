@@ -35,8 +35,14 @@ theorem integral_scaledCirculationDensity_eq_one
     funext x
     simp [scaledCirculationDensity, div_eq_mul_inv, mul_comm]]
   rw [MeasureTheory.integral_const_mul]
-  rw [← Real.Gamma_eq_integral hs]
-  simp [gammaFn, gammaFn_ne_zero hs]
+  have hG :
+      (∫ x in Ioi (0 : ℝ), x ^ (s - 1) * Real.exp (-x)) = gammaFn s := by
+    rw [gammaFn, Real.Gamma_eq_integral hs]
+    apply MeasureTheory.integral_congr_ae
+    filter_upwards with x
+    ring
+  rw [hG]
+  simp [gammaFn_ne_zero hs]
 
 /-- Normalised raw moment of the scaled gamma circulation density. -/
 def scaledGammaMoment (s : ℝ) (n : ℕ) : ℝ :=
