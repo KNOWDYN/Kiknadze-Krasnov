@@ -38,7 +38,8 @@ theorem lowerGamma_one {x : ℝ} (hx : 0 ≤ x) :
     (by fun_prop : Continuous fun y : ℝ => Real.exp (-y)).intervalIntegrable 0 x
   have h := intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le
     hx (by fun_prop) hderiv hint
-  convert h using 1 <;> simp
+  rw [h]
+  ring
 
 /-- Regularised lower gamma at shape one. -/
 theorem regLowerGamma_one {x : ℝ} (hx : 0 ≤ x) :
@@ -115,7 +116,6 @@ theorem oseen_vorticity_formula
   have hsum : t + oseenAgeShift nu beta0 ≠ 0 :=
     ne_of_gt (add_pos_of_nonneg_of_pos ht hage)
   field_simp [hnu.ne', hsum, Real.pi_ne_zero]
-  ring
 
 /-- At the constant-strain Burgers scale, x=a0 r^2/(4 nu). -/
 theorem scaledX_burgersScale_eq
