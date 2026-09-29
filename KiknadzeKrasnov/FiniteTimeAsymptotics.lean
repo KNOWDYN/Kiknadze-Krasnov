@@ -188,6 +188,111 @@ theorem singularBetaY_subcritical_tendsto_finite
     exact hH.inv₀ hHpos.ne'
   · exact inv_pos.mpr hHpos
 
+/-- Endpoint comparison scale used for the p>1 Laplace balance. -/
+def singularEndpointD (lambda p y : ℝ) : ℝ :=
+  Real.exp (singularAccumNoncritical lambda p y) * y ^ p / lambda
+
+/-- First correction comparison scale for the p>1 endpoint balance. -/
+def singularEndpointD1 (lambda p y : ℝ) : ℝ :=
+  Real.exp (singularAccumNoncritical lambda p y) * y ^ (2 * p - 1) / lambda
+
+/-- Derivative of the noncritical accumulated strain on the positive y-axis. -/
+theorem singularAccumNoncritical_hasDerivAt
+    {lambda p y : ℝ} (hy : 0 < y) (hp : p ≠ 1) :
+    HasDerivAt (singularAccumNoncritical lambda p)
+      (-lambda * y ^ (-p)) y := by
+  have hpow :=
+    Real.hasDerivAt_rpow_const (p := 1 - p) (Or.inl hy.ne')
+  have hone : HasDerivAt (fun z : ℝ => 1 - z ^ (1 - p))
+      (-(1 - p) * y ^ ((1 - p) - 1)) y := by
+    convert (hasDerivAt_const y (1 : ℝ)).sub hpow using 1 <;> ring
+  have h := hone.const_mul (lambda / (1 - p))
+  unfold singularAccumNoncritical
+  convert h using 1
+  rw [show (1 - p) - 1 = -p by ring]
+  have hden : 1 - p ≠ 0 := sub_ne_zero.mpr (Ne.symm hp)
+  field_simp [hden]
+  ring
+
+/-- Raw derivative coefficient of the leading endpoint comparison scale. -/
+def singularEndpointDDot (lambda p y : ℝ) : ℝ :=
+  ((Real.exp (singularAccumNoncritical lambda p y) *
+      (-lambda * y ^ (-p))) * y ^ p +
+    Real.exp (singularAccumNoncritical lambda p y) *
+      (p * y ^ (p - 1))) / lambda
+
+theorem singularEndpointD_hasDerivAt
+    {lambda p y : ℝ} (hy : 0 < y) (hlambda : lambda ≠ 0)
+    (hp : p ≠ 1) :
+    HasDerivAt (singularEndpointD lambda p)
+      (singularEndpointDDot lambda p y) y := by
+  have hA := singularAccumNoncritical_hasDerivAt
+    (lambda := lambda) (p := p) hy hp
+  have hExp := hA.exp
+  have hPow :=
+    Real.hasDerivAt_rpow_const (p := p) (Or.inl hy.ne')
+  have h := (hExp.mul hPow).div_const lambda
+  unfold singularEndpointD singularEndpointDDot
+  convert h using 1 <;> ring
+
+/-- Simplified derivative needed for endpoint integration by parts. -/
+theorem singularEndpointDDot_eq
+    {lambda p y : ℝ} (hy : 0 < y) (hlambda : lambda ≠ 0) :
+    singularEndpointDDot lambda p y =
+      -Real.exp (singularAccumNoncritical lambda p y) *
+        (1 - (p / lambda) * y ^ (p - 1)) := by
+  have hcancel : y ^ (-p) * y ^ p = 1 := by
+    rw [← Real.rpow_add hy]
+    simp
+  unfold singularEndpointDDot
+  field_simp [hlambda]
+  rw [hcancel]
+  ring
+
+/-- Raw derivative coefficient of the first correction comparison scale. -/
+def singularEndpointD1Dot (lambda p y : ℝ) : ℝ :=
+  ((Real.exp (singularAccumNoncritical lambda p y) *
+      (-lambda * y ^ (-p))) * y ^ (2 * p - 1) +
+    Real.exp (singularAccumNoncritical lambda p y) *
+      ((2 * p - 1) * y ^ ((2 * p - 1) - 1))) / lambda
+
+theorem singularEndpointD1_hasDerivAt
+    {lambda p y : ℝ} (hy : 0 < y) (hlambda : lambda ≠ 0)
+    (hp : p ≠ 1) :
+    HasDerivAt (singularEndpointD1 lambda p)
+      (singularEndpointD1Dot lambda p y) y := by
+  have hA := singularAccumNoncritical_hasDerivAt
+    (lambda := lambda) (p := p) hy hp
+  have hExp := hA.exp
+  have hPow :=
+    Real.hasDerivAt_rpow_const (p := 2 * p - 1) (Or.inl hy.ne')
+  have h := (hExp.mul hPow).div_const lambda
+  unfold singularEndpointD1 singularEndpointD1Dot
+  convert h using 1 <;> ring
+
+/-- Simplified first-correction derivative. -/
+theorem singularEndpointD1Dot_eq
+    {lambda p y : ℝ} (hy : 0 < y) (hlambda : lambda ≠ 0) :
+    singularEndpointD1Dot lambda p y =
+      -Real.exp (singularAccumNoncritical lambda p y) * y ^ (p - 1) *
+        (1 - ((2 * p - 1) / lambda) * y ^ (p - 1)) := by
+  have hpow :
+      y ^ (-p) * y ^ (2 * p - 1) = y ^ (p - 1) := by
+    rw [← Real.rpow_add hy]
+    congr 1
+    ring
+  unfold singularEndpointD1Dot
+  field_simp [hlambda]
+  rw [hpow]
+  have hpow' :
+      y ^ ((2 * p - 1) - 1) =
+        y ^ (p - 1) * y ^ (p - 1) := by
+    rw [← Real.rpow_add hy]
+    congr 1
+    ring
+  rw [hpow']
+  ring
+
 /-- log(1/y) diverges to +infinity at the terminal endpoint. -/
 theorem log_inv_tendsto_atTop_nhdsGT :
     Tendsto (fun y : ℝ => Real.log (y⁻¹)) (𝓝[>] 0) atTop := by
