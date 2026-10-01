@@ -21,7 +21,7 @@ Formal certificates for the mathematical results of the final manuscript and Sup
 
 ## Principal certificate
 
-`KiknadzeKrasnov.exactMaterialCirculationSurface` certifies the central single-mode result on the annular source branch: the distinguished cylinder is transported by the KK radial velocity, is the one-mode **vorticity-magnitude maximum**, has **zero viscous circulation transfer**, and encloses the fixed profile fraction (Gamma P(s,s-1)).
+`KiknadzeKrasnov.exactMaterialCirculationSurface` certifies the central single-mode result on the annular source branch: the distinguished cylinder is transported by the KK radial velocity, is the one-mode **vorticity-magnitude maximum**, has **zero viscous circulation transfer**, and encloses the fixed profile fraction `Γ P(s, s − 1)`.
 
 The development also certifies the actual scalar axisymmetric Navier–Stokes residuals, finite-mode angular-momentum and vorticity transport, physical moments and enstrophy, global one-mode swirl-magnitude extrema, Lagrangian trajectories, classical limits, and the finite-time radial-scale classification.
 
