@@ -1,12 +1,16 @@
 # Source specification
 
-Project: **Exact Material Circulation Surface in an Unsteady Viscous Vortex**  
+Project: **A Zero-Flux Material Cylinder in the Unsteady Kiknadze–Krasnov Vortex**  
 Formal target: Lean 4 + Mathlib  
 Repository: `KNOWDYN/Kiknadze-Krasnov`
 
-## 1. Frozen source set
+## 1. Frozen source set and final reviewed artifacts
 
-The formalisation is grounded in the supplied final-submission archive, not in retyped PDF equations.
+The formalisation was built from the supplied TeX source archive and its frozen equation/claim ledger. The final release audit additionally reconciles that ledger and the Lean certificates against the final reviewed manuscript and Supplementary Material PDFs.
+
+### 1.1 Formal source archive
+
+The source ledger remains grounded in the supplied TeX archive, not in retyped PDF equations.
 
 - archive SHA-256: `c0e9f4c3d99a0d97f5f2d82b56187de50a0350260dde98dbaed3112e60d14b7b`
 - `main.tex` SHA-256: `7a77240317464855e449baf2129e681b62ebfe5f73903ae76932229adea7cce4`
@@ -14,6 +18,19 @@ The formalisation is grounded in the supplied final-submission archive, not in r
 - `references.bib` SHA-256: `48c59b2f7ffe0709370c88c873e0b727a93aaa5637188b5212353bee85b51708`
 
 The archive contains 17 files: `main.tex`, `supplementary_material.tex`, `references.bib`, four manuscript tables, two supplementary tables, and eight vector-PDF figures.
+
+### 1.2 Final reviewed PDF set
+
+The final reviewed publication artifacts use the title **A Zero-Flux Material Cylinder in the Unsteady Kiknadze–Krasnov Vortex**.
+
+- manuscript v3: 30 pages; SHA-256 `153c7cff9d0418015ec7b8375bc4ee0559ef70d66405051ee1ef406086b31bdc`
+- Supplementary Material v3: 10 pages; SHA-256 `5a3ac52605ca0deeafc4f8f9614f54abb2d1db69de98d0b374b799a0cced1372`
+- manuscript displayed equations: (1)–(160)
+- supplementary displayed equations: (S1)–(S53)
+
+The v3 PDFs incorporate the release-audit corrections already represented by the Lean development: the combined near-axis pressure coefficient including optional central line circulation, sign-safe vorticity-magnitude terminology, sign-safe swirl-magnitude terminology, and the corrected introductory label before manuscript Eq. (75). The mathematical theorem set required no change during this final reconciliation.
+
+The TeX archive hashes and equation fingerprints below remain frozen because they are the provenance of the formal source inventory. The v3 PDF hashes identify the final reviewed presentation artifacts reconciled to that inventory.
 
 Mathematical display inventory:
 
@@ -27,7 +44,7 @@ Every display block is represented in the five sharded CSV files under `docs/equ
 
 ## 2. Certification boundary
 
-The Lean development will certify the mathematical derivations made in the manuscript and supplementary material, subject to the physical/model premises explicitly adopted there.
+The Lean development certifies the mathematical derivations made in the manuscript and Supplementary Material, subject to the physical/model premises explicitly adopted there.
 
 ### 2.1 Governing premises rather than proof targets
 
@@ -40,7 +57,7 @@ The following are treated as the physical/mathematical model supplied to the for
 5. absence of non-conservative body force;
 6. standard passive-scalar advection–diffusion equation when it appears in the discussion.
 
-The project **will** prove that the stated KK fields satisfy the scalar axisymmetric equations under the paper's hypotheses. It will **not** attempt to formalise continuum mechanics from Cauchy's theorem or rederive cylindrical-coordinate differential operators from Euclidean differential geometry within this certificate.
+The project proves that the stated KK fields satisfy the scalar axisymmetric equations under the paper's hypotheses. It does **not** attempt to formalise continuum mechanics from Cauchy's theorem or rederive cylindrical-coordinate differential operators from Euclidean differential geometry within this certificate.
 
 ### 2.2 External literature statements
 
@@ -197,17 +214,17 @@ Prove the finite accumulated-strain criterion, exact concentration diagnostic, a
 
 The `p>1` statement is expected to be the highest-analysis-risk proof in the source.
 
-## 6. Semantic audit findings that must be preserved, not silently repaired
+## 6. Semantic audit findings preserved in the formalisation
 
 ### S1 — Signed vorticity versus vorticity magnitude
 
-The source permits circulation coefficients of either sign but repeatedly calls `x=s-1` the “vorticity maximum”. For `Γ<0`, the signed vorticity has a minimum at that point while `|ω_z|` has its maximum there. The source itself later gives a magnitude formula with `|Γ|`.
+The pre-release source permitted circulation coefficients of either sign while some prose called `x=s-1` the “vorticity maximum”. For `Γ<0`, the signed vorticity has a minimum at that point while `|ω_z|` has its maximum there. The final v3 manuscript and Supplementary Material now use sign-safe magnitude wording.
 
 Formalisation rule: prove the sign-independent statement for `|ω_z|`, and separately prove signed maximum/minimum according to `sign Γ`. Do not insert an undocumented `Γ>0` assumption into the main theorem.
 
 ### S2 — Maximum swirl wording
 
-The manuscript says the azimuthal velocity has a positive interior maximum for `s>1/2`, while the supplementary parameter table refers to a maximum of `|u_θ|`. The sign of `u_θ` is controlled by the sign of circulation.
+The pre-release manuscript described a positive interior azimuthal-velocity maximum for `s>1/2`, while the supplementary parameter table used `|u_θ|`. The final v3 manuscript and Supplementary Material now consistently use sign-safe magnitude wording, with signed extrema conditioned on circulation sign.
 
 Formalisation rule: the canonical sign-independent theorem concerns `|u_θ|`; signed extrema are stated conditionally on circulation sign.
 
@@ -260,7 +277,8 @@ The Lean project must not claim any of the following unless a later source or ex
 
 ## 8. Source audit artefacts
 
-- `docs/SOURCE_SPEC.md` — this frozen formal specification
+- `docs/SOURCE_SPEC.md` — this formal specification and final-artifact provenance
+- `docs/FINAL_RELEASE_AUDIT.md` — final manuscript/Supplement reconciliation and release audit
 - `docs/equations/part_01.csv` … `part_05.csv` — all 206 display blocks with source lines, labels, fingerprints, action and target bundle
 - `docs/source-claims.csv` — mathematically consequential prose claims and restrictions not safely represented by display equations alone
 
