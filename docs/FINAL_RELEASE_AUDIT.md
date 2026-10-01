@@ -20,14 +20,9 @@ The final manuscript and Supplementary Material were checked against the complet
 Confirmed:
 
 1. The manuscript and Supplementary Material use the same final title and KK notation.
-2. Manuscript Eq. (60) now gives the combined near-axis pressure scaled limit
-   [
-   lim_{r	o0^+} r^2 p(r,z,t)
-   =-rac{ho}{2}left(q^2+rac{Gamma_ell^2}{4pi^2}ight),
-   ]
-   matching `PressureAsymptotics.lean`.
-3. Sign-independent vorticity statements now use the maximum of `|omega_z|`; signed maximum/minimum statements are conditioned on circulation sign.
-4. Sign-independent swirl statements now use the maximum of `|u_theta|`; signed maximum/minimum statements are conditioned on circulation sign.
+2. Manuscript Eq. (60) now gives the combined near-axis pressure scaled limit `lim_(r→0+) r²p = −(ρ/2)[q² + Γ_ℓ²/(4π²)]`, matching `PressureAsymptotics.lean`.
+3. Sign-independent vorticity statements now use the maximum of `|ω_z|`; signed maximum/minimum statements are conditioned on circulation sign.
+4. Sign-independent swirl statements now use the maximum of `|u_θ|`; signed maximum/minimum statements are conditioned on circulation sign.
 5. The introductory text before manuscript Eq. (75) correctly identifies the displayed quantities as profile derivatives.
 6. The Supplementary Material glossary, parameter-domain table, material-surface derivation and multimode qualification use terminology consistent with the manuscript.
 7. The distinct-scale multimode restriction remains explicit: componentwise material cylinders do not imply a universal common total-field zero-flux surface.
