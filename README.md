@@ -4,12 +4,11 @@
 
 **Lean 4 / Mathlib formal verification companion**
 
-[![Lean CI](https://github.com/KNOWDYN/Kiknadze-Krasnov/actions/workflows/lean.yml/badge.svg?branch=main)](https://github.com/KNOWDYN/Kiknadze-Krasnov/actions/workflows/lean.yml)
-![Lean](https://img.shields.io/badge/Lean-4.34.0--rc2-0C6BFF)
+[![Lean](https://img.shields.io/badge/Lean-4.34.0--rc2-0C6BFF)
+![Lean CI](https://github.com/KNOWDYN/Kiknadze-Krasnov/actions/workflows/lean.yml/badge.svg?branch=main)](https://github.com/KNOWDYN/Kiknadze-Krasnov/actions/workflows/lean.yml)
 ![Mathlib](https://img.shields.io/badge/Mathlib-pinned%20%408d52ea9-2F74C0)
 ![Package](https://img.shields.io/badge/package-v1.0.0-4C566A)
 ![Proof trust](https://img.shields.io/badge/proof%20trust-audited-brightgreen)
-![Placeholders](https://img.shields.io/badge/sorry%20%7C%20admit-none-brightgreen)
 ![Coverage](https://img.shields.io/badge/source%20coverage-206%20displays%20%2B%2037%20claims-brightgreen)
 ![Status](https://img.shields.io/badge/status-reviewer--ready-brightgreen)
 
