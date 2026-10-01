@@ -7,7 +7,7 @@ noncomputable section
 open Set intervalIntegral
 
 /-!
-Pass 3A formalises the manuscript's meridional construction at a fixed time.
+This module formalises the manuscript's meridional construction at a fixed time.
 The scalars `a`, `b`, and `q` are therefore instantaneous values; this file does
 not assume that `q` is time-independent. Constancy of `q` is a later
 angular-momentum compatibility result.

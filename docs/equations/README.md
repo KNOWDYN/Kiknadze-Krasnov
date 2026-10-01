@@ -1,4 +1,4 @@
-# Pass 1 equation ledger
+# Source equation ledger
 
 The source display inventory is sharded only to keep each audit file small and reviewable. Together the five CSV files contain every displayed mathematical block in the supplied LaTeX source package.
 
@@ -12,4 +12,4 @@ The source display inventory is sharded only to keep each audit file small and r
 
 Total: **206 display blocks** = 159 from `main.tex` + 47 from `supplementary_material.tex`.
 
-Each row records the exact source file and line span, manuscript label when present, formalisation action, target theorem bundle, a short SHA-256 fingerprint of the extracted formula, and a formula preview. The frozen source-file hashes are recorded in `../PASS1_SOURCE_SPEC.md`.
+Each row records the exact source file and line span, manuscript label when present, formalisation action, target theorem bundle, a short SHA-256 fingerprint of the extracted formula, and a formula preview. The frozen source-file hashes are recorded in `../SOURCE_SPEC.md`.

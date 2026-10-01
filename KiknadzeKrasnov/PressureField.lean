@@ -9,7 +9,7 @@ open MeasureTheory intervalIntegral
 /-!
 Pressure reconstruction for the exact KK field, corresponding to manuscript
 Eqs. (50)--(59).  The pressure reference radius is named `rRef` and is
-kept distinct from the distinguished material radius of Pass 4.
+kept distinct from the distinguished material radius of the principal certificate.
 -/
 
 /-- Eq. (51): pointwise time derivative of u_r for constant q. -/

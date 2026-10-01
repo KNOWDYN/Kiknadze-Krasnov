@@ -35,3 +35,7 @@ jobs:
             echo 'Forbidden Lean proof placeholder found.'
             exit 1
           fi
+      - name: Audit transitive proof trust
+        run: lake env lean scripts/TrustAudit.lean
+      - name: Check source coverage
+        run: python3 scripts/check_coverage.py

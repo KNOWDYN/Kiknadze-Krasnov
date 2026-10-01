@@ -8,8 +8,7 @@ open intervalIntegral
 
 /-!
 Exact radial-scale dynamics used by the Navier--Stokes solution certificate.
-This formalises manuscript Eqs. (44)--(49).  The finite-time asymptotic
-classification is deliberately deferred to the later family/asymptotics pass.
+This formalises manuscript Eqs. (44)--(49).  FiniteTimeCriteria and FiniteTimeAsymptotics certify the terminal classification.
 -/
 
 /-- Linear inverse-scale residual h' + a h - 4 nu. -/

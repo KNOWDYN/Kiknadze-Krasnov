@@ -1,4 +1,4 @@
-# Pass 1 — Source-to-Formal-Specification Freeze
+# Source specification
 
 Project: **Exact Material Circulation Surface in an Unsteady Viscous Vortex**  
 Formal target: Lean 4 + Mathlib  
@@ -23,7 +23,7 @@ Mathematical display inventory:
 - manuscript equation labels `eq:*` = **89**
 - all manuscript labels (equations, sections, figures, tables) = **111**
 
-Every display block is represented in the five sharded CSV files under `docs/pass1_equation_ledger/` (indexed by its `README.md`). Mathematically consequential prose assertions that are not uniquely represented by a display equation are represented in `docs/PASS1_claim_register.csv`.
+Every display block is represented in the five sharded CSV files under `docs/equations/` (indexed by its `README.md`). Mathematically consequential prose assertions that are not uniquely represented by a display equation are represented in `docs/source-claims.csv`.
 
 ## 2. Certification boundary
 
@@ -40,7 +40,7 @@ The following are treated as the physical/mathematical model supplied to the for
 5. absence of non-conservative body force;
 6. standard passive-scalar advection–diffusion equation when it appears in the discussion.
 
-The project **will** prove that the stated KK fields satisfy the scalar axisymmetric equations under the paper's hypotheses. It will **not** attempt to formalise continuum mechanics from Cauchy's theorem or rederive cylindrical-coordinate differential operators from Euclidean differential geometry unless a later pass demonstrates that this is necessary for a claimed result.
+The project **will** prove that the stated KK fields satisfy the scalar axisymmetric equations under the paper's hypotheses. It will **not** attempt to formalise continuum mechanics from Cauchy's theorem or rederive cylindrical-coordinate differential operators from Euclidean differential geometry within this certificate.
 
 ### 2.2 External literature statements
 
@@ -106,7 +106,7 @@ The manuscript has notation collisions that are harmless on paper but must be re
 | lower integration reference `r_*` in pressure integral | `rRef` | distinct from the later material radius |
 | material radius `r_*` | `rStar` | headline surface |
 | Euler gamma function `Γ(s)` | `gammaFn s` | avoids collision with circulation amplitudes |
-| incomplete gamma / regularised `P(s,x)` | `regLowerGamma s x` or a project wrapper | exact final name fixed in pass 2 after Mathlib audit |
+| incomplete gamma / regularised `P(s,x)` | `regLowerGamma s x` or a project wrapper | the project wrapper is defined by its actual interval integral |
 | accumulated strain `\mathcal A(t)` | `strainAccum t` | separate from dimensionless `A(τ)` used later |
 | circulation `Γ` | `circ`, `circLine`, `circMode i` | sign must remain explicit |
 
@@ -258,16 +258,11 @@ The Lean project must not claim any of the following unless a later source or ex
 - zero passive-scalar/thermal flux merely because circulation flux vanishes;
 - applicability to anatomical, plasma, atmospheric, combustion or fibre systems without their additional governing assumptions.
 
-## 8. Pass-1 artefacts
+## 8. Source audit artefacts
 
-- `docs/PASS1_SOURCE_SPEC.md` — this frozen formal specification
-- `docs/pass1_equation_ledger/part_01.csv` … `part_05.csv` — all 206 display blocks with source lines, labels, fingerprints, action and target bundle
-- `docs/PASS1_claim_register.csv` — mathematically consequential prose claims and restrictions not safely represented by display equations alone
+- `docs/SOURCE_SPEC.md` — this frozen formal specification
+- `docs/equations/part_01.csv` … `part_05.csv` — all 206 display blocks with source lines, labels, fingerprints, action and target bundle
+- `docs/source-claims.csv` — mathematically consequential prose claims and restrictions not safely represented by display equations alone
 
-These artefacts are audit inputs for every subsequent pass. A later proof may refine theorem names or split a claim into smaller lemmas, but it must not silently delete, strengthen or weaken a source claim. Any intentional scope change must be recorded in the repository.
+These artefacts are the source audit inputs. A proof may refine theorem names or split a claim into smaller lemmas, but it must not silently delete, strengthen or weaken a source claim. Any intentional scope change must be recorded in the repository.
 
-## 9. Pass-1 acceptance result
-
-**PASS 1 COMPLETE** if and only if all three audit artefacts are present together at the recorded freeze commit and the source hashes above match the supplied archive.
-
-The next pass may begin only from this frozen source specification.
