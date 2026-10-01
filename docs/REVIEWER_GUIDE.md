@@ -1,5 +1,7 @@
 # Reviewer guide
 
+This guide accompanies the final reviewed paper **A Zero-Flux Material Cylinder in the Unsteady Kiknadze–Krasnov Vortex** and its Supplementary Material.
+
 All names below are in the `KiknadzeKrasnov` namespace. `KiknadzeKrasnov.lean` imports the complete development. The source inventory contains 206 mathematical displays and 37 consequential prose claims; [coverage.csv](coverage.csv) and [claim-coverage.csv](claim-coverage.csv) map each to its certificate or explicit scope classification. Inventory coverage does not mean that adopted model premises or cited external results have been independently proved.
 
 ## Principal results
@@ -36,8 +38,12 @@ All names below are in the `KiknadzeKrasnov` namespace. `KiknadzeKrasnov.lean` i
 
 Run the four commands in the repository README using the committed toolchain and dependency lock. `scripts/TrustAudit.lean` walks transitive axiom dependencies of every project declaration and permits only `propext`, `Classical.choice`, and `Quot.sound`. It rejects `sorryAx` and any project-specific axiom. The coverage checker verifies the complete source inventory and that every documented certificate name exists. CI checks the same committed source.
 
-The source archive itself is not redistributed in this repository. Its archive and component hashes, original source line references, and equation fingerprints are preserved in [SOURCE_SPEC.md](SOURCE_SPEC.md) and [equations](equations/README.md).
+The source archive itself is not redistributed in this repository. Its archive and component hashes, original source line references, and equation fingerprints are preserved in [SOURCE_SPEC.md](SOURCE_SPEC.md) and [equations](equations/README.md). The final reviewed manuscript and Supplementary Material are identified there by SHA-256 and their reconciliation is recorded in [FINAL_RELEASE_AUDIT.md](FINAL_RELEASE_AUDIT.md).
 
-## Submission boundary
+## Release boundary
 
-The manual merge/release is left to the author. Carry the pressure correction and the sign/domain qualifications from [MANUSCRIPT_NOTES.md](MANUSCRIPT_NOTES.md) into the manuscript. Distributional line vorticity, historical attribution, cited kernel/layer results, numerical figure interpretation, and application-specific governing assumptions are outside the certificate. No finite-energy whole-space Navier–Stokes regularity claim is made.
+The final v3 manuscript and Supplementary Material have been reconciled with the formalisation. The near-axis pressure correction and sign-safe vorticity/swirl wording documented in [MANUSCRIPT_NOTES.md](MANUSCRIPT_NOTES.md) are incorporated in the final reviewed PDFs.
+
+Distributional line vorticity, historical attribution, cited kernel/layer results, numerical figure interpretation, and application-specific governing assumptions remain outside the certificate. No finite-energy whole-space Navier–Stokes regularity claim is made.
+
+The repository release/tag is created only after the release-hygiene pull request has been manually reviewed and merged by the author.
