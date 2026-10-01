@@ -10,7 +10,6 @@
 ![Package](https://img.shields.io/badge/package-v1.0.0-4C566A)
 ![Proof trust](https://img.shields.io/badge/proof%20trust-audited-brightgreen)
 ![Coverage](https://img.shields.io/badge/source%20coverage-206%20displays%20%2B%2037%20claims-brightgreen)
-![Status](https://img.shields.io/badge/status-reviewer--ready-brightgreen)
 
 Formal certificates for the mathematical results of the final manuscript and Supplementary Material.
 
