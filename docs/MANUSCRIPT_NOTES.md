@@ -1,6 +1,6 @@
 # Final manuscript reconciliation
 
-The formal source hashes and original equation fingerprints remain preserved in the frozen ledger. The final reviewed manuscript and Supplementary Material have now incorporated the corrections and qualifications identified during formalisation.
+The formal source hashes and original equation fingerprints remain preserved in the frozen ledger. The final reviewed manuscript and Supplementary Material have incorporated the corrections and qualifications identified during formalisation.
 
 Final reviewed artifacts:
 
@@ -9,23 +9,20 @@ Final reviewed artifacts:
 
 ## Near-axis pressure — resolved
 
-For fixed time and axial coordinate, positive shape, positive distributed scales, and positive pressure reference radius, the actual swirl-pressure primitive gives
+For fixed time and axial coordinate, the certified scaled limit is:
 
-[
-lim_{r	o0^+}r^2p(r,z,t)
-=-rac{ho}{2}left(q^2+rac{Gamma_ell^2}{4pi^2}ight).
-]
+`lim_(r→0+) r² p(r,z,t) = −(ρ/2)[q² + Γ_ℓ²/(4π²)]`.
 
-When `Gamma_line = 0`, this reduces to `-rho q²/2`. For nonzero line circulation there is an additional term `-rho Gamma_line²/(8 pi² r²)`.
+When `Γ_ℓ = 0`, this reduces to `−ρq²/2`. For nonzero line circulation there is an additional leading term `−ρΓ_ℓ²/(8π²r²)`.
 
-The final v3 manuscript states the combined scaled limit in Eq. (60), then gives the zero-line-circulation asymptotic as a special case. This now matches `PressureAsymptotics.lean`.
+The final v3 manuscript states the combined scaled limit in Eq. (60), then gives the zero-line-circulation asymptotic as a special case. This matches `PressureAsymptotics.lean`.
 
 ## Signed extrema — resolved
 
 The final v3 manuscript and Supplementary Material use sign-independent magnitude statements where the circulation sign is unrestricted:
 
-- for nonzero distributed circulation, the distinguished radius is the maximum of `|omega_z|`; the signed field has a maximum for positive circulation and a minimum for negative circulation;
-- for nonzero single-mode circulation and `s > 1/2`, the interior extremum is stated for `|u_theta|`, with signed maximum/minimum distinguished by circulation sign.
+- for nonzero distributed circulation, the distinguished radius is the maximum of `|ω_z|`; the signed field has a maximum for positive circulation and a minimum for negative circulation;
+- for nonzero single-mode circulation and `s > 1/2`, the interior extremum is stated for `|u_θ|`, with signed maximum/minimum distinguished by circulation sign.
 
 These formulations match `PrincipalSurface.lean`, `VorticityCore.lean`, and `SwirlMaximum.lean`.
 
