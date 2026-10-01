@@ -5,7 +5,7 @@ namespace KiknadzeKrasnov
 noncomputable section
 
 /-!
-Pass 4 circulation-transfer layer for manuscript Eqs. (116)--(123) and
+Circulation-transfer layer for manuscript Eqs. (116)--(123) and
 Supplementary Eqs. (30)--(35).
 -/
 

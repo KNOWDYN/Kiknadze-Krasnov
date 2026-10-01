@@ -6,7 +6,7 @@ namespace KiknadzeKrasnov
 noncomputable section
 
 /-!
-Pass 4 analytic profile layer. These lemmas certify the regularised
+Analytic profile layer. These lemmas certify the regularised
 incomplete-gamma derivatives used in the manuscript's one-mode vorticity and
 material-circulation arguments.
 -/

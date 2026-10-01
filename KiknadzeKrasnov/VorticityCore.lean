@@ -8,7 +8,7 @@ noncomputable section
 open Set
 
 /-!
-Pass 4 one-mode vorticity layer. This file connects the already-defined KK
+One-mode vorticity layer. This file connects the already-defined KK
 swirl/circulation profile to the actual cylindrical curl and proves the
 sign-correct annular vorticity extremum used by the principal material-surface
 theorem.

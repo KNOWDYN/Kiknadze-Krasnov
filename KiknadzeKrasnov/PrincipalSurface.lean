@@ -5,13 +5,13 @@ namespace KiknadzeKrasnov
 noncomputable section
 
 /-!
-Pass 4 principal certificate.  This theorem family assembles the manuscript's
+Principal certificate.  This theorem family assembles the manuscript's
 central single-mode result without strengthening it to distinct-scale
 multimode fields or to variational transport-barrier statements.
 -/
 
 /--
-For every physical time at which the Pass-3B scale equation holds, the
+For every physical time at which the scale equation holds, the
 source-bearing distinguished radius is transported by the KK radial velocity.
 This is the reviewer-facing materiality statement corresponding to manuscript
 Eq. (111).
@@ -188,7 +188,7 @@ theorem principalSurface_snapshot
   exact abs_distributedVorticity_lt_peak hcirc hs hbeta hr hne
 
 /--
-Pass-4 assembled form of the paper's headline theorem: on the source-bearing
+Assembled form of the paper's headline theorem: on the source-bearing
 single-mode branch, the same positive cylinder is material for every physical
 time and, at each time, is the one-mode |omega_z| peak and an exact zero
 viscous-circulation-transfer surface enclosing the fixed profile fraction

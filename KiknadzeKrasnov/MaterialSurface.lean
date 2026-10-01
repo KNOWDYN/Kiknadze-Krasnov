@@ -9,12 +9,12 @@ noncomputable section
 open Set
 
 /-!
-Pass 4 material-motion layer for manuscript Eqs. (103)--(112) and
+Material-motion layer for manuscript Eqs. (103)--(112) and
 Supplementary Eqs. (18)--(26).  The source-bearing distinguished radius is
 proved to obey the same radial particle law as the fluid.
 -/
 
-/-- Algebraic rate form of the Pass-3B scale residual. -/
+/-- Algebraic rate form of the scale residual. -/
 theorem betaScaleResidual_zero_iff_rate {nu a beta betaDot : ℝ} :
     betaScaleResidual nu a beta betaDot = 0 ↔
       betaDot = a * beta - 4 * nu * beta ^ 2 := by

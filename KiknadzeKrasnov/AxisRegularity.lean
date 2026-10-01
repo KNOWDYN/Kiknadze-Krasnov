@@ -33,8 +33,8 @@ theorem radialVelocity_finite_axis_limit_forces_source_zero
     have hfull :
         Tendsto (fun r : ℝ => -(a / 2) * r ^ 2 + q)
           (𝓝 0) (𝓝 q) := by
-      convert (continuousAt_const.mul (continuousAt_id.pow 2)).add
-        continuousAt_const |>.tendsto using 1 <;> ring
+      have hc : ContinuousAt (fun r : ℝ => -(a / 2) * r ^ 2 + q) 0 := by fun_prop
+      simpa using hc.tendsto
     exact tendsto_nhdsWithin_of_tendsto_nhds (s := Ioi (0 : ℝ)) hfull
   have heq :
       (fun r : ℝ => r * radialVelocity a q r) =ᶠ[𝓝[>] 0]
@@ -43,10 +43,9 @@ theorem radialVelocity_finite_axis_limit_forces_source_zero
     have hr0 : r ≠ 0 := ne_of_gt hr
     unfold radialVelocity
     field_simp [hr0]
-    ring
   have hq : Tendsto (fun r : ℝ => r * radialVelocity a q r)
       (𝓝[>] 0) (𝓝 q) := hpoly.congr' heq.symm
-  exact tendsto_nhds_unique hprod hq
+  exact tendsto_nhds_unique hq hprod
 
 /-- The regular one-mode distributed angular momentum tends to zero at the
 axis. -/
@@ -57,7 +56,8 @@ theorem distributedAngularMomentum_one_tendsto_zero
   have hxfull :
       Tendsto (fun r : ℝ => scaledX beta r) (𝓝 0) (𝓝 0) := by
     unfold scaledX
-    simpa using (tendsto_const_nhds.mul (tendsto_id.pow 2))
+    have hc : ContinuousAt (fun r : ℝ => beta * r ^ 2) 0 := by fun_prop
+    simpa using hc.tendsto
   have hx : Tendsto (fun r : ℝ => scaledX beta r)
       (𝓝[>] 0) (𝓝 0) :=
     tendsto_nhdsWithin_of_tendsto_nhds (s := Ioi (0 : ℝ)) hxfull
@@ -74,8 +74,8 @@ theorem distributedAngularMomentum_one_tendsto_zero
     have hexp :
         Tendsto (fun r : ℝ => 1 - Real.exp (-(scaledX beta r)))
           (𝓝[>] 0) (𝓝 0) := by
-      convert tendsto_const_nhds.sub (Real.continuous_exp.continuousAt.tendsto.comp hx.neg) using 1
-      norm_num
+      have he := Real.continuous_exp.continuousAt.tendsto.comp hx.neg
+      simpa using he.const_sub (1 : ℝ)
     exact hexp.congr' hformula.symm
   unfold distributedAngularMomentum
   simpa using hP.const_mul (circ / (2 * Real.pi))
@@ -136,12 +136,13 @@ theorem exp_slope_comp_neg_beta_sq
     (Real.hasDerivAt_exp 0).tendsto_slope_zero
   have hargFull :
       Tendsto (fun r : ℝ => -(beta * r ^ 2)) (𝓝 0) (𝓝 0) := by
-    convert (tendsto_const_nhds.mul (tendsto_id.pow 2)).neg using 1 <;> ring
+    have hc : ContinuousAt (fun r : ℝ => -(beta * r ^ 2)) 0 := by fun_prop
+    simpa using hc.tendsto
   have harg :
       Tendsto (fun r : ℝ => -(beta * r ^ 2))
         (𝓝[>] 0) (𝓝[≠] 0) := by
     apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-    · exact hargFull
+    · exact tendsto_nhdsWithin_of_tendsto_nhds (s := Ioi (0 : ℝ)) hargFull
     · filter_upwards [self_mem_nhdsWithin] with r hr
       have hr0 : r ≠ 0 := ne_of_gt hr
       simp [hbeta.ne', hr0]
@@ -167,7 +168,8 @@ theorem distributedSwirl_one_div_radius_tendsto
   filter_upwards [self_mem_nhdsWithin] with r hr
   have hr0 : r ≠ 0 := ne_of_gt hr
   rw [distributedSwirl_one]
-  · field_simp [hr0, hbeta.ne', Real.pi_ne_zero]
+  · unfold scaledX
+    field_simp [hr0, hbeta.ne', Real.pi_ne_zero]
     ring
   · unfold scaledX
     positivity
@@ -180,7 +182,8 @@ theorem distributedSwirl_one_tendsto_zero
     (circ := circ) hbeta
   have hr : Tendsto (fun r : ℝ => r) (𝓝[>] 0) (𝓝 0) :=
     tendsto_nhdsWithin_of_tendsto_nhds (s := Ioi (0 : ℝ)) tendsto_id
-  have hmul := hratio.mul hr
+  have hmul : Tendsto (fun r : ℝ => distributedSwirl circ 1 beta r / r * r)
+      (𝓝[>] 0) (𝓝 0) := by simpa using hratio.mul hr
   apply hmul.congr'
   filter_upwards [self_mem_nhdsWithin] with r hpos
   have hr0 : r ≠ 0 := ne_of_gt hpos

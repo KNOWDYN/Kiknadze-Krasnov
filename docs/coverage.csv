@@ -1,0 +1,207 @@
+item_id,source,source_lines,source_action,kind,entry_points,qualification
+M001,main.tex,50-55,DUPLICATE,repeated certificate,axial_affine_of_prescribed_gradient;radialVelocity_family_of_continuity;meridional_continuity,
+M002,main.tex,57-62,DUPLICATE,repeated certificate,distributedAngularMomentum_eq_radius_mul_swirl,
+M003,main.tex,68-71,DUPLICATE,repeated certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+M004,main.tex,73-77,DUPLICATE,repeated certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+M005,main.tex,83-86,DUPLICATE,repeated certificate,preSeparationResidual_factor;profileResidual_zero_iff_shapeODE,
+M006,main.tex,94-96,DEFINE,definition,,
+M007,main.tex,98-100,DEFINE,definition,,
+M008,main.tex,104-107,DEFINE,definition,,
+M009,main.tex,137-140,ASSUME_STANDARD,model premise,,Standard continuum-mechanics governing law; not a novel theorem of the paper.
+M010,main.tex,142-145,ASSUME_STANDARD,model premise,,Standard continuum-mechanics governing law; not a novel theorem of the paper. Used as formal governing premise.
+M011,main.tex,149-153,ASSUME_STANDARD,model premise,,Standard continuum-mechanics governing law; not a novel theorem of the paper.
+M012,main.tex,155-159,ASSUME_STANDARD,model premise,,Standard continuum-mechanics governing law; not a novel theorem of the paper.
+M013,main.tex,161-166,ASSUME_STANDARD,model premise,,Standard continuum-mechanics governing law; not a novel theorem of the paper. Used as formal governing premise.
+M014,main.tex,171-175,ASSUME_STANDARD,model premise,,Canonical scalar governing equations used as proof premises; cylindrical-coordinate derivation itself is out of scope.
+M015,main.tex,177-187,ASSUME_STANDARD,model premise,,Canonical scalar governing equations used as proof premises; cylindrical-coordinate derivation itself is out of scope.
+M016,main.tex,189-198,ASSUME_STANDARD,model premise,,Canonical scalar governing equations used as proof premises; cylindrical-coordinate derivation itself is out of scope.
+M017,main.tex,200-207,ASSUME_STANDARD,model premise,,Canonical scalar governing equations used as proof premises; cylindrical-coordinate derivation itself is out of scope.
+M018,main.tex,211-213,DEFINE,definition,,
+M019,main.tex,215-217,DEFINE,definition,,
+M020,main.tex,234-237,DEFINE,definition,,
+M021,main.tex,239-241,PROVE,certificate,axial_affine_of_prescribed_gradient;radialVelocity_family_of_continuity;meridional_continuity,
+M022,main.tex,243-246,PROVE,certificate,axial_affine_of_prescribed_gradient;radialVelocity_family_of_continuity;meridional_continuity,
+M023,main.tex,248-250,PROVE,certificate,axial_affine_of_prescribed_gradient;radialVelocity_family_of_continuity;meridional_continuity,
+M024,main.tex,252-254,PROVE,certificate,axial_affine_of_prescribed_gradient;radialVelocity_family_of_continuity;meridional_continuity,
+M025,main.tex,256-259,PROVE,certificate,axial_affine_of_prescribed_gradient;radialVelocity_family_of_continuity;meridional_continuity,
+M026,main.tex,263-265,PROVE,certificate,radialSourceFlux_eq,
+M027,main.tex,270-273,DEFINE,definition,,
+M028,main.tex,275-280,PROVE,certificate,angularMomentumResidual_eq_radius_mul_azimuthalResidual,
+M029,main.tex,284-287,DEFINE,definition,,
+M030,main.tex,289-293,PROVE,certificate,profileAngularMomentum_time_hasDerivAt;profileAngularMomentum_radial_hasDerivAt;profileAngularMomentum_radial_second_operator_eq,
+M031,main.tex,295-299,PROVE,certificate,angularMomentumResidual_eq_preSeparationResidual,
+M032,main.tex,301-304,PROVE,certificate,preSeparationResidual_factor;profileResidual_zero_iff_shapeODE,
+M033,main.tex,306-308,PROVE,certificate,preSeparationResidual_factor;profileResidual_zero_iff_shapeODE,
+M034,main.tex,310-313,PROVE,certificate,source_constant_of_fixed_nontrivial_profile,Requires an explicit nonzero profile-derivative witness.
+M035,main.tex,315-318,DEFINE,definition,,
+M036,main.tex,320-323,PROVE,certificate,preSeparationResidual_factor;profileResidual_zero_iff_shapeODE,
+M037,main.tex,327-329,PROVE,certificate,gammaKernel_logarithmic_derivative,
+M038,main.tex,331-333,PROVE,certificate,separated_profile_derivative_general,
+M039,main.tex,335-340,PROVE,certificate,separated_profile_primitive_general;upperGammaComplement_eq_integral,
+M040,main.tex,342-346,PROVE,certificate,lower_add_upperGammaComplement;upperGammaComplement_eq_integral;regLowerGamma_eq_one_sub_upper,
+M041,main.tex,348-351,PROVE,certificate,distributedAngularMomentum_eq_radius_mul_swirl,
+M042,main.tex,355-361,PROVE,certificate,multimodeCirculationValue_eq_two_pi_radius_swirl,
+M043,main.tex,365-368,PROVE,certificate,multimodeCirculationValue_tendsto_atTop,
+M044,main.tex,372-374,DEFINE,definition,,
+M045,main.tex,376-379,PROVE,certificate,betaScaleResidual_imp_inverseScaleResidual,
+M046,main.tex,381-384,DEFINE,definition,,
+M047,main.tex,386-393,PROVE,certificate,inverseScaleExact_hasDerivAt;inverseScaleExact_zero,
+M048,main.tex,395-399,PROVE,certificate,betaExact_hasDerivAt;betaExact_zero;betaExact_mul_inverseScaleExact,
+M049,main.tex,401-406,PROVE,certificate,inverseScaleExact_sub;inverseScaleExact_order_preserved;inverseScaleExact_strict_order_preserved,
+M050,main.tex,414-416,PROVE,certificate,radialVelocity_eq_of_integrated_relation,
+M051,main.tex,418-422,PROVE,certificate,radialVelocity_time_hasDerivAt;radialVelocity_radial_hasDerivAt,
+M052,main.tex,424-426,PROVE,certificate,radial_convective_acceleration,
+M053,main.tex,428-430,PROVE,certificate,radial_viscous_operator_zero,
+M054,main.tex,432-437,PROVE,certificate,pressureFieldAtTime_radial_hasDerivAt;pressureFieldAtTime_axial_hasDerivAt,
+M055,main.tex,439-441,PROVE,certificate,axial_acceleration_from_actual_field,
+M056,main.tex,443-446,PROVE,certificate,pressureFieldAtTime_axial_hasDerivAt,
+M057,main.tex,450-458,PROVE,certificate,pressureFieldAtTime_radial_hasDerivAt;pressureFieldAtTime_axial_hasDerivAt,
+M058,main.tex,460-464,PROVE,certificate,multimodeSwirl_pressure_hasDerivAt,Positive reference radius and evaluation radius; actual interval-integral primitive.
+M059,main.tex,468-470,PROVE,certificate,pressureFieldAtTime_axis_coefficient;pressureFieldAtTime_axis_coefficient_zero_line;multimodePressure_axis_coefficient,Corrected: nonzero central line circulation contributes another inverse-square term. See MANUSCRIPT_NOTES.md.
+M060,main.tex,475-478,PROVE,certificate,radialVelocity_finite_axis_limit_forces_source_zero;multimodeSwirl_finite_axis_limit_forces_line_zero,Finite axis limits; independent line circulation; finite distributed scales.
+M061,main.tex,480-485,PROVE,certificate,original_meridional_notation,
+M062,main.tex,486-490,PROVE,certificate,multimodeSwirl_regular_formula,
+M063,main.tex,492-494,PROVE,certificate,multimodeSwirl_regular_cubic_remainder,Finite signed mode sum; positive distributed scales.
+M064,main.tex,499-503,PROVE,certificate,finiteCirculation_shape_pos_iff,
+M065,main.tex,505-508,PROVE,certificate,distributedCirculation_hasDerivAt_r;regLowerGamma_tendsto_one,
+M066,main.tex,513-517,DEFINE_OR_CHECK,certificate,betaExact_zero;inverseScaleExact_zero,Initial data are prescribed; substitution at t=0.
+M067,main.tex,518-521,DEFINE_OR_CHECK,certificate,betaExact_zero;inverseScaleExact_zero,Initial data are prescribed; substitution at t=0.
+M068,main.tex,523-529,DEFINE_OR_CHECK,certificate,multimodeSwirl_far_field;radialVelocity_far_field,Scaled limits also cover zero total circulation or zero strain; equivalence requires nonzero leading coefficient.
+M069,main.tex,539-541,PROVE,certificate,continuityResidualActual_zero;radialMomentumResidualActual_zero;axialMomentumResidualActual_zero,
+M070,main.tex,543-547,PROVE,certificate,continuityResidualActual_zero;radialMomentumResidualActual_zero;axialMomentumResidualActual_zero,
+M071,main.tex,549-551,PROVE,certificate,continuityResidualActual_zero;radialMomentumResidualActual_zero;axialMomentumResidualActual_zero,
+M072,main.tex,553-555,PROVE,certificate,continuityResidualActual_zero;radialMomentumResidualActual_zero;axialMomentumResidualActual_zero,
+M073,main.tex,558-561,PROVE,certificate,distributedAngularMomentum_radial_hasDerivAt_actual,
+M074,main.tex,563-568,PROVE,certificate,regLowerGamma_hasDerivAt;regLowerGammaDensity_second_relation,
+M075,main.tex,570-573,PROVE,certificate,distributedAngularMomentumResidualActual_eq_preSeparation;distributedAngularMomentumResidualActual_zero,
+M076,main.tex,575-578,PROVE,certificate,centralLineAngularMomentum_time_hasDerivAt_zero,"Circulation amplitudes are constant parameters, not evolving unknowns."
+M077,main.tex,580-583,PROVE,certificate,kk_exact_navier_stokes_certificate;multimodeAngularMomentum_operator_zero,Actual meridional/pressure fields plus certified finite angular-momentum derivatives.
+M078,main.tex,588-590,PROVE,certificate,distributedVorticity_eq_swirl_curl;multimodeDistributedVorticity_hasDerivAt,Classical punctured-domain curl; distributional line vorticity excluded.
+M079,main.tex,592-597,PROVE,certificate,distributedVorticity_eq_swirl_curl;multimodeDistributedVorticity_hasDerivAt,Classical punctured-domain curl; distributional line vorticity excluded.
+M080,main.tex,601-606,PROVE,certificate,distributedVorticity_time_hasDerivAt;distributedVorticity_hasDerivAt_coefficient;distributedVorticity_radialDerivative_hasDerivAt;actualVorticityTransportResidual_zero;vorticityTransportResidualLocal_sum,
+M081,main.tex,610-614,PROVE,certificate,multimodeCirculationValue_eq_two_pi_radius_swirl,
+M082,main.tex,626-630,PROVE,certificate,distributedCirculation_derivative_density;integral_scaledCirculationDensity_eq_one,
+M083,main.tex,632-636,PROVE,certificate,physicalRadialEvenMoment_eq,
+M084,main.tex,638-642,PROVE,certificate,radialSecondMoment_eq;radialSquaredVariance_eq;physicalRadialEvenMoment_eq,
+M085,main.tex,644-646,PROVE,certificate,rmsRadius_eq;radialSecondMoment_eq,
+M086,main.tex,648-651,PROVE,certificate,regLowerGamma_quantile_exists;distributedCirculation_at_fractionRadius,Fraction lies strictly between zero and one.
+M087,main.tex,653-656,PROVE,certificate,distributedCirculation_at_vorticityPeak,
+M088,main.tex,668-670,PROVE,certificate,vorticityShape_eq_gammaKernel,
+M089,main.tex,672-677,PROVE,certificate,scaledX_vorticityPeakRadius;abs_distributedVorticity_lt_peak,Nonzero circulation; s>1; signed maximum/minimum distinguished.
+M090,main.tex,679-684,PROVE,certificate,scaledX_vorticityPeakRadius;abs_distributedVorticity_lt_peak,Nonzero circulation; s>1; signed maximum/minimum distinguished.
+M091,main.tex,688-690,PROVE,certificate,oneModeSwirl_scaled;oneModeSwirl_magnitude_maximum,Nonzero circulation; s>1/2; magnitude maximum at positive radius.
+M092,main.tex,692-695,PROVE,certificate,oneModeSwirl_scaled;oneModeSwirl_magnitude_maximum,Nonzero circulation; s>1/2; magnitude maximum at positive radius.
+M093,main.tex,697-699,PROVE,certificate,oneModeSwirl_scaled;oneModeSwirl_magnitude_maximum,Nonzero circulation; s>1/2; magnitude maximum at positive radius.
+M094,main.tex,701-704,PROVE,certificate,multimodeSwirl_deriv_zero_iff_extremum_relation,
+M095,main.tex,708-710,PROVE,certificate,physicalMultimodeEnstrophy_eq;physicalEnstrophyPair_integrable,"Physical integral, including mixed signed pair terms; s>1/2."
+M096,main.tex,712-719,PROVE,certificate,physicalMultimodeEnstrophy_eq;physicalEnstrophyPair_integrable,"Physical integral, including mixed signed pair terms; s>1/2."
+M097,main.tex,721-724,PROVE,certificate,enstrophyPairClosed_diagonal_eq_single;physicalEnstrophyPair_eq,
+M098,main.tex,726-729,PROVE,certificate,physicalSingleModeEnstrophy_hasDerivAt,
+M099,main.tex,734-736,PROVE,certificate,radialTrajectory_hasDerivAt;radialSqTrajectory_hasDerivAt;radialTrajectory_zero,Positive-radius interval before any sink-axis encounter.
+M100,main.tex,738-742,PROVE,certificate,radialTrajectory_hasDerivAt;radialSqTrajectory_hasDerivAt;radialTrajectory_zero,Positive-radius interval before any sink-axis encounter.
+M101,main.tex,744-748,PROVE,certificate,axialTrajectory_hasDerivAt;axialTrajectory_zero,
+M102,main.tex,750-754,PROVE,certificate,azimuthalTrajectory_hasDerivAt;azimuthalTrajectory_zero,FTC hypotheses and positive radius.
+M103,main.tex,761-764,PROVE_CORE,certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+M104,main.tex,766-769,PROVE_CORE,certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+M105,main.tex,771-775,PROVE_CORE,certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+M106,main.tex,777-781,PROVE_CORE,certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+M107,main.tex,783-786,DEFINE,definition,,
+M108,main.tex,790-792,PROVE_CORE,certificate,inverseScale_history_ode,
+M109,main.tex,794-797,PROVE_CORE,certificate,materialRadiusSq_eq_source_form,
+M110,main.tex,799-802,PROVE_CORE,certificate,materialRadiusSq_history_hasDerivAt,
+M111,main.tex,804-807,PROVE_CORE,certificate,materialRadius_history_hasDerivAt,
+M112,main.tex,809-817,PROVE_CORE,certificate,materialSurface_invariant_on;materialSurface_no_crossing_on,No-crossing; unconditional convergence is not asserted.
+M113,main.tex,822-827,PROVE_CORE,certificate,distributedVorticity_eq_swirl_curl;distributedVorticity_hasDerivAt_r,
+M114,main.tex,829-834,PROVE_CORE,certificate,distributedVorticity_eq_swirl_curl;distributedVorticity_hasDerivAt_r,
+M115,main.tex,836-839,PROVE_CORE,certificate,materialRadius_eq_vorticityPeakRadius,
+M116,main.tex,844-846,PROVE_CORE,certificate,materialCirculationFromX_scaled_eq,
+M117,main.tex,848-851,PROVE_CORE,certificate,materialCirculationFromX_scaled_eq,
+M118,main.tex,853-856,PROVE_CORE,certificate,regLowerGamma_hasDerivAt,
+M119,main.tex,858-863,PROVE_CORE,certificate,materialCirculationFromX_hasDerivAt,
+M120,main.tex,865-867,PROVE_CORE,certificate,materialCirculationRate_eq_viscousFlux;materialCirculationFromX_hasDerivAt_viscousFlux,
+M121,main.tex,869-874,PROVE_CORE,certificate,materialCirculationRate_eq_viscousFlux;materialCirculationFromX_hasDerivAt_viscousFlux,
+M122,main.tex,878-883,PROVE_CORE,certificate,materialCirculation_at_star;materialCirculation_at_star_hasDerivAt_zero_on;materialCirculation_fraction_at_star,
+M123,main.tex,885-888,PROVE_CORE,certificate,materialCirculation_at_star;materialCirculation_at_star_hasDerivAt_zero_on;materialCirculation_fraction_at_star,
+M124,main.tex,928-930,PROVE_CORE,certificate,steady_materialRadiusSq_eq_stagnation,
+M125,main.tex,964-966,PROVE,certificate,zeroStrainScale_hasDerivAt;oseen_swirl_formula;oseen_vorticity_formula,
+M126,main.tex,968-971,PROVE,certificate,zeroStrainScale_hasDerivAt;oseen_swirl_formula;oseen_vorticity_formula,
+M127,main.tex,972-975,PROVE,certificate,zeroStrainScale_hasDerivAt;oseen_swirl_formula;oseen_vorticity_formula,
+M128,main.tex,980-984,PROVE,certificate,constantStrainInverseScale_hasDerivAt;constantStrainScale_tendsto,
+M129,main.tex,986-988,PROVE,certificate,constantStrainInverseScale_hasDerivAt;constantStrainScale_tendsto,
+M130,main.tex,990-993,PROVE,certificate,burgers_swirl_formula,
+M131,main.tex,998-1001,PROVE,certificate,regularVorticityResidual_heatTransform;regularVorticityResidual_zero_of_heat;heatProfile_radial_hasDerivAt;heatProfile_radialDerivative_hasDerivAt;heatProfile_time_hasDerivAt,Differential change of variables; cited Bessel kernel is external.
+M132,main.tex,1003-1009,PROVE,certificate,regularVorticityResidual_heatTransform;regularVorticityResidual_zero_of_heat;heatProfile_radial_hasDerivAt;heatProfile_radialDerivative_hasDerivAt;heatProfile_time_hasDerivAt,Differential change of variables; cited Bessel kernel is external.
+M133,main.tex,1011-1013,PROVE,certificate,regularVorticityResidual_heatTransform;regularVorticityResidual_zero_of_heat;heatProfile_radial_hasDerivAt;heatProfile_radialDerivative_hasDerivAt;heatProfile_time_hasDerivAt,Differential change of variables; cited Bessel kernel is external.
+M134,main.tex,1015-1021,EXTERNAL_REFERENCE,external reference,,Cited known heat-kernel representation; formalize transformation to diffusion but not historical external theorem unless needed.
+M135,main.tex,1026-1028,PROVE,certificate,burgersScale_residual_zero,
+M136,main.tex,1030-1033,PROVE,certificate,steady_materialRadiusSq_eq_stagnation;steady_materialRadius_eq_stagnationRadius,
+M137,main.tex,1035-1039,PROVE,certificate,steady_materialRadiusSq_eq_stagnation;steady_materialRadius_eq_stagnationRadius,
+M138,main.tex,1041-1044,PROVE,certificate,steady_materialRadiusSq_eq_stagnation;steady_materialRadius_eq_stagnationRadius,
+M139,main.tex,1046-1048,PROVE,certificate,stagnationRadiusSq_pos;material_stagnation_balance_ratio,Positive source and strain for a positive stagnation radius.
+M140,main.tex,1050-1054,PROVE,certificate,stagnationRadiusSq_pos;material_stagnation_balance_ratio,Positive source and strain for a positive stagnation radius.
+M141,main.tex,1061-1063,PROVE,certificate,finiteModes_constantStrainScale_tendsto,
+M142,main.tex,1071-1075,PROVE,certificate,inverseScaleExact_hasDerivAt;inverseScaleExact_zero,
+M143,main.tex,1077-1080,PROVE,certificate,inverseScaleExact_hasDerivAt;inverseScaleExact_zero,
+M144,main.tex,1082-1088,PROVE,certificate,inverseScaleExact_hasDerivAt;inverseScaleExact_zero,
+M145,main.tex,1090-1095,PROVE,certificate,finiteAccumulatedStrain_preserves_positive_scale,
+M146,main.tex,1099-1107,PROVE,certificate,exact_concentration_diagnostic,
+M147,main.tex,1112-1120,PROVE,certificate,nondimensional_scale_hasDerivAt,
+M148,main.tex,1122-1125,PROVE,certificate,nondimensional_scale_hasDerivAt,
+M149,main.tex,1137-1142,PROVE,certificate,singularAccum_time_hasDerivAt;singularInverseScale_time_hasDerivAt;reciprocalInverseScaleNoncritical_hasDerivAt;reciprocalInverseScaleCritical_hasDerivAt,Explicit singular family with its initial-value and ODE certificates.
+M150,main.tex,1144-1151,PROVE,certificate,singularAccum_time_hasDerivAt;singularInverseScale_time_hasDerivAt;reciprocalInverseScaleNoncritical_hasDerivAt;reciprocalInverseScaleCritical_hasDerivAt,Explicit singular family with its initial-value and ODE certificates.
+M151,main.tex,1153-1158,PROVE,certificate,beta_supercritical_ratio_tendsto_one;terminalY_tendsto_terminal;radius_ratio_tendsto_one,p=1 and lambda>1; radius ratio follows from the certified inverse-scale ratio and square-root continuity.
+M152,main.tex,1174-1176,DEFINE,definition,,
+M153,main.tex,1243-1245,ASSUME_STANDARD,model premise,,Passive-scalar governing equation is contextual; not a theorem of the KK derivation.
+M154,main.tex,1256-1258,DUPLICATE,repeated certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+M155,main.tex,1260-1264,DUPLICATE,repeated certificate,materialRadius_history_hasDerivAt,
+M156,main.tex,1266-1268,DUPLICATE,repeated certificate,materialSurface_invariant_on;materialSurface_no_crossing_on,No-crossing; unconditional convergence is not asserted.
+M157,main.tex,1270-1273,DUPLICATE,repeated certificate,materialCirculationRate_eq_viscousFlux;materialCirculationFromX_hasDerivAt_viscousFlux,
+M158,main.tex,1275-1279,DUPLICATE,repeated certificate,materialCirculation_at_star;materialCirculation_at_star_hasDerivAt_zero_on;materialCirculation_fraction_at_star,
+M159,main.tex,1287-1290,DUPLICATE,repeated certificate,inverseScaleExact_hasDerivAt;inverseScaleExact_zero,
+S001,supplementary_material.tex,22-25,DEFINE_OR_PROVE,certificate,original_meridional_notation,
+S002,supplementary_material.tex,26-28,DEFINE_OR_PROVE,certificate,original_upperGamma_swirl_notation,
+S003,supplementary_material.tex,30-33,DEFINE_OR_PROVE,certificate,original_meridional_notation,
+S004,supplementary_material.tex,35-37,DEFINE_OR_PROVE,certificate,original_upperGamma_swirl_notation,
+S005,supplementary_material.tex,38-40,DEFINE_OR_PROVE,certificate,original_upperGamma_swirl_notation,
+S006,supplementary_material.tex,59-61,DUPLICATE_SUPPORT,repeated certificate,axial_affine_of_prescribed_gradient;radialVelocity_family_of_continuity;meridional_continuity,
+S007,supplementary_material.tex,63-65,DUPLICATE_SUPPORT,repeated certificate,continuityResidualActual_zero;radialMomentumResidualActual_zero;axialMomentumResidualActual_zero,
+S008,supplementary_material.tex,67-72,DUPLICATE_SUPPORT,repeated certificate,radial_viscous_operator_zero,
+S009,supplementary_material.tex,76-82,DUPLICATE_SUPPORT,repeated certificate,radial_convective_acceleration,
+S010,supplementary_material.tex,84-86,DUPLICATE_SUPPORT,repeated certificate,axial_acceleration_from_actual_field,
+S011,supplementary_material.tex,90-92,DUPLICATE_SUPPORT,repeated certificate,distributedAngularMomentum_radial_hasDerivAt_actual,
+S012,supplementary_material.tex,93-96,DUPLICATE_SUPPORT,repeated certificate,regLowerGamma_hasDerivAt;regLowerGammaDensity_second_relation,
+S013,supplementary_material.tex,98-100,DUPLICATE_SUPPORT,repeated certificate,kk_exact_navier_stokes_certificate;multimodeAngularMomentum_operator_zero,Actual meridional/pressure fields plus certified finite angular-momentum derivatives.
+S014,supplementary_material.tex,102-105,DUPLICATE_SUPPORT,repeated certificate,distributedAngularMomentumResidualActual_eq_preSeparation;distributedAngularMomentumResidualActual_zero,
+S015,supplementary_material.tex,107-109,DUPLICATE_SUPPORT,repeated certificate,preSeparationResidual_factor;profileResidual_zero_iff_shapeODE,
+S016,supplementary_material.tex,115-117,DUPLICATE_SUPPORT,repeated certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+S017,supplementary_material.tex,119-125,DUPLICATE_SUPPORT,repeated certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+S018,supplementary_material.tex,130-132,DUPLICATE_SUPPORT,repeated certificate,inverseScale_history_ode,
+S019,supplementary_material.tex,134-137,DUPLICATE_SUPPORT,repeated certificate,materialRadiusSq_history_hasDerivAt,
+S020,supplementary_material.tex,139-142,DUPLICATE_SUPPORT,repeated certificate,materialSurface_invariant_on;materialSurface_no_crossing_on,No-crossing; unconditional convergence is not asserted.
+S021,supplementary_material.tex,144-147,DUPLICATE_SUPPORT,repeated certificate,materialSurface_invariant_on;materialSurface_no_crossing_on,No-crossing; unconditional convergence is not asserted.
+S022,supplementary_material.tex,152-154,DUPLICATE_SUPPORT,repeated certificate,distributedVorticity_eq_swirl_curl;distributedVorticity_hasDerivAt_r,
+S023,supplementary_material.tex,156-162,DUPLICATE_SUPPORT,repeated certificate,distributedVorticity_eq_swirl_curl;distributedVorticity_hasDerivAt_r,
+S024,supplementary_material.tex,166-168,DUPLICATE_SUPPORT,repeated certificate,materialCirculationFromX_scaled_eq,
+S025,supplementary_material.tex,170-175,DUPLICATE_SUPPORT,repeated certificate,materialCirculationFromX_hasDerivAt,
+S026,supplementary_material.tex,177-179,DUPLICATE_SUPPORT,repeated certificate,materialCirculationRate_eq_viscousFlux;materialCirculationFromX_hasDerivAt_viscousFlux,
+S027,supplementary_material.tex,181-183,DUPLICATE_SUPPORT,repeated certificate,materialCirculationRate_eq_viscousFlux;materialCirculationFromX_hasDerivAt_viscousFlux,
+S028,supplementary_material.tex,185-188,DUPLICATE_SUPPORT,repeated certificate,materialCirculation_at_star;materialCirculation_at_star_hasDerivAt_zero_on;materialCirculation_fraction_at_star,
+S029,supplementary_material.tex,208-210,PROVE,certificate,oneModeSwirl_scaled;oneModeSwirl_magnitude_maximum,
+S030,supplementary_material.tex,212-214,PROVE,certificate,oneModeSwirl_scaled;oneModeSwirl_magnitude_maximum,
+S031,supplementary_material.tex,216-219,PROVE,certificate,physicalEnstrophyPair_eq;enstrophyPairClosed_diagonal_eq_single;enstrophy_axis_power_integrable_iff;enstrophy_kernel_integrable_iff,
+S032,supplementary_material.tex,223-226,PROVE,certificate,multimodeCirculationValue_eq_two_pi_radius_swirl;multimodeDistributedVorticity_hasDerivAt,
+S033,supplementary_material.tex,228-230,PROVE,certificate,multimode_scaledMaterial_hasDerivAt,
+S034,supplementary_material.tex,232-234,PROVE,certificate,multimodeCirculationValue_eq_two_pi_radius_swirl;multimodeDistributedVorticity_hasDerivAt,
+S035,supplementary_material.tex,239-241,PROVE,certificate,inverseScaleExact_hasDerivAt,
+S036,supplementary_material.tex,243-246,PROVE,certificate,singularAccum_time_hasDerivAt;reciprocalInverseScaleCritical_hasDerivAt;terminalY_tendsto_terminal,
+S037,supplementary_material.tex,247-253,PROVE,certificate,singularAccum_time_hasDerivAt;reciprocalInverseScaleCritical_hasDerivAt;terminalY_tendsto_terminal,
+S038,supplementary_material.tex,257-259,PROVE,certificate,singularAccumNoncritical_subcritical_tendsto;singularBetaY_subcritical_tendsto_finite,
+S039,supplementary_material.tex,264-266,PROVE,certificate,reciprocalInverseScaleNoncritical_hasDerivAt;reciprocalInverseScaleNoncritical_initial,
+S040,supplementary_material.tex,268-271,PROVE,certificate,beta_subcritical_ratio_tendsto_one;reciprocalBeta_noncritical_tendsto_atTop,
+S041,supplementary_material.tex,273-275,PROVE,certificate,reciprocalInverseScaleCritical_hasDerivAt;reciprocalInverseScaleCritical_initial,
+S042,supplementary_material.tex,277-279,PROVE,certificate,beta_critical_ratio_tendsto_one;reciprocalBeta_critical_tendsto_atTop,
+S043,supplementary_material.tex,281-283,PROVE,certificate,beta_supercritical_ratio_tendsto_one;reciprocalBeta_noncritical_tendsto_atTop,
+S044,supplementary_material.tex,288-291,PROVE,certificate,singularBetaY_supercritical_ratio;singularExpIntegralY_endpoint_ratio;singularBetaY_supercritical_tendsto_atTop,"Actual endpoint integral asymptotic, not assumed as a premise."
+S045,supplementary_material.tex,298-300,DUPLICATE_NUMERICAL,repeated certificate,scaledMaterial_hasDerivAt;radialSquared_hasDerivAt_of_materialTrajectory,
+S046,supplementary_material.tex,301-303,DUPLICATE_NUMERICAL,repeated certificate,vorticityShape_eq_gammaKernel,
+S047,supplementary_material.tex,305-307,DUPLICATE_NUMERICAL,repeated certificate,materialCirculationFromX_hasDerivAt,

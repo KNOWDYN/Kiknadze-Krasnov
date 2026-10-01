@@ -33,12 +33,13 @@ theorem lowerGamma_one {x : ℝ} (hx : 0 ≤ x) :
         simp
       · ring
     have hneg := hexp.neg
-    convert hneg using 1 <;> simp
+    convert hneg using 1; simp
   have hint : IntervalIntegrable (fun y : ℝ => Real.exp (-y)) volume 0 x :=
     (by fun_prop : Continuous fun y : ℝ => Real.exp (-y)).intervalIntegrable 0 x
   have h := intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le
     hx (by fun_prop) hderiv hint
   rw [h]
+  simp only [neg_zero, Real.exp_zero]
   ring
 
 /-- Regularised lower gamma at shape one. -/

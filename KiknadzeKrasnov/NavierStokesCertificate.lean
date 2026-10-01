@@ -260,7 +260,7 @@ def distributedAngularMomentumResidualActual
         (distributedAngularMomentumSecondRadialDerivative circ s beta r
           - distributedAngularMomentumRadialDerivative circ s beta r / r)
 
-/-- The actual one-mode residual reduces exactly to the Pass-3B separated residual. -/
+/-- The actual one-mode residual reduces exactly to the separated residual. -/
 theorem distributedAngularMomentumResidualActual_eq_preSeparation
     {nu a q beta betaDot circ s r : ℝ}
     (hbeta : 0 < beta) (hr : PuncturedRadius r) :
@@ -310,7 +310,7 @@ theorem distributedAngularMomentumResidualActual_zero
 R_theta in velocity units, with the time derivative taken from the actual
 one-mode-plus-constant-line angular-momentum history.  The remaining radial
 coefficients are separately certified above as derivatives of the actual
-profile.  On r>0, Pass 3B identifies this angular-momentum residual divided
+profile.  On r>0, The angular-momentum reduction identifies this angular-momentum residual divided
 by r with the z-independent azimuthal velocity residual.
 -/
 def azimuthalMomentumResidualActual
@@ -407,7 +407,7 @@ theorem oneModeAngularMomentumWithLine_radial_hasDerivAt
 
 /--
 Complete pointwise certificate answering whether the field containing the
-Pass-4 material surface satisfies the axisymmetric incompressible
+material surface satisfies the axisymmetric incompressible
 Navier--Stokes equations.  The pressure potential is the actual swirl
 integral from Eq. (58); `hPi` is discharged by
 `swirlPressurePotential_hasDerivAt` under its standard FTC hypotheses.

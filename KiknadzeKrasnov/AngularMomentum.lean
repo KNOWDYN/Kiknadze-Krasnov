@@ -7,7 +7,7 @@ noncomputable section
 open Set
 
 /-!
-Pass 3B formalises the manuscript's angular-momentum reduction, Eqs. (27)--(36),
+This module formalises the manuscript's angular-momentum reduction, Eqs. (27)--(36),
 and the corresponding supplementary residual factorisation.  The source coefficient
 `q(t)` is allowed to depend on time until the fixed-profile compatibility theorem
 proves that it is constant on the physical time interval under an explicit
@@ -322,7 +322,7 @@ theorem source_constant_of_fixed_nontrivial_profile
 /-- Eq. (35): dimensionless source parameter `χ=q/(2ν)`. -/
 def sourceRatio (nu q : ℝ) : ℝ := q / (2 * nu)
 
-/-- Eq. (35) agrees exactly with the shape parameter already frozen in Pass 2. -/
+/-- Eq. (35) agrees exactly with the shape parameter already defined in Parameters. -/
 theorem shape_eq_one_add_sourceRatio (p : FluidParams) (q : ℝ) :
     shape p q = 1 + sourceRatio p.nu q := by
   rfl

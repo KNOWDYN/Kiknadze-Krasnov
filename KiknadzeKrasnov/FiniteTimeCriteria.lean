@@ -22,7 +22,8 @@ theorem strainAccum_continuousOn_Icc
   have h :=
     intervalIntegral.continuousOn_primitive_interval'
       ha (show (0 : ℝ) ∈ uIcc 0 T by simp)
-  simpa [strainAccum, uIcc_of_le hT] using h
+  unfold strainAccum
+  simpa [uIcc_of_le hT] using h
 
 /-- The weighted viscous primitive is continuous on a finite interval whenever
 the imposed strain is absolutely integrable there. -/
@@ -41,7 +42,8 @@ theorem scaleIntegral_continuousOn_Icc
   have h :=
     intervalIntegral.continuousOn_primitive_interval'
       hEint (show (0 : ℝ) ∈ uIcc 0 T by simp)
-  simpa [scaleIntegral, uIcc_of_le hT] using h
+  unfold scaleIntegral
+  simpa [uIcc_of_le hT] using h
 
 /-- Eq. (144) is continuous up to every finite terminal time at which the
 strain is absolutely integrable. -/
@@ -67,7 +69,7 @@ theorem inverseScaleExact_tendsto_terminal
     (ha : IntervalIntegrable a volume 0 T) :
     Tendsto (inverseScaleExact nu h0 a) (𝓝[<] T)
       (𝓝 (inverseScaleExact nu h0 a T)) := by
-  have hc := inverseScaleExact_continuousOn_Icc hT.le ha
+  have hc := inverseScaleExact_continuousOn_Icc (nu := nu) (h0 := h0) hT.le ha
   have ht : T ∈ Icc (0 : ℝ) T := ⟨hT.le, le_rfl⟩
   have h := (hc T ht).tendsto
   rw [nhdsWithin_Icc_eq_nhdsLE hT] at h
@@ -116,12 +118,14 @@ theorem inv_tendsto_atTop_iff_tendsto_zero_of_eventually_pos
   constructor
   · intro hinv
     have hz := hinv.inv_tendsto_atTop
-    simpa only [Pi.inv_apply, inv_inv] using hz
+    convert hz using 1
+    funext x
+    simp
   · intro hz
     have hgt : Tendsto h l (𝓝[>] 0) := by
       rw [tendsto_nhdsWithin_iff]
       exact ⟨hz, hpos⟩
-    simpa only [Pi.inv_apply] using hgt.inv_tendsto_nhdsGT_zero
+    convert hgt.inv_tendsto_nhdsGT_zero using 1
 
 /-- Manuscript Eq. (146): exact finite-time concentration diagnostic.  No
 weighted-viscous term is discarded. -/
@@ -134,8 +138,7 @@ theorem exact_concentration_diagnostic
           Real.exp (-strainAccum a t) *
             (h0 + 4 * nu * scaleIntegral a t))
         l (𝓝 0) := by
-  simpa only [inverseScaleExact] using
-    (inv_tendsto_atTop_iff_tendsto_zero_of_eventually_pos hpos)
+  exact inv_tendsto_atTop_iff_tendsto_zero_of_eventually_pos hpos
 
 end
 

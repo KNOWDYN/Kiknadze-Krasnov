@@ -4,6 +4,7 @@ namespace KiknadzeKrasnov
 
 noncomputable section
 
+open Set MeasureTheory
 open scoped BigOperators
 
 /-- Radial stretching factor `exp(A/2)` used in the regular `q=0` transform. -/
@@ -30,7 +31,7 @@ def regularVorticityResidual
 theorem heatXi_hasDerivAt_r (A r : ℝ) :
     HasDerivAt (heatXi A) (heatStretch A) r := by
   unfold heatXi
-  simpa only [one_mul] using (hasDerivAt_id r).mul_const (heatStretch A)
+  convert (hasDerivAt_id r).mul_const (heatStretch A) using 1 <;> simp
 
 /-- Time derivative of the radial stretching factor when `A'=a`. -/
 theorem heatStretch_history_hasDerivAt
@@ -40,7 +41,7 @@ theorem heatStretch_history_hasDerivAt
   unfold heatStretch
   have hhalf := hA.div_const 2
   have h := hhalf.exp
-  convert h using 1 <;> ring
+  convert h using 1; ring
 
 /-- At fixed physical radius, `ξ_t=(a/2)ξ`. -/
 theorem heatXi_history_hasDerivAt
@@ -49,7 +50,7 @@ theorem heatXi_history_hasDerivAt
       ((a / 2) * heatXi (A t) r) t := by
   have h := (heatStretch_history_hasDerivAt hA).const_mul r
   unfold heatXi
-  convert h using 1 <;> ring
+  convert h using 1; ring
 
 /-- The transformed time has derivative `exp(A)=exp(A/2)^2`. -/
 theorem heatTime_hasDerivAt
@@ -119,9 +120,9 @@ theorem radialHeatResidual_finset_sum {n : ℕ}
       ∑ i, radialHeatResidual nu xi (WTau i) (WXi i) (WXiXi i) := by
   classical
   unfold radialHeatResidual
+  simp_rw [div_eq_mul_inv, mul_add]
   simp only [Finset.sum_sub_distrib, Finset.sum_add_distrib,
-    Finset.mul_sum, Finset.sum_mul, div_eq_mul_inv]
-  ring
+    Finset.mul_sum, Finset.sum_mul]
 
 end
 
