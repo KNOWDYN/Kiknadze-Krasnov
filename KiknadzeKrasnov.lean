@@ -13,6 +13,7 @@ import KiknadzeKrasnov.CirculationSurface
 import KiknadzeKrasnov.PrincipalSurface
 
 import KiknadzeKrasnov.ScaleDynamics
+import KiknadzeKrasnov.SelectiveConservation
 import KiknadzeKrasnov.PressureField
 import KiknadzeKrasnov.NavierStokesCertificate
 
