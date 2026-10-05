@@ -45,7 +45,6 @@ theorem scaledOffset_integratingFactor_hasDerivAt_zero
     simpa using hx.sub_const (s - 1)
   have hProd := hExp.mul hOff
   convert hProd using 1
-  · rfl
   · unfold scaledOffset
     ring
 
@@ -115,7 +114,7 @@ theorem scaledOffset_exact_exponential
     scaledOffset s (x t₂)
         = (Real.exp (-diffusiveClock nu beta t₂) *
             Real.exp (diffusiveClock nu beta t₂)) * scaledOffset s (x t₂) := by
-              rw [hcancel]
+              simp [hcancel]
     _ = Real.exp (-diffusiveClock nu beta t₂) *
           (Real.exp (diffusiveClock nu beta t₂) * scaledOffset s (x t₂)) := by ring
     _ = Real.exp (-diffusiveClock nu beta t₂) *
@@ -175,7 +174,7 @@ through that scale.
 -/
 theorem distinguishedFraction_independent_of_scale
     {circ s beta₁ beta₂ : ℝ}
-    (hcirc : circ ≠ 0) (hs : 1 < s) (hb₁ : 0 < beta₁) (hb₂ : 0 < beta₂) :
+    (hs : 1 < s) (hb₁ : 0 < beta₁) (hb₂ : 0 < beta₂) :
     materialCirculationFromX circ s
         (scaledX beta₁ (materialRadius s beta₁)) / circ =
       materialCirculationFromX circ s
