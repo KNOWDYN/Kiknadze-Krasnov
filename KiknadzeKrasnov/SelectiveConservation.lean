@@ -7,10 +7,9 @@ noncomputable section
 open Set intervalIntegral
 
 /-!
-Formal layer for the Nature-level interpretation of selective material
-conservation.  No new physical model is introduced here: the theorems assemble
-and sharpen consequences already implied by the KK material-radius and
-circulation identities.
+Formal layer for the selective material-circulation interpretation.
+No new physical model is introduced here: the theorems assemble and sharpen
+consequences already implied by the KK material-radius and circulation identities.
 -/
 
 /-- Scaled displacement from the distinguished material partition x*=s-1. -/
@@ -182,8 +181,8 @@ theorem distinguishedFraction_independent_of_scale
   rw [scaledX_materialRadius hs hb₁, scaledX_materialRadius hs hb₂]
 
 /--
-Nature-level assembled consequence: at every physical time, the exact material
-surface certified by `exactMaterialCirculationSurface` is also the separator of
+Assembled consequence: at every physical time, the exact material surface
+certified by `exactMaterialCirculationSurface` is also the separator of
 opposite signed viscous circulation transfer on its two sides.
 -/
 theorem selectiveMaterialConservation
