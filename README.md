@@ -23,11 +23,18 @@ Formal certificates for the mathematical results of the final manuscript and Sup
 
 The development also certifies the actual scalar axisymmetric Navier–Stokes residuals, finite-mode angular-momentum and vorticity transport, physical moments and enstrophy, global one-mode swirl-magnitude extrema, Lagrangian trajectories, classical limits, and the finite-time radial-scale classification.
 
+## Selective-conservation extension (Physics of Fluids V2)
+
+The current `main` branch also contains `KiknadzeKrasnov/SelectiveConservation.lean`, the formal extension used by the revised Physics of Fluids manuscript **Selective material circulation conservation in the unsteady Kiknadze–Krasnov vortex**. It certifies the scaled material-coordinate evolution, the exact exponential decay of the offset from `x_* = s - 1` in the accumulated diffusive clock, and scale independence of the distinguished circulation fraction.
+
+The tagged `v1.0.0` release remains the frozen formal baseline for the earlier zero-flux-cylinder manuscript; the selective-conservation extension is additive. The experimental scope used by the PoF revision is recorded in `docs/POF_V2_EXPERIMENTAL_SCOPE.md`: the V1 direct local zero-crossing comparison, the H2/V3 fit-based common-zero mining, and global KK-versus-Burgers/source identification are complementary tests and are not treated as a single ranking problem.
+
 ## Certification map
 
 | Layer | What is certified | Reviewer entry point |
 |---|---|---|
 | Principal surface | Materiality, no crossing, vorticity-magnitude peak, zero circulation transfer | `PrincipalSurface.lean` |
+| Selective conservation | Scaled-offset dynamics, exact exponential selection, distinguished-fraction scale independence | `SelectiveConservation.lean` |
 | Navier–Stokes | Continuity and all three momentum residuals for the actual fields | `NavierStokesCertificate.lean` |
 | Pressure | Exact pressure derivatives and corrected near-axis coefficient with optional line circulation | `PressureAsymptotics.lean` |
 | Multimode field | Finite superposition, equal-scale reduction, distinct-scale qualification | `MultimodeCertificate.lean` |
