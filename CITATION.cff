@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this formal development, please cite the repository release corresponding to the version you used."
+title: "Kiknadze–Krasnov Vortex Formal Verification"
+type: software
+authors:
+  - family-names: "Saqr"
+    given-names: "Khalid M."
+version: "1.1.0"
+repository-code: "https://github.com/KNOWDYN/Kiknadze-Krasnov"
