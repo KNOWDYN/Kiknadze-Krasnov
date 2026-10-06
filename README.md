@@ -82,6 +82,6 @@ The certificates are intentionally scoped to the stated KK family and explicit p
 
 <div align="center">
 
-**v1.1.0 release candidate · additive selective-conservation layer · zero proof placeholders · transitive trust audited by CI**
+**v1.1.0 · additive selective-conservation layer · zero proof placeholders · transitive trust audited by CI**
 
 </div>
