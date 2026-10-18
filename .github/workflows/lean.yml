@@ -39,3 +39,25 @@ jobs:
         run: lake env lean scripts/TrustAudit.lean
       - name: Check source coverage
         run: python3 scripts/check_coverage.py
+
+  zenodo_bridge:
+    if: github.ref == 'refs/heads/tmp/zenodo-17988010-transfer'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download exact Zenodo archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 5 --retry-delay 2 \
+            --output turbulence_dataset.zip \
+            'https://zenodo.org/api/records/17988010/files/turbulence_dataset.zip/content'
+          echo 'bbb7a3a49a1d9bd830e3c0318bf23296  turbulence_dataset.zip' | md5sum --check --strict
+          ls -lh turbulence_dataset.zip
+      - name: Upload verified archive as temporary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zenodo-17988010
+          path: turbulence_dataset.zip
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 1
