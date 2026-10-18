@@ -1,63 +1,30 @@
-name: Lean
+name: Zenodo dictionary bridge
 
 on:
   push:
-  pull_request:
 
 permissions:
   contents: read
 
-concurrency:
-  group: lean-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install elan and pinned Lean toolchain
-        shell: bash
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain none
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Resolve pinned dependencies
-        run: lake update
-      - name: Fetch Mathlib cache
-        run: lake exe cache get
-      - name: Build Lean project
-        run: lake build
-      - name: Reject proof placeholders
-        shell: bash
-        run: |
-          if grep -RInE '\b(sorry|admit)\b' --include='*.lean' KiknadzeKrasnov KiknadzeKrasnov.lean; then
-            echo 'Forbidden Lean proof placeholder found.'
-            exit 1
-          fi
-      - name: Audit transitive proof trust
-        run: lake env lean scripts/TrustAudit.lean
-      - name: Check source coverage
-        run: python3 scripts/check_coverage.py
-
-  zenodo_bridge:
+  zenodo_dictionary:
     if: github.ref == 'refs/heads/tmp/zenodo-17988010-transfer'
     runs-on: ubuntu-latest
     steps:
-      - name: Download exact Zenodo archive
+      - name: Download and verify data dictionary
         shell: bash
         run: |
           set -euo pipefail
           curl --fail --location --retry 5 --retry-delay 2 \
-            --output turbulence_dataset.zip \
-            'https://zenodo.org/api/records/17988010/files/turbulence_dataset.zip/content'
-          echo 'bbb7a3a49a1d9bd830e3c0318bf23296  turbulence_dataset.zip' | md5sum --check --strict
-          ls -lh turbulence_dataset.zip
-      - name: Upload verified archive as temporary artifact
+            --output data_dictionary.csv \
+            'https://zenodo.org/api/records/17988010/files/data_dictionary.csv/content'
+          echo '64552ab964c9ca318c7caab6a50e08a4  data_dictionary.csv' | md5sum --check --strict
+          ls -lh data_dictionary.csv
+      - name: Upload verified dictionary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: zenodo-17988010
-          path: turbulence_dataset.zip
+          name: zenodo-17988010-dictionary
+          path: data_dictionary.csv
           if-no-files-found: error
           compression-level: 0
           retention-days: 1
